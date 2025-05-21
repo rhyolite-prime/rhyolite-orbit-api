@@ -27,7 +27,6 @@
     <Folder Include="DomainServices\Payroll\" />
     <Folder Include="DomainServices\ProductionPlanning\" />
     <Folder Include="DomainServices\SchoolManager\" />
-    <Folder Include="DomainServices\Shared\Currencies\" />
     <Folder Include="DomainServices\SupplyChain\" />
     <Folder Include="Models\AccountsPayable\" />
     <Folder Include="Models\AccountsReceivable\" />
