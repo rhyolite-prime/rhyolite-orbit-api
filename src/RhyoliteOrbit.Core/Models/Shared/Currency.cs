@@ -8,9 +8,9 @@ namespace RhyoliteOrbit.Models.Shared;
 public class Currency: Abp.Domain.Entities.Auditing.FullAuditedEntity<Guid>, Abp.Domain.Entities.IMustHaveTenant
 {
     [MaxLength(100)]
-    public string CurrencyName { get; set; }
+    public string Name { get; set; }
     [MaxLength(50)]
-    public string CurrencyCode { get; set; }
+    public string Code { get; set; }
     [MaxLength(50)]
     public string MinorName { get; set; }
     public decimal BuyRate { get; set; }
