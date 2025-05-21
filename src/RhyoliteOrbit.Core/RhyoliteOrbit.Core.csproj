@@ -19,4 +19,23 @@
     <PackageReference Include="Abp.ZeroCore.EntityFrameworkCore" Version="10.0.0" />
     <PackageReference Include="Castle.Windsor.MsDependencyInjection" Version="4.1.0" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="DomainServices\AccountsPayable\" />
+    <Folder Include="DomainServices\AccountsReceivable\" />
+    <Folder Include="DomainServices\GeneralLedger\" />
+    <Folder Include="DomainServices\Inventory\" />
+    <Folder Include="DomainServices\Payroll\" />
+    <Folder Include="DomainServices\ProductionPlanning\" />
+    <Folder Include="DomainServices\SchoolManager\" />
+    <Folder Include="DomainServices\Shared\Currencies\" />
+    <Folder Include="DomainServices\SupplyChain\" />
+    <Folder Include="Models\AccountsPayable\" />
+    <Folder Include="Models\AccountsReceivable\" />
+    <Folder Include="Models\GeneralLedger\" />
+    <Folder Include="Models\Inventory\" />
+    <Folder Include="Models\Payroll\" />
+    <Folder Include="Models\ProductionPlanning\" />
+    <Folder Include="Models\SchoolManager\" />
+    <Folder Include="Models\SupplyChain\" />
+  </ItemGroup>
 </Project>

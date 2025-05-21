@@ -14,4 +14,14 @@
   <ItemGroup>
     <ProjectReference Include="..\RhyoliteOrbit.Core\RhyoliteOrbit.Core.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Services\AccountsPayable\" />
+    <Folder Include="Services\AccountsReceivable\" />
+    <Folder Include="Services\Inventory\" />
+    <Folder Include="Services\ProductionPlanning\" />
+    <Folder Include="Services\Payroll\" />
+    <Folder Include="Services\SchoolManager\" />
+    <Folder Include="Services\Shared\" />
+    <Folder Include="Services\SupplyChain\" />
+  </ItemGroup>
 </Project>
