@@ -36,7 +36,7 @@ public class PersonnelStatusManager: Abp.Domain.Services.DomainService, IPersonn
             foreach (var defaultRecord in allDefaults)
             {
                 defaultRecord.IsDefault = false;
-                await _repositoryPersonnelStatus.InsertAsync(entity);
+                await _repositoryPersonnelStatus.UpdateAsync(defaultRecord);
             }
         }
 
