@@ -31,17 +31,16 @@ public class PersonnelStatusManager: Abp.Domain.Services.DomainService, IPersonn
 
         if (entity.IsDefault)
         {
-            var dattaDefault = await _repositoryPersonnelStatus.FirstOrDefaultAsync(x => x.IsDefault);
+            var allDefaults = await _repositoryPersonnelStatus.GetAllListAsync(x => x.IsDefault);
 
-            if (dattaDefault != null)
+            foreach (var defaultRecord in allDefaults)
             {
+                defaultRecord.IsDefault = false;
                 await _repositoryPersonnelStatus.InsertAsync(entity);
             }
-
-             throw new UserFriendlyException(400, "Only one default record is allowed.");
         }
-        
-       
+
+        await _repositoryPersonnelStatus.InsertAsync(entity);
     }
     
     public async Task Update(PersonnelStatus entity)
