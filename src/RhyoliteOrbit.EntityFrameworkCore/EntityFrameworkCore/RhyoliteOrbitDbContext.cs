@@ -4,6 +4,7 @@ using RhyoliteOrbit.Authorization.Roles;
 using RhyoliteOrbit.Authorization.Users;
 using RhyoliteOrbit.MultiTenancy;
 using Microsoft.EntityFrameworkCore;
+using RhyoliteOrbit.Models.SchoolManager;
 using RhyoliteOrbit.Models.Shared;
 
 namespace RhyoliteOrbit.EntityFrameworkCore;
@@ -41,4 +42,8 @@ public class RhyoliteOrbitDbContext : AbpZeroDbContext<Tenant, Role, User, Rhyol
     public DbSet<SupplierGroup> SupplierGroups { get; set; }
     public DbSet<MessageTemplate> MessageTemplates { get; set; }
     public DbSet<SystemNumber> SystemNumbers { get; set; }
+    
+    //school manager...
+    public DbSet<AcademicYear> AcademicYears { get; set; }
+    public DbSet<AlumniHistory> AlumniHistories { get; set; }
 }

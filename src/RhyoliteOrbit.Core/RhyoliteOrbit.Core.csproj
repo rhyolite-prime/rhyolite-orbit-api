@@ -26,7 +26,9 @@
     <Folder Include="DomainServices\Inventory\" />
     <Folder Include="DomainServices\Payroll\" />
     <Folder Include="DomainServices\ProductionPlanning\" />
-    <Folder Include="DomainServices\SchoolManager\" />
+    <Folder Include="DomainServices\SchoolManager\AlumniHistories\" />
+    <Folder Include="DomainServices\SchoolManager\BillPayments\" />
+    <Folder Include="DomainServices\SchoolManager\BillSetups\" />
     <Folder Include="DomainServices\SupplyChain\" />
     <Folder Include="Models\AccountsPayable\" />
     <Folder Include="Models\AccountsReceivable\" />
@@ -34,7 +36,6 @@
     <Folder Include="Models\Inventory\" />
     <Folder Include="Models\Payroll\" />
     <Folder Include="Models\ProductionPlanning\" />
-    <Folder Include="Models\SchoolManager\" />
     <Folder Include="Models\SupplyChain\" />
   </ItemGroup>
 </Project>
