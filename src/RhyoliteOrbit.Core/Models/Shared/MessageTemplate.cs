@@ -8,4 +8,4 @@ public class MessageTemplate: Abp.Domain.Entities.Auditing.FullAuditedEntity<Gui
     public string MessageSubject { get; set; }
     public string Alias { get; set; }
     public int TenantId { get; set; }
-}
+}   
