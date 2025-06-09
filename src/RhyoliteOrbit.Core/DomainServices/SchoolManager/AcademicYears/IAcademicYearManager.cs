@@ -7,7 +7,7 @@ namespace RhyoliteOrbit.DomainServices.SchoolManager.AcademicYears;
 
 public interface IAcademicYearManager: Abp.Domain.Services.IDomainService
 {
-    Task<object> ListAll();
+    Task<object> GetAll(int pageNo, int pageSize, string query);
     Task<object> GetAsync(Guid id);
     Task<object> Create(AcademicYear entity);
     Task Update(AcademicYear entity);

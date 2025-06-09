@@ -45,5 +45,37 @@ public class RhyoliteOrbitDbContext : AbpZeroDbContext<Tenant, Role, User, Rhyol
     
     //school manager...
     public DbSet<AcademicYear> AcademicYears { get; set; }
-    public DbSet<AlumniHistory> AlumniHistories { get; set; }
+    public DbSet<AssignedClass> AssignedClasses { get; set; }
+    public DbSet<StudentBehaviorRecord> StudentBehaviorRecords { get; set; }
+    public DbSet<StaffDesignation> StaffDesignations { get; set; }
+    public DbSet<StudentAttendance> StudentAttendances { get; set; }
+    public DbSet<StudentBillReceipt> StudentBillReceipts { get; set; }
+    public DbSet<StudentBill> StudentBills { get; set; }
+    public DbSet<BillPayment> BillPayments { get; set; }
+    public DbSet<BillSetup> BillSetups { get; set; }
+    public DbSet<BillType> BillTypes { get; set; }
+    public DbSet<CancelledBill> CancelledBills { get; set; }
+    public DbSet<CancelledPayment> CancelledPayments { get; set; }
+    public DbSet<ClassStream> ClassStreams { get; set; }
+    public DbSet<FeesDescription> FeesDescriptions { get; set; }
+    public DbSet<GradingScheme> GradingSchemes { get; set; }
+    public DbSet<Level> Levels { get; set; }
+    public DbSet<Parent> Parents { get; set; }
+    public DbSet<PaymentType> PaymentTypes { get; set; }
+    public DbSet<PastQuestion> PastQuestions { get; set; }
+    public DbSet<PromotionHistory> PromotionHistory { get; set; }
+    public DbSet<ResultsUpload> ResultsUploads { get; set; }
+    public DbSet<ResultType> ResultTypes { get; set; }
+    public DbSet<SchClass> SchClasses { get; set; }
+    public DbSet<SchoolProfile> SchoolProfiles { get; set; }
+    public DbSet<Sibling> Siblings { get; set; }
+    public DbSet<Staff> Staffs { get; set; }
+    public DbSet<Student> Students { get; set; }
+    public DbSet<StudentParent> StudentParents { get; set; }
+    public DbSet<StudentStatement> StudentStatements { get; set; }
+    public DbSet<Subject> Subjects { get; set; }
+    public DbSet<SubjectRemark> SubjectRemarks { get; set; }
+    public DbSet<TerminalReport> TerminalReports { get; set; }
+    public DbSet<MiscellaneousPayment> MiscellaneousPayments { get; set; }
+   
 }
