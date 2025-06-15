@@ -133,16 +133,15 @@ public class RhyoliteOrbitDbContext : AbpZeroDbContext<Tenant, Role, User, Rhyol
     public DbSet<MonthlyPfDeduction> MonthlyPfDeductions { get; set; }
     public DbSet<MonthlyLoanDeductionHist> MonthlyLoanDeductionHistory { get; set; }
     public DbSet<MonthlyLoanDeduction> MonthlyLoanDeductions { get; set; }
-    public DbSet<MonthlyIrsTaxHist> MonthlyIrsTaxHistory { get; set; }
     public DbSet<MonthlyIrsTax> MonthlyIrsTaxes { get; set; }
+    public DbSet<MonthlyIrsTaxHist> MonthlyIrsTaxHistory { get; set; }
     public DbSet<MonthlySalaryAdvance> MonthlySalaryAdvances { get; set; }
-    public DbSet<MonthlySecPfDeduction> MonthlySecPfDeductions { get; set; }
     public DbSet<MonthlySalaryAdvanceHist> MonthlySalaryAdvanceHistory { get; set; }
+    public DbSet<MonthlySecPfDeduction> MonthlySecPfDeductions { get; set; }
     public DbSet<MonthlySecPfDeductionHist> MonthlySecPfDeductionHistory { get; set; }
-    public DbSet<MonthlyOvertimeHistory> MonthlyOvertimeHistory { get; set; }
     public DbSet<MonthlyOvertime> MonthlyOvertimes { get; set; }
+    public DbSet<MonthlyOvertimeHistory> MonthlyOvertimeHistory { get; set; }
     public DbSet<MonthlyBonus> MonthlyBonuses { get; set; }
     public DbSet<MonthlyBonusHistory> MonthlyBonusHistory { get; set; }
-    public DbSet<IrsSignature> IrsSignatures { get; set; }
    
 }
