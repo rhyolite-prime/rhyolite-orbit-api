@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace RhyoliteOrbit.Models.SchoolManager;
 
-public class StudentBehaviorRecord: Abp.Domain.Entities.Auditing.FullAuditedEntity<Guid>, Abp.Domain.Entities.IMustHaveTenant
+public class StudentBehaviourRecord: Abp.Domain.Entities.Auditing.FullAuditedEntity<Guid>, Abp.Domain.Entities.IMustHaveTenant
 {
     public Guid AcademicYearId { get; set; }
     [MaxLength(50)]

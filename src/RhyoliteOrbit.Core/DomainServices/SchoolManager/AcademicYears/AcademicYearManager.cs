@@ -12,7 +12,7 @@ namespace RhyoliteOrbit.DomainServices.SchoolManager.AcademicYears;
 
 public class AcademicYearManager: Abp.Domain.Services.DomainService, IAcademicYearManager
 {
-    private readonly IRepository<AcademicYear, Guid> _repositoryAcademicYear;
+        private readonly IRepository<AcademicYear, Guid> _repositoryAcademicYear;
 
         public AcademicYearManager(IRepository<AcademicYear, Guid> repositoryAcademicYear)
         {
@@ -63,16 +63,8 @@ public class AcademicYearManager: Abp.Domain.Services.DomainService, IAcademicYe
                     message = "successful"
                 };
             }
-            else
-            {
-                return new
-                {
-                    code = 400,
-                    message = "Duplicate records are not allowed."
-                };
 
-            }
-
+            throw new UserFriendlyException(400, "Duplicate records are not allowed.");
 
         }
 
@@ -117,7 +109,6 @@ public class AcademicYearManager: Abp.Domain.Services.DomainService, IAcademicYe
             if (!string.IsNullOrEmpty(query))
             {
                 predicate.And(x => x.Name.Contains(query));
-
             }
             
             var totalCount =
@@ -144,10 +135,8 @@ public class AcademicYearManager: Abp.Domain.Services.DomainService, IAcademicYe
         public async Task Delete(Guid id)
         {
             await _repositoryAcademicYear.DeleteAsync(id);
-
         }
 
-        
         public async Task DeleteTerm(TermDto input)
         {
             var academicYearData = await _repositoryAcademicYear.FirstOrDefaultAsync(input.AcademicYearId);

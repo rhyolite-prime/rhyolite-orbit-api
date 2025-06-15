@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace RhyoliteOrbit.Models.SchoolManager;
 
-public class Sibling
+public class Sibling: Abp.Domain.Entities.Auditing.FullAuditedEntity<Guid>, Abp.Domain.Entities.IMustHaveTenant
 {
     public Guid SiblingClassId { get; set; }
     [MaxLength(50)]

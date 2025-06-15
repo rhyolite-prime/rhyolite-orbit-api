@@ -18,52 +18,41 @@
     <PackageReference Include="Abp.AutoMapper" Version="10.0.0" />
     <PackageReference Include="Abp.ZeroCore.EntityFrameworkCore" Version="10.0.0" />
     <PackageReference Include="Castle.Windsor.MsDependencyInjection" Version="4.1.0" />
+    <PackageReference Include="RabbitMQ.Client" Version="6.4.0" />
+    <PackageReference Include="StackExchange.Redis" Version="2.6.90" />
+    <PackageReference Include="Hashids.net" Version="1.6.1" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="DomainServices\AccountsPayable\" />
     <Folder Include="DomainServices\AccountsReceivable\" />
     <Folder Include="DomainServices\GeneralLedger\" />
     <Folder Include="DomainServices\Inventory\" />
-    <Folder Include="DomainServices\Payroll\" />
+    <Folder Include="DomainServices\Payroll\Dashboard\" />
+    <Folder Include="DomainServices\Payroll\DeductionTypes\" />
+    <Folder Include="DomainServices\Payroll\EmployeeAllowances\" />
+    <Folder Include="DomainServices\Payroll\EmployeeBenefitInKinds\" />
+    <Folder Include="DomainServices\Payroll\EmployeeDaysWorkedInfo\" />
+    <Folder Include="DomainServices\Payroll\EmployeeDeductions\" />
+    <Folder Include="DomainServices\Payroll\EmployeeLoanRepaymentSchedules\" />
+    <Folder Include="DomainServices\Payroll\EmployeeRanks\" />
+    <Folder Include="DomainServices\Payroll\EmployeeReliefs\" />
+    <Folder Include="DomainServices\Payroll\EmployeeSalaryData\" />
+    <Folder Include="DomainServices\Payroll\EmployeeSnits\" />
+    <Folder Include="DomainServices\Payroll\Gratuities\" />
+    <Folder Include="DomainServices\Payroll\InitializePayMonths\" />
+    <Folder Include="DomainServices\Payroll\LoanTypes\" />
+    <Folder Include="DomainServices\Payroll\PayCalendars\" />
+    <Folder Include="DomainServices\Payroll\SalaryGrades\" />
+    <Folder Include="DomainServices\Payroll\TaxReliefs\" />
+    <Folder Include="DomainServices\Payroll\TaxTableHistory\" />
+    <Folder Include="DomainServices\Payroll\TaxTables\" />
     <Folder Include="DomainServices\ProductionPlanning\" />
-    <Folder Include="DomainServices\SchoolManager\AssignedClasses\" />
-    <Folder Include="DomainServices\SchoolManager\BillPayments\" />
-    <Folder Include="DomainServices\SchoolManager\BillSetups\" />
-    <Folder Include="DomainServices\SchoolManager\BillTypes\" />
-    <Folder Include="DomainServices\SchoolManager\CancelledBills\" />
-    <Folder Include="DomainServices\SchoolManager\CancelledPayments\" />
-    <Folder Include="DomainServices\SchoolManager\ClassStreams\" />
-    <Folder Include="DomainServices\SchoolManager\FeesDescriptions\" />
-    <Folder Include="DomainServices\SchoolManager\GradingSchemes\" />
-    <Folder Include="DomainServices\SchoolManager\Levels\" />
-    <Folder Include="DomainServices\SchoolManager\MiscellaneousPayments\" />
-    <Folder Include="DomainServices\SchoolManager\Parents\" />
-    <Folder Include="DomainServices\SchoolManager\PastQuestions\" />
-    <Folder Include="DomainServices\SchoolManager\PaymentTypes\" />
-    <Folder Include="DomainServices\SchoolManager\PromotionHistories\" />
-    <Folder Include="DomainServices\SchoolManager\ResultsUploads\" />
-    <Folder Include="DomainServices\SchoolManager\ResultTypes\" />
-    <Folder Include="DomainServices\SchoolManager\SchClasses\" />
-    <Folder Include="DomainServices\SchoolManager\SchoolProfiles\" />
-    <Folder Include="DomainServices\SchoolManager\Siblings\" />
-    <Folder Include="DomainServices\SchoolManager\StaffDesignations\" />
-    <Folder Include="DomainServices\SchoolManager\Staffs\" />
-    <Folder Include="DomainServices\SchoolManager\StudentAttendances\" />
-    <Folder Include="DomainServices\SchoolManager\StudentBehaviorRecords\" />
     <Folder Include="DomainServices\SchoolManager\StudentBillReceipts\" />
-    <Folder Include="DomainServices\SchoolManager\StudentBills\" />
-    <Folder Include="DomainServices\SchoolManager\StudentParents\" />
-    <Folder Include="DomainServices\SchoolManager\StudentStatements\" />
-    <Folder Include="DomainServices\SchoolManager\Students\" />
-    <Folder Include="DomainServices\SchoolManager\SubjectRemarks\" />
-    <Folder Include="DomainServices\SchoolManager\Subjects\" />
-    <Folder Include="DomainServices\SchoolManager\TerminalReports\" />
     <Folder Include="DomainServices\SupplyChain\" />
     <Folder Include="Models\AccountsPayable\" />
     <Folder Include="Models\AccountsReceivable\" />
     <Folder Include="Models\GeneralLedger\" />
     <Folder Include="Models\Inventory\" />
-    <Folder Include="Models\Payroll\" />
     <Folder Include="Models\ProductionPlanning\" />
     <Folder Include="Models\SupplyChain\" />
   </ItemGroup>

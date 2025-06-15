@@ -23,6 +23,9 @@ public class SchoolProfile: Abp.Domain.Entities.Auditing.FullAuditedEntity<Guid>
     public string PrimaryPhoneNo { get; set; }
     [MaxLength(100)]
     public string SchoolHead { get; set; }
+    [MaxLength(350)]
+    public string SchoolLogoUrl { get; set; }
+    
     [MaxLength(20)]
     public string SecondaryPhoneNo { get; set; }
     [MaxLength(100)]

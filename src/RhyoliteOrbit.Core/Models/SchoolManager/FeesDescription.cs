@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace RhyoliteOrbit.Models.SchoolManager;
 
-public class FeesDescription
+public class FeesDescription: Abp.Domain.Entities.Auditing.FullAuditedEntity<Guid>, Abp.Domain.Entities.IMustHaveTenant
 {
     [MaxLength(100)]
     public string Description { get; set; }
