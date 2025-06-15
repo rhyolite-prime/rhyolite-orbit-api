@@ -17,6 +17,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.WebEncoders;
 using System.Text.Encodings.Web;
 using System.Text.Unicode;
+using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 namespace RhyoliteOrbit.Web.Startup;
 
@@ -49,6 +51,19 @@ public class Startup
         {
             options.TextEncoderSettings = new TextEncoderSettings(UnicodeRanges.All);
         });
+        
+        services.Configure<KestrelServerOptions>(options =>
+        {
+            options.Limits.MaxRequestBodySize = int.MaxValue;
+        });
+        
+        services.AddResponseCompression(options =>
+        {
+            options.EnableForHttps = true; // Enable compression for HTTPS requests (optional)
+            options.Providers.Add<GzipCompressionProvider>();
+
+        });
+        
 
         services.AddScoped<IWebResourceManager, WebResourceManager>();
 

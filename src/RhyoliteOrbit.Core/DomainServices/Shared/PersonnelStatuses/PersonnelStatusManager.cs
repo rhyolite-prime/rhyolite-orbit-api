@@ -20,15 +20,16 @@ public class PersonnelStatusManager: Abp.Domain.Services.DomainService, IPersonn
 
     public async Task Create(PersonnelStatus entity)
     {
-        var trimmedName = entity.Name.Trim().ToLowerInvariant();
 
-        var datta = await _repositoryPersonnelStatus.FirstOrDefaultAsync(x => x.Name.Trim().ToLower() == trimmedName);
+        var datta = await _repositoryPersonnelStatus.FirstOrDefaultAsync(x => x.Name.Trim().ToLower() == entity.Name.Trim().ToLower());
 
         if (datta != null)
         {
             throw new UserFriendlyException(400, "Duplicate records are not allowed");
         }
 
+        await _repositoryPersonnelStatus.InsertAsync(entity);
+        
         if (entity.IsDefault)
         {
             var allDefaults = await _repositoryPersonnelStatus.GetAllListAsync(x => x.IsDefault);
@@ -40,7 +41,7 @@ public class PersonnelStatusManager: Abp.Domain.Services.DomainService, IPersonn
             }
         }
 
-        await _repositoryPersonnelStatus.InsertAsync(entity);
+        
     }
     
     public async Task Update(PersonnelStatus entity)

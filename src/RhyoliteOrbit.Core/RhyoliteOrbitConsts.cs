@@ -1,4 +1,5 @@
-﻿using RhyoliteOrbit.Debugging;
+﻿using System.Collections.Generic;
+using RhyoliteOrbit.Debugging;
 
 namespace RhyoliteOrbit;
 
@@ -9,6 +10,20 @@ public class RhyoliteOrbitConsts
     public const string ConnectionStringName = "Default";
 
     public const bool MultiTenancyEnabled = true;
+    
+    
+    public enum BillStatus
+    {
+        Draft = 0,
+        Pending = 1,
+        Approved = 2,
+        Rejected = 3,
+        Cancelled = 4,
+        Paid = 5,
+        PartiallyPaid = 6,
+        Refunded = 7,
+        PartiallyRefunded = 8
+    }
 
 
     /// <summary>
