@@ -88,8 +88,8 @@ public class BoaAllowanceManager: Abp.Domain.Services.DomainService, IBoaAllowan
         public async Task<object> ListAll(int month, int year)
         {
            return  await _repositoryBonusAndOnetimeAllowance.GetAllListAsync(x => x.Month == month && x.Year == year);
-
         }
+        
         public async Task Delete(Guid id)
         {
             await _repositoryBonusAndOnetimeAllowance.DeleteAsync(id);

@@ -21,6 +21,9 @@
     <PackageReference Include="RabbitMQ.Client" Version="6.4.0" />
     <PackageReference Include="StackExchange.Redis" Version="2.6.90" />
     <PackageReference Include="Hashids.net" Version="1.6.1" />
+    <PackageReference Include="Akka" Version="1.5.0" />
+    <PackageReference Include="Syncfusion.HtmlToPdfConverter.Blink.Net.Core.Linux" Version="19.3.0.48" />
+    <PackageReference Include="Syncfusion.HtmlToPdfConverter.Blink.Net.Core.Mac" Version="19.3.0.48" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="DomainServices\AccountsPayable\" />
@@ -28,24 +31,6 @@
     <Folder Include="DomainServices\GeneralLedger\" />
     <Folder Include="DomainServices\Inventory\" />
     <Folder Include="DomainServices\Payroll\Dashboard\" />
-    <Folder Include="DomainServices\Payroll\DeductionTypes\" />
-    <Folder Include="DomainServices\Payroll\EmployeeAllowances\" />
-    <Folder Include="DomainServices\Payroll\EmployeeBenefitInKinds\" />
-    <Folder Include="DomainServices\Payroll\EmployeeDaysWorkedInfo\" />
-    <Folder Include="DomainServices\Payroll\EmployeeDeductions\" />
-    <Folder Include="DomainServices\Payroll\EmployeeLoanRepaymentSchedules\" />
-    <Folder Include="DomainServices\Payroll\EmployeeRanks\" />
-    <Folder Include="DomainServices\Payroll\EmployeeReliefs\" />
-    <Folder Include="DomainServices\Payroll\EmployeeSalaryData\" />
-    <Folder Include="DomainServices\Payroll\EmployeeSnits\" />
-    <Folder Include="DomainServices\Payroll\Gratuities\" />
-    <Folder Include="DomainServices\Payroll\InitializePayMonths\" />
-    <Folder Include="DomainServices\Payroll\LoanTypes\" />
-    <Folder Include="DomainServices\Payroll\PayCalendars\" />
-    <Folder Include="DomainServices\Payroll\SalaryGrades\" />
-    <Folder Include="DomainServices\Payroll\TaxReliefs\" />
-    <Folder Include="DomainServices\Payroll\TaxTableHistory\" />
-    <Folder Include="DomainServices\Payroll\TaxTables\" />
     <Folder Include="DomainServices\ProductionPlanning\" />
     <Folder Include="DomainServices\SchoolManager\StudentBillReceipts\" />
     <Folder Include="DomainServices\SupplyChain\" />
@@ -55,5 +40,7 @@
     <Folder Include="Models\Inventory\" />
     <Folder Include="Models\ProductionPlanning\" />
     <Folder Include="Models\SupplyChain\" />
+    <Folder Include="Pdf\ApInvoice\" />
+    <Folder Include="Pdf\ArInvoice\" />
   </ItemGroup>
 </Project>

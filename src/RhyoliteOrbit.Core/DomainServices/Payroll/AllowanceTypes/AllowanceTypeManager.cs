@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Abp.Domain.Repositories;
 using Abp.Linq.Expressions;
+using Abp.UI;
 using Microsoft.EntityFrameworkCore;
 using RhyoliteOrbit.DomainServices.Payroll.AllowanceTypes.Dto;
 using RhyoliteOrbit.Models.Payroll;
@@ -36,12 +37,13 @@ public class AllowanceTypeManager: Abp.Domain.Services.DomainService, IAllowance
                     message = "successful"
                 };
             }
+            
+            throw new UserFriendlyException(
+                400,
+                "Allowance Type",
+                "Duplicate records are not allowed."
+            );
 
-            return new
-            {
-                code = 400,
-                message = "Duplicate records are not allowed."
-            };
         }
 
         public async Task<object> CreateAllowanceRate(AllowanceRateDto input)

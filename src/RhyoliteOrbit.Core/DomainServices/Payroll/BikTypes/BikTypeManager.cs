@@ -42,6 +42,7 @@ public class BikTypeManager: DomainService, IBikTypeManager
                     message = "successful"
                 };
             }
+            
 
             throw new UserFriendlyException(400, "Benefits in Kind Type", "Duplicate records are not allowed.");
              
