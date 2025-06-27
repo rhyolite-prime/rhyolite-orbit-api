@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace RhyoliteOrbit.Models.Payroll;
 
-public class MonthlyBenefitsInKindHist: Abp.Domain.Entities.Auditing.FullAuditedEntity<Guid>, Abp.Domain.Entities.IMustHaveTenant
+public class MonthlySsnitDeductionHistory: Abp.Domain.Entities.Auditing.FullAuditedEntity<Guid>, Abp.Domain.Entities.IMustHaveTenant
 {
     public Guid EmployeeId { get; set; }
     [MaxLength(20)]
@@ -14,9 +14,8 @@ public class MonthlyBenefitsInKindHist: Abp.Domain.Entities.Auditing.FullAudited
     public string EmployeeDepartment { get; set; }
     [MaxLength(100)]
     public string EmployeeCategory { get; set; }
-    public Guid BenefitInKindTypeId { get; set; }
-    [MaxLength(100)]
-    public string BenefitInKindTypeName { get; set; }
+    [MaxLength(150)]
+    public string Description { get; set; }
     public decimal Amount { get; set; }
     public int Month { get; set; }
     public int Year { get; set; }

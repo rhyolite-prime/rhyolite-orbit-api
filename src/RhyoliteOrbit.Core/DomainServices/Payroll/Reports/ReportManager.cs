@@ -22,17 +22,17 @@ public class ReportManager: Abp.Domain.Services.DomainService, IReportManager
         private readonly IRepository<EmployeeLoanRepaymentSchedule, Guid> _repositoryEmployeeLoanRepaymentSchedule;
         private readonly IRepository<LoanType, Guid> _repositoryLoanType;
         private readonly IRepository<MonthlyLoanDeduction, Guid> _repositoryMonthlyLoanDeduction;
-        private readonly IRepository<MonthlyLoanDeductionHist, Guid> _repositoryMonthlyLoanDeductionHist;
+        private readonly IRepository<MonthlyLoanDeductionHistory, Guid> _repositoryMonthlyLoanDeductionHist;
         private readonly IRepository<MonthlyAllowance, Guid> _repositoryMonthlyAllowance;
         private readonly IRepository<MonthlySalaryAdvance, Guid> _repositoryMonthlySalaryAdvance;
-        private readonly IRepository<MonthlySalaryAdvanceHist, Guid> _repositoryMonthlySalaryAdvanceHist;
+        private readonly IRepository<MonthlySalaryAdvanceHistory, Guid> _repositoryMonthlySalaryAdvanceHist;
         private readonly IRepository<Paymaster, Guid> _repositoryPaymaster;
-        private readonly IRepository<PaymasterHist, Guid> _repositoryPaymasterHist;
+        private readonly IRepository<PaymasterHistory, Guid> _repositoryPaymasterHist;
         private readonly IRepository<MonthlyCumulativeDeduction, Guid> _repositoryMonthlyCumulativeDeduction;
-        private readonly IRepository<MonthlyCumulativeDeductionHist, Guid> _repositoryMonthlyCumulativeDeductionHist;
-        private readonly IRepository<MonthlyAllowanceHist, Guid> _repositoryMonthlyAllowanceHist;
+        private readonly IRepository<MonthlyCumulativeDeductionHistory, Guid> _repositoryMonthlyCumulativeDeductionHist;
+        private readonly IRepository<MonthlyAllowanceHistory, Guid> _repositoryMonthlyAllowanceHist;
         private readonly IRepository<MonthlyDeduction, Guid> _repositoryMonthlyDeduction;
-        private readonly IRepository<MonthlyDeductionHist, Guid> _repositoryMonthlyDeductionHist;
+        private readonly IRepository<MonthlyDeductionHistory, Guid> _repositoryMonthlyDeductionHist;
         private readonly IRepository<EmployeeDaysWorked, Guid> _repositoryEmployeeDaysWorked;
         private readonly IRepository<EmployeeBioData, Guid> _repositoryEmployeeBioData;
         private readonly IRepository<EmployeeSalaryData, Guid> _repositoryEmployeeSalaryData;
@@ -40,15 +40,15 @@ public class ReportManager: Abp.Domain.Services.DomainService, IReportManager
         private readonly IRepository<IrsSignature, Guid> _repositoryIrsSignature;
         private readonly IRepository<SalaryGrade, Guid> _repositorySalaryGrade;
         private readonly IRepository<MonthlyRelief, Guid> _repositoryMonthlyRelief;
-        private readonly IRepository<MonthlyReliefHist, Guid> _repositoryMonthlyReliefHist;
+        private readonly IRepository<MonthlyReliefHistory, Guid> _repositoryMonthlyReliefHist;
         private readonly IRepository<MonthlyBenefitsInKind, Guid> _repositoryMonthlyBenefitsInKind;
-        private readonly IRepository<MonthlyBenefitsInKindHist, Guid> _repositoryMonthlyBenefitsInKindHist;
+        private readonly IRepository<MonthlyBenefitsInKindHistory, Guid> _repositoryMonthlyBenefitsInKindHist;
         private readonly IRepository<MonthlyOvertime, Guid> _repositoryMonthlyOvertime;
         private readonly IRepository<MonthlyOvertimeHistory, Guid> _repositoryMonthlyOvertimeHist;
         private readonly IRepository<MonthlyBonus, Guid> _repositoryMonthlyBonus;
         private readonly IActorRef _payslipDispatchActorProvider;
 
-        public ReportManager(IRepository<InitializePayMonth, Guid> repositoryInitializePayMonth, TopLevelActors.PayslipDispatchActorProvider payslipDispatchActorProvider, IRepository<CompanyProfile, Guid> repositoryCompanyProfile, IRepository<EmployeeLoan, Guid> repositoryEmployeeLoan, IRepository<LoanType, Guid> repositoryLoanType, IRepository<MonthlyLoanDeduction, Guid> repositoryMonthlyLoanDeduction, IRepository<EmployeeLoanRepaymentSchedule, Guid> repositoryEmployeeLoanRepaymentSchedule, IRepository<MonthlyAllowanceHist, Guid> repositoryMonthlyAllowanceHist, IRepository<Paymaster, Guid> repositoryPaymaster, IRepository<MonthlySalaryAdvance, Guid> repositoryMonthlySalaryAdvance, IRepository<MonthlyCumulativeDeduction, Guid> repositoryMonthlyCumulativeDeduction, IRepository<MonthlyDeduction, Guid> repositoryMonthlyDeduction, IRepository<EmployeeDaysWorked, Guid> repositoryEmployeeDaysWorked, IRepository<EmployeeBioData, Guid> repositoryEmployeeBioData, IRepository<EmployeeSnit, Guid> repositoryEmployeeSnit, IRepository<MonthlyAllowance, Guid> repositoryMonthlyAllowance, IRepository<PaymasterHist, Guid> repositoryPaymasterHist, IRepository<IrsSignature, Guid> repositoryIrsSignature, IRepository<SalaryGrade, Guid> repositorySalaryGrade, IRepository<MonthlyRelief, Guid> repositoryMonthlyRelief, IRepository<MonthlyBenefitsInKind, Guid> repositoryMonthlyBenefitsInKind, IRepository<MonthlyOvertime, Guid> repositoryMonthlyOvertime, IRepository<MonthlySalaryAdvanceHist, Guid> repositoryMonthlySalaryAdvanceHist, IRepository<MonthlyLoanDeductionHist, Guid> repositoryMonthlyLoanDeductionHist, IRepository<MonthlyDeductionHist, Guid> repositoryMonthlyDeductionHist, IRepository<MonthlyReliefHist, Guid> repositoryMonthlyReliefHist, IRepository<MonthlyBenefitsInKindHist, Guid> repositoryMonthlyBenefitsInKindHist, IRepository<MonthlyOvertimeHistory, Guid> repositoryMonthlyOvertimeHist, IRepository<MonthlyCumulativeDeductionHist, Guid> repositoryMonthlyCumulativeDeductionHist, IRepository<MonthlyBonus, Guid> repositoryMonthlyBonus, IRepository<EmployeeSalaryData, Guid> repositoryEmployeeSalaryData)
+        public ReportManager(IRepository<InitializePayMonth, Guid> repositoryInitializePayMonth, TopLevelActors.PayslipDispatchActorProvider payslipDispatchActorProvider, IRepository<CompanyProfile, Guid> repositoryCompanyProfile, IRepository<EmployeeLoan, Guid> repositoryEmployeeLoan, IRepository<LoanType, Guid> repositoryLoanType, IRepository<MonthlyLoanDeduction, Guid> repositoryMonthlyLoanDeduction, IRepository<EmployeeLoanRepaymentSchedule, Guid> repositoryEmployeeLoanRepaymentSchedule, IRepository<MonthlyAllowanceHistory, Guid> repositoryMonthlyAllowanceHist, IRepository<Paymaster, Guid> repositoryPaymaster, IRepository<MonthlySalaryAdvance, Guid> repositoryMonthlySalaryAdvance, IRepository<MonthlyCumulativeDeduction, Guid> repositoryMonthlyCumulativeDeduction, IRepository<MonthlyDeduction, Guid> repositoryMonthlyDeduction, IRepository<EmployeeDaysWorked, Guid> repositoryEmployeeDaysWorked, IRepository<EmployeeBioData, Guid> repositoryEmployeeBioData, IRepository<EmployeeSnit, Guid> repositoryEmployeeSnit, IRepository<MonthlyAllowance, Guid> repositoryMonthlyAllowance, IRepository<PaymasterHistory, Guid> repositoryPaymasterHist, IRepository<IrsSignature, Guid> repositoryIrsSignature, IRepository<SalaryGrade, Guid> repositorySalaryGrade, IRepository<MonthlyRelief, Guid> repositoryMonthlyRelief, IRepository<MonthlyBenefitsInKind, Guid> repositoryMonthlyBenefitsInKind, IRepository<MonthlyOvertime, Guid> repositoryMonthlyOvertime, IRepository<MonthlySalaryAdvanceHistory, Guid> repositoryMonthlySalaryAdvanceHist, IRepository<MonthlyLoanDeductionHistory, Guid> repositoryMonthlyLoanDeductionHist, IRepository<MonthlyDeductionHistory, Guid> repositoryMonthlyDeductionHist, IRepository<MonthlyReliefHistory, Guid> repositoryMonthlyReliefHist, IRepository<MonthlyBenefitsInKindHistory, Guid> repositoryMonthlyBenefitsInKindHist, IRepository<MonthlyOvertimeHistory, Guid> repositoryMonthlyOvertimeHist, IRepository<MonthlyCumulativeDeductionHistory, Guid> repositoryMonthlyCumulativeDeductionHist, IRepository<MonthlyBonus, Guid> repositoryMonthlyBonus, IRepository<EmployeeSalaryData, Guid> repositoryEmployeeSalaryData)
         {
             _repositoryInitializePayMonth = repositoryInitializePayMonth;
             _repositoryCompanyProfile = repositoryCompanyProfile;

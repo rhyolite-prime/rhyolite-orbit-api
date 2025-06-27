@@ -9,37 +9,37 @@ using RhyoliteOrbit.Models.Shared;
 
 namespace RhyoliteOrbit.DomainServices.Shared.CustomerGroups;
 
-public class CustomerGroupManager: Abp.Domain.Services.DomainService, ICustomerGroupManager
+public class PartnerCategoryManager: Abp.Domain.Services.DomainService, IPartnerCategoryManager
 {
-    private readonly IRepository<CustomerGroup, Guid> _repositoryCustomerGroup;
+    private readonly IRepository<PartnerCategory, Guid> _repositoryPartnerCategory;
 
-    public CustomerGroupManager(IRepository<CustomerGroup, Guid> repositoryCustomerGroup)
+    public PartnerCategoryManager(IRepository<PartnerCategory, Guid> repositoryPartnerCategory)
     {
-        _repositoryCustomerGroup = repositoryCustomerGroup;
+        _repositoryPartnerCategory = repositoryPartnerCategory;
     }
 
-    public async Task Create(CustomerGroup entity)
+    public async Task Create(PartnerCategory entity)
     {
-        var datta = await _repositoryCustomerGroup.FirstOrDefaultAsync(x => x.Name == entity.Name);
+        var datta = await _repositoryPartnerCategory.FirstOrDefaultAsync(x => x.Name == entity.Name);
 
         if (datta == null)
         {
-            await _repositoryCustomerGroup.InsertAsync(entity);
+            await _repositoryPartnerCategory.InsertAsync(entity);
 
         }
         
         throw new UserFriendlyException(400, "Duplicate records are not allowed.");
     }
     
-    public async Task Update(CustomerGroup entity)
+    public async Task Update(PartnerCategory entity)
     {
-        await _repositoryCustomerGroup.UpdateAsync(entity);
+        await _repositoryPartnerCategory.UpdateAsync(entity);
     }
 
     public async Task<object> ListAll(int pageNo, int pageSize, string query)
     {
         
-        var predicate = PredicateBuilder.New<CustomerGroup>();
+        var predicate = PredicateBuilder.New<PartnerCategory>();
 
         predicate.And(x => !x.IsDeleted);
             
@@ -51,9 +51,9 @@ public class CustomerGroupManager: Abp.Domain.Services.DomainService, ICustomerG
             
         var totalCount =
                 
-            await _repositoryCustomerGroup.CountAsync(predicate);
+            await _repositoryPartnerCategory.CountAsync(predicate);
             
-        var data = await (await _repositoryCustomerGroup.GetAllAsync()).Where(predicate).Select(a=> new { a.Id, a.Name, a.CreationTime, }).Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
+        var data = await (await _repositoryPartnerCategory.GetAllAsync()).Where(predicate).Select(a=> new { a.Id, a.Name, a.CreationTime, }).Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
 
         var totalPages = totalCount > 0 ? Convert.ToInt32(Math.Ceiling(totalCount / (decimal)pageSize)) : 0;
 
@@ -72,7 +72,7 @@ public class CustomerGroupManager: Abp.Domain.Services.DomainService, ICustomerG
     }
     public async Task Delete(Guid id)
     {
-        await _repositoryCustomerGroup.DeleteAsync(id);
+        await _repositoryPartnerCategory.DeleteAsync(id);
 
     }
 }
