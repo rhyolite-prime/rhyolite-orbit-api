@@ -8,11 +8,11 @@ using RhyoliteOrbit.Models.Payroll;
 
 namespace RhyoliteOrbit.DomainServices.Payroll.BoaAllowances;
 
-public class BoaAllowanceManager: Abp.Domain.Services.DomainService, IBoaAllowanceManager
+public class BoAllowanceManager: Abp.Domain.Services.DomainService, IBoAllowanceManager
 {
         private readonly IRepository<BonusAndOnetimeAllowance, Guid> _repositoryBonusAndOnetimeAllowance;
 
-        public BoaAllowanceManager(IRepository<BonusAndOnetimeAllowance, Guid> repositoryBonusAndOnetimeAllowance)
+        public BoAllowanceManager(IRepository<BonusAndOnetimeAllowance, Guid> repositoryBonusAndOnetimeAllowance)
         {
             _repositoryBonusAndOnetimeAllowance = repositoryBonusAndOnetimeAllowance;
         }

@@ -35,6 +35,12 @@ public class CurrencyManager : Abp.Domain.Services.DomainService, ICurrencyManag
     {
         await _repositoryCurrency.UpdateAsync(entity);
     }
+    
+    public async Task<Currency> GetAsync(string currencyName)
+    {
+        return await _repositoryCurrency.FirstOrDefaultAsync(x=> x.Name.ToLower() == currencyName.Trim().ToLower() );
+    }
+
 
     public async Task<object> ListAll(int pageNo, int pageSize, string query)
     {

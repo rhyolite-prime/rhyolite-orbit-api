@@ -29,6 +29,7 @@
     <Folder Include="DomainServices\AccountsPayable\" />
     <Folder Include="DomainServices\AccountsReceivable\" />
     <Folder Include="DomainServices\GeneralLedger\" />
+    <Folder Include="DomainServices\Hr\" />
     <Folder Include="DomainServices\Inventory\" />
     <Folder Include="DomainServices\Payroll\Dashboard\" />
     <Folder Include="DomainServices\ProductionPlanning\" />

@@ -5,7 +5,7 @@ namespace RhyoliteOrbit.DomainServices.Payroll.SalaryIncrements;
 
 public interface ISalaryIncrementHistoryManager: Abp.Domain.Services.IDomainService
 {
-    
-    Task<object> ListAll();
+
+    Task<object> ListAll(int pageNo, int pageSize, string query);
     Task Create(SalaryIncrementHistory input);
 }

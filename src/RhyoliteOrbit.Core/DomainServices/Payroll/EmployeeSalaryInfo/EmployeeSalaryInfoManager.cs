@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using RhyoliteOrbit.DomainServices.Payroll.EmployeeSalaryInfo.Dto;
 using RhyoliteOrbit.Models.Payroll;
@@ -193,11 +194,36 @@ public class EmployeeSalaryInfoManager: Abp.Domain.Services.DomainService, IEmpl
             return new { vacationDaysPaid , vacationDaySource, paysGraduatedTax = true, withHoldingTaxRate = false };
         }
 
-        public async Task<object> ListAll()
+        public async Task<object> ListAll(int pageNo, int pageSize, string query)
         {
-            var data = await _repositoryEmployeeSalaryData.GetAllListAsync();
+            var predicate = PredicateBuilder.New<EmployeeSalaryData>();
 
-            return data.OrderBy(a => a.EmployeeName);
+            predicate.And(x => !x.IsDeleted);
+            
+            if (!string.IsNullOrEmpty(query))
+            {
+                predicate.And(x => x.SalaryType.Contains(query) || x.EmployeeName.Contains(query) || x.EmployeeIdentifier.Contains(query) || x.PayType.Contains(query));
+            }
+            
+            var totalCount =
+                
+                await _repositoryEmployeeSalaryData.CountAsync(predicate);
+            
+            var data = await (await _repositoryEmployeeSalaryData.GetAllAsync()).Where(predicate).Select(a=> new { a.Id, a.EmployeeId, a.EmployeeIdentifier, a.EmployeeName, a.EmployeeSalaryNotchId, a.AccountNumber, a.SalaryType, a.MonthlySalary, a.BankBranchName, a.BankBranchId, a.BankId, a.BankName, a.CurrentHourlyRate, a.EmployeePhoto, a.PaysWithHoldingTax, a.PreviousSalary, a.VacationDaysPaid, a.WithHoldingTaxRate  }).Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            var totalPages = totalCount > 0 ? Convert.ToInt32(Math.Ceiling(totalCount / (decimal)pageSize)) : 0;
+
+            var paginatedResult = new
+            {
+                pageNo,
+                totalCount,
+                totalPages,
+                data,
+                lowerBound = pageSize * (pageNo - 1) + 1,
+                upperBound = totalPages == pageNo ? totalCount : pageNo * pageSize,
+            };
+
+            return paginatedResult;
         }
         
         public async Task Delete(Guid id)

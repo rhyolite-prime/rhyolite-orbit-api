@@ -155,12 +155,6 @@ public class EmployeeLoanManager: Abp.Domain.Services.DomainService, IEmployeeLo
             return await _repositoryEmployeeLoan.FirstOrDefaultAsync(id);
         }
 
-        public async Task<object> ListAll()
-        {
-            var data = await _repositoryEmployeeLoan.GetAllListAsync();
-            return data.OrderBy(a => a.EmployeeName).ToList();
-
-        }
         
         public async Task<object> ListAll(int pageNo, int pageSize, string query)
         {

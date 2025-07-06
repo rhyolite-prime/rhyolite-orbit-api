@@ -12,22 +12,17 @@ public class SalaryIncrementHistoryManager: Abp.Domain.Services.DomainService, I
 {
     private readonly IRepository<Models.Payroll.SalaryIncrementHistory, Guid> _repositorySalaryIncrementHistory;
 
-    public SalaryIncrementHistoryManager(IRepository<Models.Payroll.SalaryIncrementHistory, Guid> repositorySalaryIncrementHistory)
+    public SalaryIncrementHistoryManager(IRepository<SalaryIncrementHistory, Guid> repositorySalaryIncrementHistory)
     {
         _repositorySalaryIncrementHistory = repositorySalaryIncrementHistory;
     }
 
-    public async Task Create(Models.Payroll.SalaryIncrementHistory entity)
+    public async Task Create(SalaryIncrementHistory entity)
     {
         await _repositorySalaryIncrementHistory.InsertAsync(entity);
     }
 
-    public async Task<object> ListAll()
-    {
-        var data = await _repositorySalaryIncrementHistory.GetAllListAsync();
-        return data.OrderBy(a => a.EmployeeName).ToList();
-    }
-    
+     
     public async Task<object> ListAll(int pageNo, int pageSize, string query)
     {
         var predicate = PredicateBuilder.New<SalaryIncrementHistory>();

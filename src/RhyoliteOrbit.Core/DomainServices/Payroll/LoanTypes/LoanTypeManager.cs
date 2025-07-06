@@ -56,13 +56,6 @@ public class LoanTypeManager: Abp.Domain.Services.DomainService, ILoanTypeManage
             return await _repositoryLoanType.FirstOrDefaultAsync(id);
         }
 
-        public async Task<object> ListAll()
-        {
-            var data = await _repositoryLoanType.GetAllListAsync();
-            return data.OrderBy(a => a.Name).ToList();
-        }
-        
-        
         public async Task<object> ListAll(int pageNo, int pageSize, string query)
         {
             var predicate = PredicateBuilder.New<LoanType>();

@@ -38,13 +38,14 @@ public class AcademicYearAppService : RhyoliteOrbitAppServiceBase
     public async Task<object> GetAll(int pageNo, int pageSize, string query)
     {
         return await _academicYearManager.GetAll(pageNo,pageSize,query);
-
     }
 
     [HttpPost]
     public async Task Update(UpdateAcademicYearInput input)
     {
         var obj = _mapper.Map<AcademicYear>(input);
+        var tenantInfo = await GetCurrentTenantAsync();
+        obj.TenantId = tenantInfo.Id;
         await _academicYearManager.Update(obj);
     }
 

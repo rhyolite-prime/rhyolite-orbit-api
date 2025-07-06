@@ -4,7 +4,7 @@ using RhyoliteOrbit.Models.Payroll;
 
 namespace RhyoliteOrbit.DomainServices.Payroll.BoaAllowances;
 
-public interface IBoaAllowanceManager: Abp.Domain.Services.IDomainService
+public interface IBoAllowanceManager: Abp.Domain.Services.IDomainService
 {
     Task<object> ListAll(int pageNo, int pageSize, string query);
     Task<object> ListAll(int month, int year);

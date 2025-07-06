@@ -9,7 +9,7 @@ public interface IEmployeeSalaryAdvanceManager: Abp.Domain.Services.IDomainServi
 {
     Task<object> ListAll(int pageNo, int pageSize, string query);
     Task Approve(List<Guid> ids, string approvalType);
-    Task<object> ListPendingSalaryAdvance();
+    Task<object> ListPendingSalaryAdvance(int pageNo, int pageSize, string query);
     Task<object> GetAsync(Guid id);
     Task<object> ListAll(Guid employeeId);
     Task Create(EmployeeSalaryAdvance input);

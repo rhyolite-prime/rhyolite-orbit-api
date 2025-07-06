@@ -48,6 +48,11 @@ public class PersonnelStatusManager: Abp.Domain.Services.DomainService, IPersonn
     {
         await _repositoryPersonnelStatus.UpdateAsync(entity);
     }
+    
+    public async Task<PersonnelStatus> GetAsync(string statusName)
+    {
+        return await _repositoryPersonnelStatus.FirstOrDefaultAsync(x=> x.Name == statusName);
+    }
 
     public async Task<object> ListAll(int pageNo, int pageSize, string query)
     {

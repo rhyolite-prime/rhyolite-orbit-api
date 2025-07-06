@@ -43,6 +43,7 @@ public class RhyoliteOrbitDbContext : AbpZeroDbContext<Tenant, Role, User, Rhyol
     public DbSet<MessageTemplate> MessageTemplates { get; set; }
     public DbSet<SystemNumber> SystemNumbers { get; set; }
     public DbSet<Country> Countries { get; set; }
+    public DbSet<BusinessDate> BusinessDates { get; set; }
     
     //school manager...
     public DbSet<AcademicYear> AcademicYears { get; set; }

@@ -8,7 +8,7 @@ namespace RhyoliteOrbit.DomainServices.Payroll.EmployeeSalaryInfo;
 
 public interface IEmployeeSalaryInfoManager: Abp.Domain.Services.IDomainService
 {
-    Task<object> ListAll();
+    Task<object> ListAll(int pageNo, int pageSize, string query);
     Task<object> GetAsync(Guid employeeId);
     Task<object> GetAllBySalaryType(string salaryType);
     Task<object> GetAllBySalaryType(string salaryType, Guid categoryId);

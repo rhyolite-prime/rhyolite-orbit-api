@@ -47,8 +47,37 @@ public class EmployeeSalaryAdvanceManager: Abp.Domain.Services.DomainService, IE
         }
         
         
-        public async Task<object> ListPendingSalaryAdvance()
+        public async Task<object> ListPendingSalaryAdvance(int pageNo, int pageSize, string query)
         {
+            var predicate = PredicateBuilder.New<EmployeeSalaryAdvance>();
+
+            predicate.And(x => !x.IsDeleted && !x.IsApproved && (x.Status == "Pending" || x.Status == "Approved"));
+            
+            if (!string.IsNullOrEmpty(query))
+            {
+                predicate.And(x => x.LoanTypeName.Contains(query) || x.EmployeeName.Contains(query) || x.EmployeeIdentifier.Contains(query));
+            }
+            
+            var totalCount =
+                
+                await _repositoryEmployeeSalaryAdvance.CountAsync(predicate);
+            
+            var data = await (await _repositoryEmployeeSalaryAdvance.GetAllAsync()).Where(predicate).Select(a=> new { a.Id, a.EmployeeId, a.EmployeeIdentifier, a.EmployeeName, a.Amount, a.LoanDate, a.LoanTypeId, a.LoanTypeName, a.IsPaid, a.Status   }).Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            var totalPages = totalCount > 0 ? Convert.ToInt32(Math.Ceiling(totalCount / (decimal)pageSize)) : 0;
+
+            var paginatedResult = new
+            {
+                pageNo,
+                totalCount,
+                totalPages,
+                data,
+                lowerBound = pageSize * (pageNo - 1) + 1,
+                upperBound = totalPages == pageNo ? totalCount : pageNo * pageSize,
+            };
+
+            //return paginatedResult;
+            
             return await _repositoryEmployeeSalaryAdvance.GetAllListAsync(x => !x.IsApproved && (x.Status == "Pending" || x.Status == "Approved"));
         }
 

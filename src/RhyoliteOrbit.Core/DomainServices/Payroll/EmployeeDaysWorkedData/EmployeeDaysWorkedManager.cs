@@ -2,6 +2,8 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Domain.Repositories;
+using Abp.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 using RhyoliteOrbit.Models.Payroll;
 
 namespace RhyoliteOrbit.DomainServices.Payroll.EmployeeDaysWorkedData;
@@ -61,15 +63,40 @@ public class EmployeeDaysWorkedManager: Abp.Domain.Services.DomainService, IEmpl
             return await _repositoryEmployeeDaysWorked.FirstOrDefaultAsync(id);
         }
 
-        public async Task<object> ListAll()
+        public async Task<object> ListAll(int pageNo, int pageSize, string query)
         {
-            var data = await _repositoryEmployeeDaysWorked.GetAllListAsync();
+            var predicate = PredicateBuilder.New<EmployeeDaysWorked>();
 
-            return data.OrderBy(a => a.EmployeeName);
+            predicate.And(x => !x.IsDeleted);
+            
+            if (!string.IsNullOrEmpty(query))
+            {
+                predicate.And(x => x.EmployeeName.Contains(query) || x.EmployeeName.Contains(query));
+            }
+            
+            var totalCount =
+                
+                await _repositoryEmployeeDaysWorked.CountAsync(predicate);
+            
+            var data = await (await _repositoryEmployeeDaysWorked.GetAllAsync()).Where(predicate).Select(a=> new { a.Id, a.EmployeeName, a.EmployeeIdentifier, a.EmployeeId, a.Month, a.Year, a.Days, a.Hours, a.Minutes, }).Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            var totalPages = totalCount > 0 ? Convert.ToInt32(Math.Ceiling(totalCount / (decimal)pageSize)) : 0;
+
+            var paginatedResult = new
+            {
+                pageNo,
+                totalCount,
+                totalPages,
+                data,
+                lowerBound = pageSize * (pageNo - 1) + 1,
+                upperBound = totalPages == pageNo ? totalCount : pageNo * pageSize,
+            };
+
+            return paginatedResult;
 
         }
 
-        public async Task<object> ListAll(int month, int year, string salaryType)
+        public async Task<object> GetByMonthYearAndSalaryType(int month, int year, string salaryType)
         {
             var employeeDaysWorked  = await _repositoryEmployeeDaysWorked.GetAllListAsync(a => a.Month == month && a.Year == year);
             var employees = await _repositoryEmployeeBioData.GetAllListAsync();

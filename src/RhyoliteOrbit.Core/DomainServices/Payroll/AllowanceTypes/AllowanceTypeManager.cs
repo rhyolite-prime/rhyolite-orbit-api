@@ -240,12 +240,9 @@ public class AllowanceTypeManager: Abp.Domain.Services.DomainService, IAllowance
                     }
                 }
             }
-             
-
-
+            
             return allowanceRate;
-
-
+ 
         }
         public async Task Delete(Guid id)
         {

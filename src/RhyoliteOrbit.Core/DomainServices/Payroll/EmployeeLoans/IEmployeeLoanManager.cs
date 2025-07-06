@@ -8,7 +8,7 @@ namespace RhyoliteOrbit.DomainServices.Payroll.EmployeeLoans;
 
 public interface IEmployeeLoanManager: Abp.Domain.Services.IDomainService
 {
-    Task<object> ListAll();
+    Task<object> ListAll(int pageNo, int pageSize, string query);
     Task<object> GetPendingLoans();
     Task<object> GetLoanRepaymentSummary(Guid loanId);
     Task AmortizeLoan(LoanAmortizationDto dto);
