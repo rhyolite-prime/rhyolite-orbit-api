@@ -18,7 +18,7 @@ public class MonthlyAllowance: Abp.Domain.Entities.Auditing.FullAuditedEntity<Gu
     [MaxLength(100)]
     public string AllowanceTypeName { get; set; }
     public decimal Amount { get; set; }
-    public bool Taxable { get; set; }
+    public bool IsTaxable { get; set; }
     public bool Ssf { get; set; }
     public bool ProvidentFund { get; set; }
     public int AllowanceDays { get; set; }

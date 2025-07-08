@@ -8,6 +8,10 @@ namespace RhyoliteOrbit.Models.TokenAuth
     {
         [Required]
         [StringLength(AbpUserBase.MaxEmailAddressLength)]
+        public string AccountName { get; set; }
+        
+        [Required]
+        [StringLength(AbpUserBase.MaxEmailAddressLength)]
         public string UserNameOrEmailAddress { get; set; }
 
         [Required]

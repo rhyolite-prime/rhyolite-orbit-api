@@ -14,7 +14,7 @@ public class EmployeeAllowance: Abp.Domain.Entities.Auditing.FullAuditedEntity<G
     [MaxLength(100)]
     public string AllowanceTypeName { get; set; }
     public decimal Amount { get; set; }
-    public bool Taxable { get; set; }
+    public bool IsTaxable { get; set; }
     public bool IsMonthly { get; set; }
     public bool Ssf { get; set; }
     public bool ProvidentFund { get; set; }

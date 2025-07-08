@@ -31,6 +31,11 @@ public class DepartmentManager: Abp.Domain.Services.DomainService, IDepartmentMa
         throw new UserFriendlyException(400, "Duplicate records are not allowed.");
     }
     
+    public async Task<Department> GetAsync(string name)
+    {
+        return await _repositoryDepartment.FirstOrDefaultAsync(x => x.Name == name);
+    }
+    
     public async Task Update(Department entity)
     {
         await _repositoryDepartment.UpdateAsync(entity);

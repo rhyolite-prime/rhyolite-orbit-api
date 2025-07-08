@@ -7,6 +7,8 @@ namespace RhyoliteOrbit.DomainServices.Shared.Departments;
 public interface IDepartmentManager : Abp.Domain.Services.IDomainService
 {
     Task<object> ListAll(int id, int creationTime, string name);
+
+    Task<Department> GetAsync(string name);
     
     Task Create(Department input);
     

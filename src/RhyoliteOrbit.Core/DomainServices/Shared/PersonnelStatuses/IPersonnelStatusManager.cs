@@ -6,7 +6,9 @@ namespace RhyoliteOrbit.DomainServices.Shared.PersonnelStatuses;
 
 public interface IPersonnelStatusManager : Abp.Domain.Services.IDomainService
 {
-    Task<object> ListAll(int id, int creationTime, string name);
+    Task<object> ListAll(int pageNo, int pageSize, string query);
+
+    Task<PersonnelStatus> GetAsync(string statusName);
     
     Task Create(PersonnelStatus input);
     

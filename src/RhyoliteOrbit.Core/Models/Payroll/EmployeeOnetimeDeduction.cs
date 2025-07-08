@@ -10,7 +10,9 @@ public class EmployeeOnetimeDeduction: Abp.Domain.Entities.Auditing.FullAuditedE
     public string EmployeeIdentifier { get; set; }
     [MaxLength(130)]
     public string EmployeeName { get; set; }
+    
     public Guid DeductionTypeId { get; set; }
+    
     [MaxLength(100)]
     public string DeductionTypeName { get; set; }
     public bool IsFixedAmount { get; set; }

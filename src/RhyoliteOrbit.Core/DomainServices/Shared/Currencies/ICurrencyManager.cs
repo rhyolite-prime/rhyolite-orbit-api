@@ -9,7 +9,7 @@ public interface ICurrencyManager : Abp.Domain.Services.IDomainService
     Task<object> ListAll(int pageNo, int pageSize, string query);
 
     Task Create(Currency input);
-
+    Task<Currency> GetAsync(string currencyName);
 
     Task Update(Currency input);
 

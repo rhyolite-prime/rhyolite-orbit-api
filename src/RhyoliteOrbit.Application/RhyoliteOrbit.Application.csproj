@@ -17,9 +17,10 @@
   <ItemGroup>
     <Folder Include="Services\AccountsPayable\" />
     <Folder Include="Services\AccountsReceivable\" />
+    <Folder Include="Services\Hr\" />
     <Folder Include="Services\Inventory\" />
+    <Folder Include="Services\Payroll\SalaryAdvanceApplications\Dto\" />
     <Folder Include="Services\ProductionPlanning\" />
-    <Folder Include="Services\Payroll\" />
     <Folder Include="Services\Shared\" />
     <Folder Include="Services\SupplyChain\" />
   </ItemGroup>

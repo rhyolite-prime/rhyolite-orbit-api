@@ -2,11 +2,13 @@
 using RhyoliteOrbit.Sessions.Dto;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 
 namespace RhyoliteOrbit.Sessions;
 
 public class SessionAppService : RhyoliteOrbitAppServiceBase, ISessionAppService
 {
+    [HttpGet]
     [DisableAuditing]
     public async Task<GetCurrentLoginInformationsOutput> GetCurrentLoginInformations()
     {
@@ -32,4 +34,6 @@ public class SessionAppService : RhyoliteOrbitAppServiceBase, ISessionAppService
 
         return output;
     }
+    
+    
 }

@@ -32,18 +32,18 @@ public class RhyoliteOrbitDbContext : AbpZeroDbContext<Tenant, Role, User, Rhyol
     public DbSet<CostCenter> CostCenters { get; set; }
     public DbSet<Currency> Currencies { get; set; }
     public DbSet<Customer> Customers { get; set; }
-    public DbSet<CustomerGroup> CustomerGroups { get; set; }
     public DbSet<Department> Departments { get; set; }
     public DbSet<SystemSetting> SystemSetting { get; set; }
     public DbSet<PersonnelStatus> PersonnelStatuses { get; set; }
     public DbSet<Relationship> Relationships { get; set; }
     public DbSet<Religion> Religions { get; set; }
-    public DbSet<ReportDownload> ReportDownloads { get; set; }
+    public DbSet<ReportDownload> ReportDownloads { get; set; }  
     public DbSet<Supplier> Suppliers { get; set; }
-    public DbSet<SupplierGroup> SupplierGroups { get; set; }
+    public DbSet<PartnerCategory> PartnerCategories { get; set; }
     public DbSet<MessageTemplate> MessageTemplates { get; set; }
     public DbSet<SystemNumber> SystemNumbers { get; set; }
     public DbSet<Country> Countries { get; set; }
+    public DbSet<BusinessDate> BusinessDates { get; set; }
     
     //school manager...
     public DbSet<AcademicYear> AcademicYears { get; set; }
@@ -117,28 +117,28 @@ public class RhyoliteOrbitDbContext : AbpZeroDbContext<Tenant, Role, User, Rhyol
     public DbSet<MonthlyBenefitsInKind> MonthlyBenefitsInKinds { get; set; }
     public DbSet<MonthlyRelief> MonthlyReliefs { get; set; }
     public DbSet<Paymaster> Paymasters { get; set; }
-    public DbSet<MonthlyAllowanceHist> MonthlyAllowanceHistory { get; set; }
-    public DbSet<MonthlyDeductionHist> MonthlyDeductionHistory { get; set; }
-    public DbSet<MonthlyBenefitsInKindHist> MonthlyBenefitsInKindHistory { get; set; }
-    public DbSet<MonthlyReliefHist> MonthlyReliefHistory { get; set; }
-    public DbSet<PaymasterHist> PaymasterHistory { get; set; }
-    public DbSet<MonthlyCumulativeDeductionHist> MonthlyCumulativeDeductionHistory { get; set; }
+    public DbSet<MonthlyAllowanceHistory> MonthlyAllowanceHistory { get; set; }
+    public DbSet<MonthlyDeductionHistory> MonthlyDeductionHistory { get; set; }
+    public DbSet<MonthlyBenefitsInKindHistory> MonthlyBenefitsInKindHistory { get; set; }
+    public DbSet<MonthlyReliefHistory> MonthlyReliefHistory { get; set; }
+    public DbSet<PaymasterHistory> PaymasterHistory { get; set; }
+    public DbSet<MonthlyCumulativeDeductionHistory> MonthlyCumulativeDeductionHistory { get; set; }
     public DbSet<MonthlyCumulativeDeduction> MonthlyCumulativeDeductions { get; set; }
     public DbSet<MonthlySsnitDeduction> MonthlySsnitDeductions { get; set; }
-    public DbSet<MonthlySsnitDeductionHist> MonthlySsnitDeductionHistory { get; set; }
+    public DbSet<MonthlySsnitDeductionHistory> MonthlySsnitDeductionHistory { get; set; }
     public DbSet<MonthlyOnetimeDeduction> MonthlyOnetimeDeductions { get; set; }
-    public DbSet<MonthlyOnetimeDeductionHist> MonthlyOnetimeDeductionHistory { get; set; }
+    public DbSet<MonthlyOnetimeDeductionHistory> MonthlyOnetimeDeductionHistory { get; set; }
     public DbSet<SalaryIncrementHistory> SalaryIncrementHistory { get; set; }
-    public DbSet<MonthlyPfDeductionHist> MonthlyPfDeductionHistory { get; set; }
+    public DbSet<MonthlyPfDeductionHistory> MonthlyPfDeductionHistory { get; set; }
     public DbSet<MonthlyPfDeduction> MonthlyPfDeductions { get; set; }
-    public DbSet<MonthlyLoanDeductionHist> MonthlyLoanDeductionHistory { get; set; }
+    public DbSet<MonthlyLoanDeductionHistory> MonthlyLoanDeductionHistory { get; set; }
     public DbSet<MonthlyLoanDeduction> MonthlyLoanDeductions { get; set; }
     public DbSet<MonthlyIrsTax> MonthlyIrsTaxes { get; set; }
-    public DbSet<MonthlyIrsTaxHist> MonthlyIrsTaxHistory { get; set; }
+    public DbSet<MonthlyIrsTaxHistory> MonthlyIrsTaxHistory { get; set; }
     public DbSet<MonthlySalaryAdvance> MonthlySalaryAdvances { get; set; }
-    public DbSet<MonthlySalaryAdvanceHist> MonthlySalaryAdvanceHistory { get; set; }
+    public DbSet<MonthlySalaryAdvanceHistory> MonthlySalaryAdvanceHistory { get; set; }
     public DbSet<MonthlySecPfDeduction> MonthlySecPfDeductions { get; set; }
-    public DbSet<MonthlySecPfDeductionHist> MonthlySecPfDeductionHistory { get; set; }
+    public DbSet<MonthlySecPfDeductionHistory> MonthlySecPfDeductionHistory { get; set; }
     public DbSet<MonthlyOvertime> MonthlyOvertimes { get; set; }
     public DbSet<MonthlyOvertimeHistory> MonthlyOvertimeHistory { get; set; }
     public DbSet<MonthlyBonus> MonthlyBonuses { get; set; }

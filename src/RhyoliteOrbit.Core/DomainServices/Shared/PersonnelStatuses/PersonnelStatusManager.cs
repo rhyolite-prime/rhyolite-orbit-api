@@ -48,6 +48,11 @@ public class PersonnelStatusManager: Abp.Domain.Services.DomainService, IPersonn
     {
         await _repositoryPersonnelStatus.UpdateAsync(entity);
     }
+    
+    public async Task<PersonnelStatus> GetAsync(string statusName)
+    {
+        return await _repositoryPersonnelStatus.FirstOrDefaultAsync(x=> x.Name == statusName);
+    }
 
     public async Task<object> ListAll(int pageNo, int pageSize, string query)
     {
@@ -59,11 +64,9 @@ public class PersonnelStatusManager: Abp.Domain.Services.DomainService, IPersonn
         if (!string.IsNullOrEmpty(query))
         {
             predicate.And(a => a.Name.Contains(query));
-
         }
-            
+        
         var totalCount =
-                
             await _repositoryPersonnelStatus.CountAsync(predicate);
             
         var data = await (await _repositoryPersonnelStatus.GetAllAsync()).Where(predicate).Select(a=> new { a.Id, a.Name, a.CreationTime, }).Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();

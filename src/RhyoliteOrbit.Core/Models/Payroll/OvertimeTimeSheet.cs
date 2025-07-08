@@ -19,6 +19,6 @@ public class OvertimeTimeSheet: Abp.Domain.Entities.Auditing.FullAuditedEntity<G
     public string OvertimeTypeName { get; set; }
     public decimal OvertimeHours { get; set; }
     public decimal OvertimeMinutes { get; set; }
-    public bool Taxable { get; set; }
+    public bool IsTaxable { get; set; }
     public int TenantId { get; set; }
 }

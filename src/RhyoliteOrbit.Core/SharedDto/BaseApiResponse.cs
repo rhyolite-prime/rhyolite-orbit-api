@@ -19,3 +19,12 @@ public class BaseApiResponse
     [JsonProperty("__abp")]
     public bool Abp { get; set; }
 }
+
+public class DataResponse
+{
+    public int Code { get; set; }
+    public bool Success { get; set; }
+    public string Message { get; set; }
+    
+    public string Data { get; set; }
+}

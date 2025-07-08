@@ -11,11 +11,11 @@ public class EmployeeBioData: Abp.Domain.Entities.Auditing.FullAuditedEntity<Gui
         public string OtherName { get; set; }
         public string LastName { get; set; }
         public string EmployeePhoto { get; set; }
+        
         public string TitleName { get; set; }
         public string Gender { get; set; }
         public Guid StatusId { get; set; }
         public string StatusName { get; set; }
-
         public string CityOrLocation { get; set; }
         public string ResidenceAddress { get; set; }
         public Guid DepartmentId { get; set; }
@@ -41,7 +41,6 @@ public class EmployeeBioData: Abp.Domain.Entities.Auditing.FullAuditedEntity<Gui
         public Guid NationalityId { get; set; }
         public string NationalityName { get; set; }
         public string Hometown { get; set; }
-
         // contact info
         public string PrimaryPhoneNumber { get; set; }
         public string SecondaryPhoneNumber { get; set; }

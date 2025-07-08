@@ -43,7 +43,7 @@ namespace RhyoliteOrbit.Controllers
             var loginResult = await GetLoginResultAsync(
                 model.UserNameOrEmailAddress,
                 model.Password,
-                GetTenancyNameOrNull()
+                model.AccountName
             );
 
             var accessToken = CreateAccessToken(CreateJwtClaims(loginResult.Identity));

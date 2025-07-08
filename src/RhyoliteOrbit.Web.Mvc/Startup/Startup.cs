@@ -17,8 +17,13 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.WebEncoders;
 using System.Text.Encodings.Web;
 using System.Text.Unicode;
+using Akka.Actor;
+using Akka.Routing;
+using HashidsNet;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using RhyoliteOrbit.Actors;
+using StackExchange.Redis;
 
 namespace RhyoliteOrbit.Web.Startup;
 
@@ -26,11 +31,13 @@ public class Startup
 {
     private readonly IWebHostEnvironment _hostingEnvironment;
     private readonly IConfigurationRoot _appConfiguration;
+    private readonly IConfiguration _configuration;
 
-    public Startup(IWebHostEnvironment env)
+    public Startup(IWebHostEnvironment env, IConfiguration configuration)
     {
         _hostingEnvironment = env;
         _appConfiguration = env.GetAppConfiguration();
+        _configuration = configuration;
     }
 
     public void ConfigureServices(IServiceCollection services)
@@ -66,8 +73,27 @@ public class Startup
         
 
         services.AddScoped<IWebResourceManager, WebResourceManager>();
+        
+        services.AddSingleton<IHashids>(_ => new Hashids("13a51c1b296346b5881b69d439749334", 10));
+        services.AddSingleton<IConnectionMultiplexer>(x => ConnectionMultiplexer.Connect(_configuration.GetValue<string>("RedisCache:ConnectionString")));
+
+        services.Configure<KestrelServerOptions>(options =>
+        {
+            options.Limits.MaxRequestBodySize = int.MaxValue;
+        });
 
         services.AddSignalR();
+        
+        // Register ActorSystem ...
+        services.AddSingleton(_ => ActorSystem.Create($"ActorSystem", ConfigurationLoader.Load()));
+
+        services.AddSingleton<TopLevelActors.EmailActorProvider>(provider =>
+        {
+            var actorSystem = provider.GetService<ActorSystem>();
+            var configuration = provider.GetService<IConfiguration>();
+            var emailActor = actorSystem.ActorOf(Props.Create(() => new EmailActor(provider, configuration)).WithRouter(new RoundRobinPool(3)));
+            return () => emailActor;
+        });
 
         // Configure Abp and Dependency Injection
         services.AddAbpWithoutCreatingServiceProvider<RhyoliteOrbitWebMvcModule>(
