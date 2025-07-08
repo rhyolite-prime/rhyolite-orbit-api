@@ -45,54 +45,60 @@ public class MfaManager: DomainService, IMfaManager
             var otp = new Otp().GenerateOtp();
             await _redisCacheManager.SetValueAsync(email.ToLower(), otp);
             await _redisCacheManager.SetExpireTimeAsync(email.ToLower(), TimeSpan.FromMinutes(5));
-
             
             var emailBody = $@"
-                <html>
-                <head>
-                    <style>
-                        body {{
-                            font-family: Arial, sans-serif;
-                            line-height: 1.6;
-                        }}
-                        .container {{
-                            max-width: 600px;
-                            margin: 0 auto;
-                            padding: 20px;
-                            border: 1px solid #ddd;
-                            border-radius: 5px;
-                            background-color: #f9f9f9;
-                        }}
-                        .header {{
-                            text-align: center;
-                            padding-bottom: 20px;
-                        }}
-                        .content {{
-                            margin-bottom: 20px;
-                        }}
-                        .footer {{
-                            text-align: center;
-                            font-size: 12px;
-                            color: #777;
-                        }}
-                    </style>
-                </head>
-                <body>
-                <div class='container'>
-                    <div class='header'>
-                        <h2>{subject}</h2>
-                    </div>
-                    <div class='content'>
-                        <p>WARNING! Do NOT share this code with anyone.</p>
-                        <p>Your OTP code is <strong>{otp}</strong>.</p>
-                    </div>
-                    <div class='footer'>
-                        <p>&copy; {DateTime.Now.Year} {_defaultDisplayName}. All rights reserved.</p>
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset='UTF-8'>
+                <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                <title>OTP Verification</title>
+            </head>
+            <body style='font-family: Arial, sans-serif; background-color: #f3f4f6; margin: 0; padding: 0;'>
+                <div style='max-width: 600px; margin: 0 auto; padding: 20px;'>
+                    <!-- Email Container -->
+                    <div style='background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); overflow: hidden;'>
+                        <!-- Logo Header -->
+                        <div style='background-color: #8A0F4D; padding: 5px; text-align: center;'>
+                            <img src='https://res.cloudinary.com/rhyoliteprime/image/upload/v1751798440/rhyolite/rhyolite-logo-white.png' alt='RhyolitePrime Logo' style='height: 102px;'>
+                        </div>
+
+                        <!-- Content Section -->
+                        <div style='padding: 30px;'>
+                            <h1 style='font-size: 24px; font-weight: 600; color: #111827; margin-bottom: 20px;'>Your One-Time Password</h1>
+                            
+                            <p style='color: #4b5563; margin-bottom: 16px;'>
+                                Please use the following verification code to complete your login:
+                            </p>
+
+                            <!-- OTP Display Box -->
+                            <div style='background-color: #f9fafb; border: 1px dashed #d1d5db; border-radius: 6px; padding: 16px; text-align: center; margin: 24px 0;'>
+                                <span style='font-size: 28px; font-weight: 700; letter-spacing: 2px; color: #111827;'>{otp}</span>
+                            </div>
+
+                            <!-- Warning Text -->
+                            <p style='color: #ef4444; font-weight: 500; margin-bottom: 24px;'>
+                                ⚠️ Do NOT share this code with anyone.
+                            </p>
+
+                            <p style='color: #4b5563; margin-bottom: 8px;'>
+                                This code will expire in 5 minutes.
+                            </p>
+                        </div>
+
+                        <!-- Footer -->
+                        <div style='background-color: #f9fafb; padding: 20px; text-align: center; border-top: 1px solid #e5e7eb;'>
+                            <p style='color: #6b7280; font-size: 12px; margin: 0;'>
+                                © {DateTime.Now.Year} RhyolitePrime. All rights reserved.
+                            </p>
+                            <p style='color: #6b7280; font-size: 12px; margin: 8px 0 0;'>
+                                If you didn't request this, please ignore this email.
+                            </p>
+                        </div>
                     </div>
                 </div>
             </body>
             </html>";
-            
             
             _emailActorProvider.Tell(new EmailNotification
             {
@@ -102,7 +108,7 @@ public class MfaManager: DomainService, IMfaManager
                 Host = _mailHostName,
                 Password = _password,
                 Port = _portNumber,
-                EnableSsl = false, 
+                EnableSsl = true, 
                 UserName = _emailAddress,
                 SenderName = _defaultDisplayName,
                 IsBodyHtml = true,
@@ -167,7 +173,7 @@ public class MfaManager: DomainService, IMfaManager
             
             return new DataResponse
             {
-                Message = "Invalid OTP",
+                Message = "Invalid or Expired OTP",
                 Code = 400,
                 Success = false
             };

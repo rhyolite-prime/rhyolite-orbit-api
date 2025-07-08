@@ -40,8 +40,10 @@
     <PackageReference Include="Abp.HangFire" Version="10.0.0" />
     <PackageReference Include="Abp.RedisCache" Version="10.0.0" />
     <PackageReference Include="Abp.Castle.Log4Net" Version="10.0.0" />
+    <PackageReference Include="Akka" Version="1.5.35" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="App_Data\Logs\" />
     <Folder Include="wwwroot\PdfEngine\linux\" />
   </ItemGroup>
 </Project>
