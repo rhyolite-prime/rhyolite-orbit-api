@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using RhyoliteOrbit.DomainServices.SchoolManager.FeesDescriptions;
-using RhyoliteOrbit.DomainServices.SchoolManager.FeesDescriptions.Dto;
 using RhyoliteOrbit.Models.SchoolManager;
 using RhyoliteOrbit.Services.SchoolManager.FeesDescriptions.Dto;
 
@@ -20,32 +19,37 @@ public class FeesDescriptionAppService : RhyoliteOrbitAppServiceBase
         _mapper = mapper;
     }
 
-    [HttpGet("list")]
-    public async Task<object> GetAll(int pageNo, int pageSize, string query)
+    [HttpGet]
+    public async Task<object> GetAll()
     {
-        return await _feesDescriptionManager.ListAll(pageNo, pageSize, query);
+        return await _feesDescriptionManager.ListAll();
     }
 
-    [HttpPost("create")]
+    [HttpGet]
+    public async Task<object> GetAllByBillType(Guid billTypeId)
+    {
+        return await _feesDescriptionManager.ListAll(billTypeId);
+    }
+
+    [HttpPost]
     public async Task<object> Create(CreateFeesDescriptionInput input)
     {
         var obj = _mapper.Map<FeesDescription>(input);
         return await _feesDescriptionManager.Create(obj);
     }
 
-    [HttpPost("update")]
+    [HttpPost]
     public async Task Update(UpdateFeesDescriptionInput input)
     {
         var obj = _mapper.Map<FeesDescription>(input);
         await _feesDescriptionManager.Update(obj);
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete]
     public async Task Delete(Guid id)
     {
         await _feesDescriptionManager.Delete(id);
 
     }
 
-    
 }
