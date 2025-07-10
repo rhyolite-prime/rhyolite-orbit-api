@@ -8,13 +8,11 @@ namespace RhyoliteOrbit.Services.Payroll.OvertimeTypes.Dto;
 public class CreateOvertimeTypeInput
 {
     public string Name { get; set; }
-    public bool Taxable { get; set; }
-    public List<OvertimeRate> Rates { get; set; }
+    public bool IsTaxable { get; set; }
 }
 
 public class UpdateOvertimeTypeInput: EntityDto<Guid>
 {
     public string Name { get; set; }
-    public bool Taxable { get; set; }
-    public List<OvertimeRate> Rates { get; set; }
+    public bool IsTaxable { get; set; }
 }

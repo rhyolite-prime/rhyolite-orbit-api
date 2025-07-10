@@ -20,9 +20,16 @@ public class OvertimeTypeAppService: RhyoliteOrbitAppServiceBase
         _mapper = mapper;
     }
 
+    [HttpGet]
     public async Task<object> GetAll(int pageNo, int pageSize, string query)
     {
-        return await _overTimeTypeManager.ListAll();
+        return await _overTimeTypeManager.ListAll(pageNo, pageSize, query);
+    }
+    
+    [HttpGet]
+    public async Task<object> GetDetails(Guid id)
+    {
+        return await _overTimeTypeManager.GetAsync(id);
     }
 
     [HttpPost]
@@ -34,9 +41,9 @@ public class OvertimeTypeAppService: RhyoliteOrbitAppServiceBase
 
        
     [HttpPost]
-    public async Task<object> CreateOvertimeRate(OvertimeRateDto input)
+    public async Task CreateOvertimeRate(OvertimeRateDto input)
     {
-        return await _overTimeTypeManager.CreateOvertimeRate(input);
+         await _overTimeTypeManager.CreateOvertimeRate(input);
     }
 
     [HttpPost]
@@ -61,8 +68,8 @@ public class OvertimeTypeAppService: RhyoliteOrbitAppServiceBase
     }
 
     [HttpDelete]
-    public async Task DeleteOvertimeRate(OvertimeRateDto input)
+    public async  Task DeleteOvertimeRate(Guid overtimeTypeId, Guid id)
     {
-        await _overTimeTypeManager.DeleteOvertimeRate(input);
+        await _overTimeTypeManager.DeleteOvertimeRate(overtimeTypeId, id);
     }
 }

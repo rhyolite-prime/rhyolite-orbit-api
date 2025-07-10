@@ -11,7 +11,7 @@ public class BikType: Abp.Domain.Entities.Auditing.FullAuditedEntity<Guid>, Abp.
     public string Name { get; set; }
     public Guid ExpenseAccountId { get; set; }
     [MaxLength(100)]
-    public Guid ExpenseAccountName { get; set; }
+    public string ExpenseAccountName { get; set; }
     public bool IsTaxable { get; set; }
     [Column(TypeName = "jsonb")] public List<BikRate> BikRates { get; set; }
     public int TenantId { get; set; }

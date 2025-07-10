@@ -15,17 +15,15 @@ namespace RhyoliteOrbit.DomainServices.Payroll.BikTypes;
 
 public class BikTypeManager: DomainService, IBikTypeManager
 {
-    private readonly IRepository<BikType, Guid> _repositoryBikType;
+        private readonly IRepository<BikType, Guid> _repositoryBikType;
         private readonly IRepository<AllowanceType, Guid> _repositoryAllowanceType;
         private readonly IRepository<EmployeeSalaryData, Guid> _repositoryEmployeeSalaryData;
-       
 
         public BikTypeManager(IRepository<BikType, Guid> repositoryBikType, IRepository<AllowanceType, Guid> repositoryAllowanceType, IRepository<EmployeeSalaryData, Guid> repositoryEmployeeSalaryData)
         {
             _repositoryBikType = repositoryBikType;
             _repositoryAllowanceType = repositoryAllowanceType;
             _repositoryEmployeeSalaryData = repositoryEmployeeSalaryData;
-      
         }
 
         public async Task<object> Create(BikType entity)
@@ -43,16 +41,24 @@ public class BikTypeManager: DomainService, IBikTypeManager
                 };
             }
             
+            throw new UserFriendlyException(
+                400,
+                "Duplicate records are not allowed.",
+                "A Benefits in Kind Type with the same name already exists."
+            );
 
-            throw new UserFriendlyException(400, "Benefits in Kind Type", "Duplicate records are not allowed.");
              
         }
 
-        public async Task<object> CreateBikRate(BikRateDto input)
+        public async Task CreateBikRate(BikRateDto input)
         {
             var allowanceTypeData = await _repositoryAllowanceType.FirstOrDefaultAsync(input.AllowanceTypeId);
 
             var bikTypeData = await _repositoryBikType.GetAsync(input.BikTypeId);
+            if (bikTypeData.BikRates == null)
+            {
+                bikTypeData.BikRates = new List<BikRate>();
+            }
             var ratesList = bikTypeData.BikRates;
             var rateInfo = ratesList.FirstOrDefault(x => x.Id == input.Id);
 
@@ -64,11 +70,12 @@ public class BikTypeManager: DomainService, IBikTypeManager
 
                 if (existingBikRate != null)
                 {
-                    return new
-                    {
-                        code = 400,
-                        message = "Duplicate records are not allowed."
-                    };
+                    
+                    throw new UserFriendlyException(
+                        400,
+                        "Duplicate records are not allowed.",
+                        "A Benefits in Kind Rate with for the Employee Category & Deduction Type already exists."
+                    );
                 }
                 
                 bikTypeData.BikRates.Add(new BikRate
@@ -87,26 +94,35 @@ public class BikTypeManager: DomainService, IBikTypeManager
                 });
 
                 await _repositoryBikType.UpdateAsync(bikTypeData);
-
-                return new
-                {
-                    code = 200,
-                    message = "successful"
-                };
+                return;
             }
-            else
-            {
-                return new
-                {
-                    code = 400,
-                    message = "Duplicate records are not allowed."
-                };
-            }
+            
+            throw new UserFriendlyException(
+                400,
+                "Duplicate records are not allowed.",
+                "A Benefits in Kind Rate already exists."
+            );
+            
         }
        
         public async Task Update(BikType entity)
         {
-            await _repositoryBikType.UpdateAsync(entity);
+            var bikTypeData = await _repositoryBikType.GetAsync(entity.Id);
+            if (bikTypeData == null)
+            {
+                throw new UserFriendlyException(
+                    400,
+                    "Benefit in Kind Type Not Found",
+                    "The specified Benefit in Kind Type could not be found. Please verify the provided ID and try again."
+                );
+                
+            }
+            bikTypeData.Name = entity.Name.Trim();
+            bikTypeData.ExpenseAccountId = entity.ExpenseAccountId;
+            bikTypeData.ExpenseAccountName = entity.ExpenseAccountName;
+            bikTypeData.IsTaxable = entity.IsTaxable;
+            
+            await _repositoryBikType.UpdateAsync(bikTypeData);
         }
 
         public async Task UpdateBikRate(BikRateDto input)
@@ -155,7 +171,7 @@ public class BikTypeManager: DomainService, IBikTypeManager
             
             if (!string.IsNullOrEmpty(query))
             {
-                predicate.And(x => x.Name.Contains(query));
+                predicate.And(x => x.Name.ToLower().Contains(query.ToLower()));
             }
             
             var totalCount =
@@ -229,11 +245,11 @@ public class BikTypeManager: DomainService, IBikTypeManager
             await _repositoryBikType.DeleteAsync(id);
         }
         
-        public async Task DeleteBikRate(BikRateDto input)
+        public async Task DeleteBikRate(Guid bikTypeId, Guid id)
         {
-            var bikTypeData = await _repositoryBikType.GetAsync(input.BikTypeId);
+            var bikTypeData = await _repositoryBikType.GetAsync(bikTypeId);
             var ratesList = bikTypeData.BikRates;
-            var rateInfo = ratesList.FirstOrDefault(x => x.Id == input.Id);
+            var rateInfo = ratesList.FirstOrDefault(x => x.Id == id);
             ratesList.Remove(rateInfo);
 
             bikTypeData.BikRates = ratesList;

@@ -57,7 +57,7 @@ public class BillTypeManager: Abp.Domain.Services.DomainService, IBillTypeManage
             
         if (!string.IsNullOrEmpty(query))
         {
-            predicate.And(x => x.Name.Contains(query));
+            predicate.And(x => x.Name.ToLower().Contains(query.ToLower()));
         }
             
         var totalCount =
@@ -71,6 +71,7 @@ public class BillTypeManager: Abp.Domain.Services.DomainService, IBillTypeManage
         var paginatedResult = new
         {
             pageNo,
+            pageSize,
             totalCount,
             totalPages,
             data,
