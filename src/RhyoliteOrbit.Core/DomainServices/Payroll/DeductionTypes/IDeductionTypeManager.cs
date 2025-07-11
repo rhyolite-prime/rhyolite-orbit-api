@@ -9,13 +9,14 @@ public interface IDeductionTypeManager: Abp.Domain.Services.IDomainService
 {
     Task<object> ListAll(int pageNo, int pageSize, string query);
     Task<object> ListAll(Guid categoryId);
+    Task<object> GetAsync(Guid id);
     Task<DeductionType> GetAsync(string name);
     Task<object> ListAll(Guid deductionTypeId, Guid employeeId, Guid categoryId);
     Task<object> Create(DeductionType input);
     Task Update(DeductionType input);
     Task Delete(Guid id);
     //
-    Task DeleteDeductionRate(DeductionRateDto input);
+    Task DeleteDeductionRate(Guid deductionTypeId, Guid id);
     Task UpdateDeductionRate(DeductionRateDto input);
-    Task<object> CreateDeductionRate(DeductionRateDto input);
+    Task CreateDeductionRate(DeductionRateDto input);
 }

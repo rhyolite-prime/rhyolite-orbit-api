@@ -16,7 +16,7 @@ public interface IAllowanceTypeManager: Abp.Domain.Services.IDomainService
     Task Update(AllowanceType input);
     Task Delete(Guid id);
     //rates
-    Task<object> CreateAllowanceRate(AllowanceRateDto input);
+    Task CreateAllowanceRate(AllowanceRateDto input);
     Task UpdateAllowanceRate(AllowanceRateDto input);
-    Task DeleteAllowanceRate(AllowanceRateDto input);
+    Task DeleteAllowanceRate(Guid allowanceTypeId,  Guid id);
 }

@@ -29,6 +29,7 @@ public class AllowanceTypeManager: Abp.Domain.Services.DomainService, IAllowance
             if (datta == null)
             {
                 entity.Name = entity.Name.Trim();
+                
                 await _repositoryAllowanceType.InsertAsync(entity);
 
                 return new
@@ -46,9 +47,13 @@ public class AllowanceTypeManager: Abp.Domain.Services.DomainService, IAllowance
 
         }
 
-        public async Task<object> CreateAllowanceRate(AllowanceRateDto input)
+        public async Task CreateAllowanceRate(AllowanceRateDto input)
         {
             var allowanceTypeData = await _repositoryAllowanceType.GetAsync(input.AllowanceTypeId);
+            if (allowanceTypeData.AllowanceRates == null)
+            {
+                allowanceTypeData.AllowanceRates = new List<AllowanceRate>();
+            }
             var ratesList = allowanceTypeData.AllowanceRates;
             var rateInfo = ratesList.FirstOrDefault(x => x.Id == input.Id);
 
@@ -59,11 +64,13 @@ public class AllowanceTypeManager: Abp.Domain.Services.DomainService, IAllowance
 
                 if (existingAllowanceRate != null)
                 {
-                    return new
-                    {
-                        code = 400,
-                        message = "Duplicate records are not allowed."
-                    };
+                    
+                    throw new UserFriendlyException(
+                        400,
+                        "Duplicate records are not allowed.",
+                        "An Allowance Rate with the same name already exists."
+                    );
+                    
                 }
                 
                 allowanceTypeData.AllowanceRates.Add(new AllowanceRate
@@ -83,25 +90,40 @@ public class AllowanceTypeManager: Abp.Domain.Services.DomainService, IAllowance
                 });
 
                 await _repositoryAllowanceType.UpdateAsync(allowanceTypeData);
-
-                return new
-                {
-                    code = 200,
-                    message = "successful"
-                };
+                
+                return;
+                 
             }
+            
+            
+            throw new UserFriendlyException(
+                400,
+                "Duplicate records are not allowed.",
+                "An Allowance Type with the same name already exists."
+            );
 
-            return new
-            {
-                code = 400,
-                message = "Duplicate records are not allowed."
-            };
+            
         }
 
         public async Task Update(AllowanceType entity)
         {
-            entity.Name = entity.Name.Trim();
-            await _repositoryAllowanceType.UpdateAsync(entity);
+            
+            var allowanceTypeData = await _repositoryAllowanceType.GetAsync(entity.Id);
+            if (allowanceTypeData == null)
+            {
+                throw new UserFriendlyException(
+                    400,
+                    "Allowance Type Error",
+                    "An error occurred while retrieving the allowance type. Provide a valid allowance type id."
+                );
+            }
+            
+            allowanceTypeData.Name = allowanceTypeData.Name.Trim();
+            allowanceTypeData.AllowanceDays = allowanceTypeData.AllowanceDays;
+            allowanceTypeData.ExpenseAccountId = allowanceTypeData.ExpenseAccountId;
+            allowanceTypeData.ExpenseAccountName = allowanceTypeData.ExpenseAccountName;
+            allowanceTypeData.IsTaxable = allowanceTypeData.IsTaxable;
+            await _repositoryAllowanceType.UpdateAsync(allowanceTypeData);
         }
 
         public async Task UpdateAllowanceRate(AllowanceRateDto input)
@@ -150,20 +172,21 @@ public class AllowanceTypeManager: Abp.Domain.Services.DomainService, IAllowance
             
             if (!string.IsNullOrEmpty(query))
             {
-                predicate.And(x => x.Name.Contains(query));
+                predicate.And(x => x.Name.ToLower().Contains(query.ToLower()));
             }
             
             var totalCount =
                 
                 await _repositoryAllowanceType.CountAsync(predicate);
             
-            var data = await (await _repositoryAllowanceType.GetAllAsync()).Where(predicate).Select(a=> new { a.Id, a.Name, a.ExpenseAccountId, a.ExpenseAccountName, a.AllowanceRates, a.IsTaxable  }).Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
+            var data = await (await _repositoryAllowanceType.GetAllAsync()).Where(predicate).Select(a=> new { a.Id, a.Name, a.ExpenseAccountId, a.ExpenseAccountName, a.AllowanceRates, a.IsTaxable, a.AllowanceDays  }).Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
 
             var totalPages = totalCount > 0 ? Convert.ToInt32(Math.Ceiling(totalCount / (decimal)pageSize)) : 0;
 
             var paginatedResult = new
             {
                 pageNo,
+                pageSize,
                 totalCount,
                 totalPages,
                 data,
@@ -173,7 +196,8 @@ public class AllowanceTypeManager: Abp.Domain.Services.DomainService, IAllowance
 
             return paginatedResult;
         }
-
+        
+        
         public async Task<object> ListAll(Guid categoryId)
         {
 
@@ -249,11 +273,11 @@ public class AllowanceTypeManager: Abp.Domain.Services.DomainService, IAllowance
             await _repositoryAllowanceType.DeleteAsync(id);
         }
 
-        public async Task DeleteAllowanceRate(AllowanceRateDto input)
+        public async Task DeleteAllowanceRate(Guid allowanceTypeId,  Guid id)
         {
-            var allowanceTypeData = await _repositoryAllowanceType.GetAsync(input.AllowanceTypeId);
+            var allowanceTypeData = await _repositoryAllowanceType.GetAsync(allowanceTypeId);
             var ratesList = allowanceTypeData.AllowanceRates;
-            var rateInfo = ratesList.FirstOrDefault(x => x.Id == input.Id);
+            var rateInfo = ratesList.FirstOrDefault(x => x.Id == id);
             
             ratesList.Remove(rateInfo);
 

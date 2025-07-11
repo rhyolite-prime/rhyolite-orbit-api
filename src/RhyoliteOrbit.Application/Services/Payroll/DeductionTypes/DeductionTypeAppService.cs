@@ -21,13 +21,19 @@ public class DeductionTypeAppService: RhyoliteOrbitAppServiceBase
     }
 
     [HttpGet]
-    public async Task<object> ListAll(int pageNo, int pageSize, string query)
+    public async Task<object> GetAll(int pageNo, int pageSize, string query)
     {
         return await _deductionTypeManager.ListAll(pageNo, pageSize, query);
     }
+    
+    [HttpGet]
+    public async Task<object> GetDetails(Guid id)
+    {
+        return await _deductionTypeManager.GetAsync(id);
+    }
 
     [HttpGet]
-    public async Task<object> ListAll(Guid deductionTypeId, Guid employeeId, Guid categoryId)
+    public async Task<object> GetAllByDeductionType(Guid deductionTypeId, Guid employeeId, Guid categoryId)
     {
         return await _deductionTypeManager.ListAll(deductionTypeId, employeeId, categoryId);
     }
@@ -61,9 +67,9 @@ public class DeductionTypeAppService: RhyoliteOrbitAppServiceBase
     }
 
     [HttpPost]
-    public async Task<object> CreateDeductionRate(DeductionRateDto input)
+    public async Task CreateDeductionRate(DeductionRateDto input)
     {
-        return await _deductionTypeManager.CreateDeductionRate(input);
+         await _deductionTypeManager.CreateDeductionRate(input);
     }
 
     [HttpPost]
@@ -73,8 +79,8 @@ public class DeductionTypeAppService: RhyoliteOrbitAppServiceBase
     }
 
     [HttpDelete]
-    public async Task DeleteDeductionRate(DeductionRateDto input)
+    public async Task DeleteDeductionRate(Guid deductionTypeId, Guid id)
     {
-        await _deductionTypeManager.DeleteDeductionRate(input);
+        await _deductionTypeManager.DeleteDeductionRate(deductionTypeId, id);
     }
 }

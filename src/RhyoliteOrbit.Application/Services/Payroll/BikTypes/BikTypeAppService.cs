@@ -27,6 +27,12 @@ public class BikTypeAppService: RhyoliteOrbitAppServiceBase
     }
 
     [HttpGet]
+    public async Task<object> GetDetails(Guid id)
+    {
+        return await _bikTypeManager.GetAsync(id);
+    }
+
+    [HttpGet]
     public async Task<object> GetAllByBenefitsInKindType(Guid bikTypeId, Guid employeeId, Guid categoryId)
     {
         return await _bikTypeManager.ListAll(bikTypeId, employeeId, categoryId);
@@ -55,9 +61,9 @@ public class BikTypeAppService: RhyoliteOrbitAppServiceBase
     }
 
     [HttpPost]
-    public async Task<object> CreateBikRate(BikRateDto input)
+    public async Task CreateBikRate(BikRateDto input)
     {
-        return await _bikTypeManager.CreateBikRate(input);
+         await _bikTypeManager.CreateBikRate(input);
     }
 
     [HttpPost]
@@ -67,8 +73,8 @@ public class BikTypeAppService: RhyoliteOrbitAppServiceBase
     }
 
     [HttpDelete]
-    public async Task DeleteBikRate(BikRateDto input)
+    public async Task DeleteBikRate(Guid bikTypeId, Guid id)
     {
-        await _bikTypeManager.DeleteBikRate(input);
+        await _bikTypeManager.DeleteBikRate(bikTypeId, id);
     }
 }

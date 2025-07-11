@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Abp.Domain.Repositories;
+using Abp.Linq.Expressions;
 using Abp.UI;
+using Microsoft.EntityFrameworkCore;
 using RhyoliteOrbit.Models.SchoolManager;
 
 namespace RhyoliteOrbit.DomainServices.SchoolManager.FeesDescriptions;
@@ -43,9 +46,35 @@ public class FeesDescriptionManager: Abp.Domain.Services.DomainService, IFeesDes
             
         }
 
-        public async Task<object> ListAll()
+        public async Task<object> ListAll(int pageNo, int pageSize, string query)
         {
-            return await _repositoryFeesDescription.GetAllListAsync();
+            var predicate = PredicateBuilder.New<FeesDescription>();
+
+            predicate.And(x => !x.IsDeleted);
+            
+            if (!string.IsNullOrEmpty(query))
+            {
+                predicate.And(x => x.Description.Contains(query));
+            }
+            
+            var totalCount =  await _repositoryFeesDescription.CountAsync(predicate);
+            
+            var data = await (await _repositoryFeesDescription.GetAllAsync()).Where(predicate).Select(a=> new { a.Id, a.Description, a.BillTypeName, a.ReceivableAccountName, a.BillTypeId, a.ReceivableAccountId }).Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            var totalPages = totalCount > 0 ? Convert.ToInt32(Math.Ceiling(totalCount / (decimal)pageSize)) : 0;
+
+            var paginatedResult = new
+            {
+                pageNo,
+                pageSize,
+                totalCount,
+                totalPages,
+                data,
+                lowerBound = pageSize * (pageNo - 1) + 1,
+                upperBound = totalPages == pageNo ? totalCount : pageNo * pageSize,
+            };
+
+            return paginatedResult;
         }
         public async Task<object> ListAll(Guid billTypeId)
         {

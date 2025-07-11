@@ -37,6 +37,8 @@ public class EmployeeCategoryAppService: RhyoliteOrbitAppServiceBase
     public async Task Update(UpdateEmployeeCategoryInput input)
     {
         var obj = _mapper.Map<EmployeeCategory>(input);
+        var tenantInfo = await GetCurrentTenantAsync();
+        obj.TenantId = tenantInfo.Id;
         await _employeeCategoryManager.Update(obj);
     }
 

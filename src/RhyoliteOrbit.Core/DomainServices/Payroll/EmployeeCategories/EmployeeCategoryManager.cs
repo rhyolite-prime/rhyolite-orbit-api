@@ -65,7 +65,7 @@ public class EmployeeCategoryManager: Abp.Domain.Services.DomainService, IEmploy
             
             if (!string.IsNullOrEmpty(query))
             {
-                predicate.And(x => x.Name.Contains(query));
+                predicate.And(x => x.Name.ToLower().Contains(query.ToLower()));
             }
             
             var totalCount =
@@ -79,6 +79,7 @@ public class EmployeeCategoryManager: Abp.Domain.Services.DomainService, IEmploy
             var paginatedResult = new
             {
                 pageNo,
+                pageSize,
                 totalCount,
                 totalPages,
                 data,

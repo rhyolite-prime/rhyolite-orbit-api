@@ -5,6 +5,7 @@ using Abp.Runtime.Security;
 using Abp.Timing;
 using Abp.Zero;
 using Abp.Zero.Configuration;
+using Npgsql;
 using RhyoliteOrbit.Authorization.Roles;
 using RhyoliteOrbit.Authorization.Users;
 using RhyoliteOrbit.Configuration;
@@ -40,6 +41,8 @@ public class RhyoliteOrbitCoreModule : AbpModule
 
         Configuration.Settings.SettingEncryptionConfiguration.DefaultPassPhrase = RhyoliteOrbitConsts.DefaultPassPhrase;
         SimpleStringCipher.DefaultPassPhrase = RhyoliteOrbitConsts.DefaultPassPhrase;
+        
+        NpgsqlConnection.GlobalTypeMapper.EnableDynamicJson();
     }
 
     public override void Initialize()

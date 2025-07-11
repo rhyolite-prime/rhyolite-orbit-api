@@ -16,5 +16,4 @@ public class AllowanceRate
     public bool Prorate { get; set; }
     public bool ApplyBackPay { get; set; }
     public bool Taxable { get; set; }
-    public int TenantId { get; set; }
 }

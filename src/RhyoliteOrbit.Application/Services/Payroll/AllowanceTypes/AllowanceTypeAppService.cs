@@ -25,6 +25,12 @@ public class AllowanceTypeAppService: RhyoliteOrbitAppServiceBase
     {
         return await _allowanceTypeManager.ListAll(pageNo, pageSize, query);
     }
+    
+    [HttpGet]
+    public async Task<object> GetDetails(Guid id)
+    {
+        return await _allowanceTypeManager.GetAsync(id);
+    }
 
     [HttpGet]
     public async Task<object> GetAllByCategory(Guid categoryId)
@@ -62,9 +68,9 @@ public class AllowanceTypeAppService: RhyoliteOrbitAppServiceBase
     }
 
     [HttpPost]
-    public async Task<object> CreateAllowanceRate(AllowanceRateDto input)
-    {
-        return await _allowanceTypeManager.CreateAllowanceRate(input);
+    public async Task CreateAllowanceRate(AllowanceRateDto input)
+    { 
+        await _allowanceTypeManager.CreateAllowanceRate(input);
     }
 
     [HttpPost]
@@ -74,8 +80,8 @@ public class AllowanceTypeAppService: RhyoliteOrbitAppServiceBase
     }
 
     [HttpDelete]
-    public async Task DeleteAllowanceRate(AllowanceRateDto input)
+    public async Task DeleteAllowanceRate(Guid allowanceTypeId,  Guid id)
     {
-        await _allowanceTypeManager.DeleteAllowanceRate(input);
+        await _allowanceTypeManager.DeleteAllowanceRate(allowanceTypeId, id);
     }
 }

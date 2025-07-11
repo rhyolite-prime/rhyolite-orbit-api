@@ -7,12 +7,12 @@ namespace RhyoliteOrbit.DomainServices.Payroll.OvertimeTypes;
 
 public interface IOverTimeTypeManager: Abp.Domain.Services.IDomainService
 {
-    Task<object> ListAll();
+    Task<object> ListAll(int pageNo, int pageSize, string query);
     Task<object> Create(OvertimeType input);
     Task Update(OvertimeType input);
     Task Delete(Guid id);
     Task<OvertimeType> GetAsync(Guid id);
-    Task DeleteOvertimeRate(OvertimeRateDto input);
+    Task DeleteOvertimeRate(Guid overtimeTypeId, Guid id);
     Task UpdateOvertimeRate(OvertimeRateDto input);
-    Task<object> CreateOvertimeRate(OvertimeRateDto input);
+    Task CreateOvertimeRate(OvertimeRateDto input);
 }

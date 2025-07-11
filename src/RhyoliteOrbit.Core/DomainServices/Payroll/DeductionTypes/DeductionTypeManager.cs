@@ -39,36 +39,39 @@ public class DeductionTypeManager: Abp.Domain.Services.DomainService, IDeduction
                 };
             }
 
-            throw new UserFriendlyException(400, "Deduction Types","Duplicate records are not allowed.");
+            throw new UserFriendlyException(
+                400,
+                "Duplicate records are not allowed.",
+                "A Deduction Type with the same name already exists."
+            );
+            
              
         }
 
-        public async Task<object> CreateDeductionRate(DeductionRateDto dto)
+        public async Task CreateDeductionRate(DeductionRateDto dto)
         {
             var deductionTypeData = await _repositoryDeductionType.GetAsync(dto.DeductionTypeId);
-            var ratesList = deductionTypeData.Rates;
+            var ratesList = deductionTypeData.Rates ?? new List<DeductionRate>();
             var rateInfo = ratesList.FirstOrDefault(x => x.Id == dto.Id);
 
             if (rateInfo == null)
             {
-                
                 var existingDeductionRate =
-                    deductionTypeData.Rates.FirstOrDefault(x => x.DeductionTypeId == dto.DeductionTypeId && x.EmployeeCategoryId == dto.EmployeeCategoryId);
+                    ratesList.FirstOrDefault(x => x.DeductionTypeId == dto.DeductionTypeId && x.EmployeeCategoryId == dto.EmployeeCategoryId);
 
                 if (existingDeductionRate != null)
                 {
-                    return new
-                    {
-                        code = 400,
-                        message = "Duplicate records are not allowed."
-                    };
+                    throw new UserFriendlyException(
+                        400,
+                        "Duplicate records are not allowed.",
+                        "A Deduction Rate with for the Employee Category & Deduction Type already exists."
+                    );
                 }
-                
+
                 //get category name...
-                
                 var employeeCategoryInfo = await _repositoryEmployeeCategory.FirstOrDefaultAsync(dto.EmployeeCategoryId);
-                
-                deductionTypeData.Rates.Add(new DeductionRate
+
+                ratesList.Add(new DeductionRate
                 {
                     Id = Guid.NewGuid(),
                     Amount = dto.Amount,
@@ -81,22 +84,39 @@ public class DeductionTypeManager: Abp.Domain.Services.DomainService, IDeduction
                     PercentageBasic = dto.PercentageBasic,
                     Prorate = dto.Prorate,
                 });
+                deductionTypeData.Rates = ratesList;
 
                 await _repositoryDeductionType.UpdateAsync(deductionTypeData);
 
-                return new
-                {
-                    code = 200,
-                    message = "successful"
-                };
+                return;
             }
-            throw new UserFriendlyException(400, "Deduction Types","Duplicate records are not allowed.");
+            
+            throw new UserFriendlyException(
+                400,
+                "Duplicate records are not allowed.",
+                "A Deduction Rate with the same reference already exists."
+            );
             
         }
 
         public async Task Update(DeductionType entity)
         {
-            await _repositoryDeductionType.UpdateAsync(entity);
+            var deductionTypeData = await _repositoryDeductionType.GetAsync(entity.Id);
+            if (deductionTypeData == null)
+            {
+                throw new UserFriendlyException(
+                    400,
+                    "Deduction Type Not Found",
+                    "The specified Deduction Type could not be found. Please verify the provided ID and try again."
+                );
+                
+            }
+            
+            deductionTypeData.LiabilityAccountId = entity.LiabilityAccountId;
+            deductionTypeData.LiabilityAccountName = entity.LiabilityAccountName;
+            deductionTypeData.Name = entity.Name;
+            
+            await _repositoryDeductionType.UpdateAsync(deductionTypeData);
         }
 
 
@@ -247,11 +267,11 @@ public class DeductionTypeManager: Abp.Domain.Services.DomainService, IDeduction
             await _repositoryDeductionType.DeleteAsync(id);
         }
 
-        public async Task DeleteDeductionRate(DeductionRateDto dto)
+        public async Task DeleteDeductionRate(Guid deductionTypeId, Guid id)
         {
-            var deductionTypeData = await _repositoryDeductionType.GetAsync(dto.DeductionTypeId);
+            var deductionTypeData = await _repositoryDeductionType.GetAsync(deductionTypeId);
             var ratesList = deductionTypeData.Rates;
-            var rateInfo = ratesList.FirstOrDefault(x => x.Id == dto.Id);
+            var rateInfo = ratesList.FirstOrDefault(x => x.Id == id);
             ratesList.Remove(rateInfo);
 
             deductionTypeData.Rates = ratesList;

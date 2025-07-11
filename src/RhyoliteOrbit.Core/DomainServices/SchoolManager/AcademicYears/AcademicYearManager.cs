@@ -122,6 +122,7 @@ public class AcademicYearManager: Abp.Domain.Services.DomainService, IAcademicYe
             var paginatedResult = new
             {
                 pageNo,
+                pageSize,
                 totalCount,
                 totalPages,
                 data,

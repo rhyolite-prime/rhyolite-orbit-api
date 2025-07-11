@@ -1,8 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Domain.Repositories;
+using Abp.Linq.Expressions;
 using Abp.UI;
+using Microsoft.EntityFrameworkCore;
 using RhyoliteOrbit.DomainServices.Payroll.OvertimeTypes.Dto;
 using RhyoliteOrbit.Models.Payroll;
 
@@ -40,11 +43,17 @@ public class OverTimeTypeManager: Abp.Domain.Services.DomainService, IOverTimeTy
             
         }
 
-        public async Task<object> CreateOvertimeRate(OvertimeRateDto dto)
+        
+        public async Task CreateOvertimeRate(OvertimeRateDto dto)
         {
             var overtimeTypeData = await _repositoryOverTimeType.GetAsync(dto.OvertimeTypeId);
-            var ratesList = overtimeTypeData.Rates;
-            var rateInfo = ratesList.FirstOrDefault(x => x.Id == dto.Id);
+
+            if (overtimeTypeData.Rates == null)
+            {
+                overtimeTypeData.Rates = new List<OvertimeRate>();
+            }
+
+            var rateInfo = overtimeTypeData.Rates.FirstOrDefault(x => x.Id == dto.Id);
 
             if (rateInfo == null)
             {
@@ -62,28 +71,35 @@ public class OverTimeTypeManager: Abp.Domain.Services.DomainService, IOverTimeTy
                     AnnualHours = dto.AnnualHours,
                     PercentageLimitOfBasic = dto.PercentageLimitOfBasic,
                     Prorate = dto.Prorate,
-
                 });
 
                 await _repositoryOverTimeType.UpdateAsync(overtimeTypeData);
-
-                return new
-                {
-                    code = 200,
-                    message = "successful"
-                };
+                return;
             }
 
-            return new
-            {
-                code = 400,
-                message = "Duplicate records are not allowed."
-            };
+            throw new UserFriendlyException(
+                400,
+                "Duplicate records are not allowed.",
+                "An Overtime Rate with the same ID already exists."
+            );
         }
 
         public async Task Update(OvertimeType entity)
         {
-            await _repositoryOverTimeType.UpdateAsync(entity);
+            var overtimeTypeData = await _repositoryOverTimeType.GetAsync(entity.Id);
+            if (overtimeTypeData == null)
+            {
+                throw new UserFriendlyException(
+                    400,
+                    "Overtime Type Error",
+                    "An error occurred while retrieving the overtime type. Provide a valid overtime type id."
+                );
+            }
+            
+            overtimeTypeData.Name = entity.Name.Trim();
+            overtimeTypeData.IsTaxable = entity.IsTaxable;
+            
+            await _repositoryOverTimeType.UpdateAsync(overtimeTypeData);
         }
 
         public async Task UpdateOvertimeRate(OvertimeRateDto input)
@@ -91,7 +107,7 @@ public class OverTimeTypeManager: Abp.Domain.Services.DomainService, IOverTimeTy
             var overtimeTypeData = await _repositoryOverTimeType.GetAsync(input.OvertimeTypeId);
             var ratesList = overtimeTypeData.Rates;
             var rateInfo = ratesList.FirstOrDefault(x => x.Id == input.Id);
-
+            
             ratesList.Remove(rateInfo);
 
             if (rateInfo != null)
@@ -103,6 +119,7 @@ public class OverTimeTypeManager: Abp.Domain.Services.DomainService, IOverTimeTy
                 rateInfo.FixedAmount = input.FixedAmount;
                 rateInfo.MaximumAmount = input.MaximumAmount;
                 rateInfo.PercentageBasic = input.PercentageBasic;
+                rateInfo.IsFactor = input.IsFactor;
                 rateInfo.Prorate = input.Prorate;
                 rateInfo.Factor = input.Factor;
                 rateInfo.AnnualHours = input.AnnualHours;
@@ -124,10 +141,37 @@ public class OverTimeTypeManager: Abp.Domain.Services.DomainService, IOverTimeTy
             return await _repositoryOverTimeType.FirstOrDefaultAsync(id);
         }
 
-        public async Task<object> ListAll()
+        public async Task<object> ListAll(int pageNo, int pageSize, string query)
         {
-            var data = await _repositoryOverTimeType.GetAllListAsync();
-            return data.OrderBy(a => a.Name).ToList();
+            var predicate = PredicateBuilder.New<OvertimeType>();
+
+            predicate.And(x => !x.IsDeleted);
+            
+            if (!string.IsNullOrEmpty(query))
+            {
+                predicate.And(x => x.Name.ToLower().Contains(query.ToLower()));
+            }
+            
+            var totalCount =
+                
+                await _repositoryOverTimeType.CountAsync(predicate);
+            
+            var data = await (await _repositoryOverTimeType.GetAllAsync()).Where(predicate).Select(a=> new { a.Id, a.Name, a.Rates, a.IsTaxable  }).Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            var totalPages = totalCount > 0 ? Convert.ToInt32(Math.Ceiling(totalCount / (decimal)pageSize)) : 0;
+
+            var paginatedResult = new
+            {
+                pageNo,
+                pageSize,
+                totalCount,
+                totalPages,
+                data,
+                lowerBound = pageSize * (pageNo - 1) + 1,
+                upperBound = totalPages == pageNo ? totalCount : pageNo * pageSize,
+            };
+
+            return paginatedResult;
         }
         
         
@@ -139,11 +183,11 @@ public class OverTimeTypeManager: Abp.Domain.Services.DomainService, IOverTimeTy
 
         }
 
-        public async Task DeleteOvertimeRate(OvertimeRateDto dto)
+        public async Task DeleteOvertimeRate(Guid overtimeTypeId, Guid id)
         {
-            var overtimeTypeData = await _repositoryOverTimeType.GetAsync(dto.OvertimeTypeId);
+            var overtimeTypeData = await _repositoryOverTimeType.GetAsync(overtimeTypeId);
             var ratesList = overtimeTypeData.Rates;
-            var rateInfo = ratesList.FirstOrDefault(x => x.Id == dto.Id);
+            var rateInfo = ratesList.FirstOrDefault(x => x.Id == id);
             ratesList.Remove(rateInfo);
 
             overtimeTypeData.Rates = ratesList;
