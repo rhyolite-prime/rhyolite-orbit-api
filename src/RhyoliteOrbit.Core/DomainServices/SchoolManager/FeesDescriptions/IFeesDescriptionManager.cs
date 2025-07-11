@@ -6,7 +6,7 @@ namespace RhyoliteOrbit.DomainServices.SchoolManager.FeesDescriptions;
 
 public interface IFeesDescriptionManager: Abp.Domain.Services.IDomainService
 {
-    Task<object> ListAll();
+    Task<object> ListAll(int pageNo, int pageSize, string query);
     Task<object> ListAll(Guid billTypeId);
     Task<object> Create(FeesDescription input);
     Task Update(FeesDescription input);
