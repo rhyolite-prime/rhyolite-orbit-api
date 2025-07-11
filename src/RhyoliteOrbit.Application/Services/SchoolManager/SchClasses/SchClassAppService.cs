@@ -20,27 +20,29 @@ namespace RhyoliteOrbit.Application.Services.SchoolManager.SchClasses
             _mapper = mapper;
         }
 
-        [HttpGet("list")]
+        [HttpGet]
         public async Task<object> GetAll(int pageNo, int pageSize, string query)
         {
             return await _schClassManager.ListAll(pageNo, pageSize, query);
         }
 
-        [HttpPost("create")]
+        [HttpPost]
         public async Task<object> Create(CreateSchClassInput input)
         {
             var obj = _mapper.Map<SchClass>(input);
             return await _schClassManager.Create(obj);
         }
 
-        [HttpPost("update")]
+        [HttpPost]
         public async Task Update(UpdateSchClassInput input)
         {
             var obj = _mapper.Map<SchClass>(input);
+            var tenantInfo = await GetCurrentTenantAsync();
+            obj.TenantId = tenantInfo.Id;
             await _schClassManager.Update(obj);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete]
         public async Task Delete(Guid id)
         {
             await _schClassManager.Delete(id);
