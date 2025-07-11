@@ -1,11 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using RhyoliteOrbit.DomainServices.SchoolManager.FeesDescriptions;
 using RhyoliteOrbit.Models.SchoolManager;
-using RhyoliteOrbit.Services.SchoolManager.FeesDescriptions.Dto;
+using RhyoliteOrbit.Services.Payroll.FeesDescriptions.Dto;
 
 namespace RhyoliteOrbit.DomainServices.SchoolManager.FeesDescriptions;
 
@@ -20,9 +18,9 @@ public class FeesDescriptionAppService : RhyoliteOrbitAppServiceBase
     }
 
     [HttpGet]
-    public async Task<object> GetAll()
+    public async Task<object> GetAll(int pageNo, int pageSize, string query)
     {
-        return await _feesDescriptionManager.ListAll();
+        return await _feesDescriptionManager.ListAll(pageNo, pageSize, query);
     }
 
     [HttpGet]
@@ -42,6 +40,8 @@ public class FeesDescriptionAppService : RhyoliteOrbitAppServiceBase
     public async Task Update(UpdateFeesDescriptionInput input)
     {
         var obj = _mapper.Map<FeesDescription>(input);
+        var tenantInfo = await GetCurrentTenantAsync();
+        obj.TenantId = tenantInfo.Id;
         await _feesDescriptionManager.Update(obj);
     }
 
