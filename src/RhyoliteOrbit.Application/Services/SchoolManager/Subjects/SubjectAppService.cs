@@ -20,10 +20,10 @@ namespace RhyoliteOrbit.Services.SchoolManager.Subjects
         }
 
         [HttpPost]
-        public async Task<object> Create(CreateSubjectInput input)
+        public async Task Create(CreateSubjectInput input)
         {
             var obj = _mapper.Map<Subject>(input);
-            return await _subjectManager.Create(obj);
+             await _subjectManager.Create(obj);
         }
 
         [HttpGet]
@@ -36,6 +36,8 @@ namespace RhyoliteOrbit.Services.SchoolManager.Subjects
         public async Task Update(UpdateSubjectInput input)
         {
             var obj = _mapper.Map<Subject>(input);
+            var tenantInfo = await GetCurrentTenantAsync();
+            obj.TenantId = tenantInfo.Id;
             await _subjectManager.Update(obj);
         }
 

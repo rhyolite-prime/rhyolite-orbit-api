@@ -30,10 +30,10 @@ public class FeesDescriptionAppService : RhyoliteOrbitAppServiceBase
     }
 
     [HttpPost]
-    public async Task<object> Create(CreateFeesDescriptionInput input)
+    public async Task Create(CreateFeesDescriptionInput input)
     {
         var obj = _mapper.Map<FeesDescription>(input);
-        return await _feesDescriptionManager.Create(obj);
+         await _feesDescriptionManager.Create(obj);
     }
 
     [HttpPost]

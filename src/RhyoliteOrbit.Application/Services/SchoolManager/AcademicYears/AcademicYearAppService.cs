@@ -22,14 +22,14 @@ public class AcademicYearAppService : RhyoliteOrbitAppServiceBase
     }
 
     [HttpPost]
-    public async Task<object> Create(CreateAcademicYearInput input)
+    public async Task Create(CreateAcademicYearInput input)
     {
-        var obj = _mapper.Map<AcademicYear>(input);
-        return await _academicYearManager.Create(obj);
+         var obj = _mapper.Map<AcademicYear>(input);
+         await _academicYearManager.Create(obj);
     }
 
     [HttpGet]
-    public async Task<object> GetAsync(Guid id)
+    public async Task<object> GetDetails(Guid id)
     {
         return await _academicYearManager.GetAsync(id);
     }
@@ -57,9 +57,9 @@ public class AcademicYearAppService : RhyoliteOrbitAppServiceBase
 
     //terms
     [HttpPost]
-    public async Task<object> CreateTerm(TermDto input)
+    public async Task CreateTerm(TermDto input)
     {
-        return await _academicYearManager.CreateTerm(input);
+         await _academicYearManager.CreateTerm(input);
     }
 
     [HttpPost]
@@ -69,8 +69,8 @@ public class AcademicYearAppService : RhyoliteOrbitAppServiceBase
     }
 
     [HttpDelete]
-    public async Task DeleteTerm(TermDto input)
+    public async Task DeleteTerm(Guid academicYearId, Guid id)
     {
-        await _academicYearManager.DeleteTerm(input);
+        await _academicYearManager.DeleteTerm(academicYearId,id);
     }
 }

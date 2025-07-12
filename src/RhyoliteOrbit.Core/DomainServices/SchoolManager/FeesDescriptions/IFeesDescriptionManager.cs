@@ -8,7 +8,7 @@ public interface IFeesDescriptionManager: Abp.Domain.Services.IDomainService
 {
     Task<object> ListAll(int pageNo, int pageSize, string query);
     Task<object> ListAll(Guid billTypeId);
-    Task<object> Create(FeesDescription input);
+    Task Create(FeesDescription input);
     Task Update(FeesDescription input);
     Task Delete(Guid id);
 }

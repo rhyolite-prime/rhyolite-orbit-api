@@ -8,7 +8,7 @@ public interface ILoanTypeManager:  Abp.Domain.Services.IDomainService
 {
     Task<object> ListAll(int pageNo, int pageSize, string query);
     Task<LoanType> GetAsync(string name);
-    Task<object> Create(LoanType input);
+    Task Create(LoanType input);
     Task Update(LoanType input);
     Task Delete(Guid id);
 }

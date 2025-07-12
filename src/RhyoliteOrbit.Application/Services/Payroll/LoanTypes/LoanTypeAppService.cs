@@ -27,10 +27,10 @@ public class LoanTypeAppService: RhyoliteOrbitAppServiceBase
     }
 
     [HttpPost]
-    public async Task<object> Create(CreateLoanTypeInput input)
+    public async Task Create(CreateLoanTypeInput input)
     {
         var obj = _mapper.Map<LoanType>(input);
-        return await _loanTypeManager.Create(obj);
+        await _loanTypeManager.Create(obj);
     }
 
     [HttpPost]

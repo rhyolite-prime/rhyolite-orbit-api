@@ -6139,7 +6139,7 @@ namespace RhyoliteOrbit.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
-                    b.Property<int>("Order")
+                    b.Property<int>("Position")
                         .HasColumnType("integer");
 
                     b.Property<int>("TenantId")
@@ -6759,7 +6759,8 @@ namespace RhyoliteOrbit.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("ReceivableAccountName")
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<int>("TenantId")
                         .HasColumnType("integer");

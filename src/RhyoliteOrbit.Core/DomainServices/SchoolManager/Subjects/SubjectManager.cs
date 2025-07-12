@@ -17,21 +17,21 @@ public class SubjectManager: Abp.Domain.Services.DomainService, ISubjectManager
         _repositorySubject = repositorySubject;
     }
 
-    public async Task<object> Create(Subject entity)
+    public async Task Create(Subject entity)
     {
         var datta = await _repositorySubject.FirstOrDefaultAsync(x => x.Name == entity.Name);
         if (datta == null)
         {
             await _repositorySubject.InsertAsync(entity);
 
-            return new
-            {
-                code = 200,
-                message = "successful"
-            };
+            return;
         }
         
-        throw new Abp.UI.UserFriendlyException(400, "Duplicate records are not allowed.");
+        throw new Abp.UI.UserFriendlyException(
+            400,
+            "Duplicate records are not allowed.",
+            "A Subject with the same name already exists."
+        );
 
     }
 
@@ -57,6 +57,7 @@ public class SubjectManager: Abp.Domain.Services.DomainService, ISubjectManager
         var paginatedResult = new
         {
             pageNo,
+            pageSize,
             totalCount,
             totalPages,
             data,

@@ -18,19 +18,14 @@ public class LoanTypeManager: Abp.Domain.Services.DomainService, ILoanTypeManage
             _repositoryLoanType = repositoryLoanType;
         }
 
-        public async Task<object> Create(LoanType entity)
+        public async Task Create(LoanType entity)
         {
             var datta = await _repositoryLoanType.FirstOrDefaultAsync(x => x.Name.Trim().ToLower() == entity.Name.Trim().ToLower());
 
             if (datta == null)
             {
                 await _repositoryLoanType.InsertAsync(entity);
-
-                return new
-                {
-                    code = 200,
-                    message = "successful"
-                };
+                return;
             }
 
             throw new UserFriendlyException(
@@ -72,13 +67,14 @@ public class LoanTypeManager: Abp.Domain.Services.DomainService, ILoanTypeManage
                 await _repositoryLoanType.CountAsync(predicate);
             
             
-            var data = await (await _repositoryLoanType.GetAllAsync()).Where(predicate).Select(a=> new { a.Id, a.Name,}).Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
+            var data = await (await _repositoryLoanType.GetAllAsync()).Where(predicate).Select(a=> new { a.Id, a.Name, a.ChargeInterest}).Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
 
             var totalPages = totalCount > 0 ? Convert.ToInt32(Math.Ceiling(totalCount / (decimal)pageSize)) : 0;
 
             var paginatedResult = new
             {
                 pageNo,
+                pageSize,
                 totalCount,
                 totalPages,
                 data,

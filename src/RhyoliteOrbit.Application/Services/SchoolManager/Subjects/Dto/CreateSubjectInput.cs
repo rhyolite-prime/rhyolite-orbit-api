@@ -1,22 +1,17 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using Abp.Application.Services.Dto;
 
 namespace RhyoliteOrbit.Services.SchoolManager.Subjects.Dto
 {
     public class CreateSubjectInput
     {
-        [Required]
         public string Name { get; set; }
-
-        [Required]
-        public string Code { get; set; }
-
-        public string Description { get; set; }
     }
 
-    public class UpdateSubjectInput : CreateSubjectInput
+    public class UpdateSubjectInput : EntityDto<Guid>
     {
-        public Guid Id { get; set; }
+        public string Name { get; set; }
     }
    
 }
