@@ -11,7 +11,7 @@ public class AcademicYear : Abp.Domain.Entities.Auditing.FullAuditedEntity<Guid>
     public string Name { get; set; }
     public DateTime BeginDate { get; set; }
     public DateTime EndDate { get; set; }
-    public int Order { get; set; }
+    public int Position { get; set; }
     [Column(TypeName = "jsonb")] public List<Term> Terms { get; set; }
     
     public int TenantId { get; set; }

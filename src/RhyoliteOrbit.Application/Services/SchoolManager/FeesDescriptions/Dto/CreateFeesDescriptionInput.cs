@@ -6,7 +6,6 @@ namespace RhyoliteOrbit.Services.Payroll.FeesDescriptions.Dto;
 
 public class CreateFeesDescriptionInput
 {
-    public string Name { get; set; }
     public string Description { get; set; }
     public Guid BillTypeId { get; set; }
         
@@ -18,7 +17,6 @@ public class CreateFeesDescriptionInput
 
 public class UpdateFeesDescriptionInput: EntityDto<Guid>
 {
-    public string Name { get; set; }
     public string Description { get; set; }
     public Guid BillTypeId { get; set; }
         

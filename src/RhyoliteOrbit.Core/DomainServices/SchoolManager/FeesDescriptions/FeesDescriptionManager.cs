@@ -21,7 +21,7 @@ public class FeesDescriptionManager: Abp.Domain.Services.DomainService, IFeesDes
             _repositoryBillType = repositoryBillType;
         }
 
-        public async Task<object> Create(FeesDescription entity)
+        public async Task Create(FeesDescription entity)
         {
             var datta = await _repositoryFeesDescription.FirstOrDefaultAsync(x => x.Description == entity.Description && x.BillTypeId == entity.BillTypeId);
             if (datta == null)
@@ -35,14 +35,14 @@ public class FeesDescriptionManager: Abp.Domain.Services.DomainService, IFeesDes
 
                 await _repositoryFeesDescription.InsertAsync(entity);
 
-                return new
-                {
-                    code = 200,
-                    message = "successful"
-                };
+                return;
             }
 
-            throw new UserFriendlyException(400, "Duplicate records are not allowed.");
+            throw new UserFriendlyException(
+                400,
+                "Duplicate records are not allowed.",
+                "A Fee Description with the same name already exists."
+            );
             
         }
 

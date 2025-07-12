@@ -6,8 +6,8 @@ namespace RhyoliteOrbit.DomainServices.SchoolManager.ClassStreams;
 
 public interface IClassStreamManager: Abp.Domain.Services.IDomainService
 {
-    Task<object> ListAll();
-    Task<object> Create(ClassStream input);
+    Task<object> ListAll(int pageNo, int pageSize, string query);
+    Task Create(ClassStream input);
     Task Update(ClassStream input);
     Task Delete(Guid id);
 }
