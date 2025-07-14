@@ -10,8 +10,7 @@ public class DeductionType: Abp.Domain.Entities.Auditing.FullAuditedEntity<Guid>
     [MaxLength(100)]
     public string Name { get; set; }
     public Guid LiabilityAccountId { get; set; }
-    [MaxLength(100)]
-    
+    [MaxLength(150)]
     public string LiabilityAccountName { get; set; }
     [Column(TypeName = "jsonb")] public List<DeductionRate> Rates { get; set; }
     public int TenantId { get; set; }

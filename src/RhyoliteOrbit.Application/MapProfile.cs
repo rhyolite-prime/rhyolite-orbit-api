@@ -1,6 +1,11 @@
 using RhyoliteOrbit.Application.Services.SchoolManager.SubjectRemarks.Dto;
+using RhyoliteOrbit.Models.GeneralLedger;
 using RhyoliteOrbit.Models.Payroll;
 using RhyoliteOrbit.Models.SchoolManager;
+using RhyoliteOrbit.Models.Shared;
+using RhyoliteOrbit.Services.GeneralLedger.AccountHeads.Dto;
+using RhyoliteOrbit.Services.GeneralLedger.CoaControls.Dto;
+using RhyoliteOrbit.Services.GeneralLedger.CoaDetails.Dto;
 using RhyoliteOrbit.Services.Payroll.AllowanceTypes.Dto;
 using RhyoliteOrbit.Services.Payroll.BikTypes.Dto;
 using RhyoliteOrbit.Services.Payroll.DeductionTypes.Dto;
@@ -15,6 +20,7 @@ using RhyoliteOrbit.Services.SchoolManager.Levels.Dto;
 using RhyoliteOrbit.Services.SchoolManager.ResultTypes.Dto;
 using RhyoliteOrbit.Services.SchoolManager.SchClasses.Dto;
 using RhyoliteOrbit.Services.SchoolManager.Subjects.Dto;
+using RhyoliteOrbit.Services.Shared.Currencies.Dto;
 
 namespace RhyoliteOrbit;
 
@@ -22,6 +28,12 @@ public class MapProfile: AutoMapper.Profile
 {
     public MapProfile()
     {
+        
+        //shared
+        CreateMap<CreateCurrencyInput, Currency>();
+        CreateMap<UpdateCurrencyInput, Currency>();
+        
+        //school manager
         CreateMap<CreateAcademicYearInput, AcademicYear>();
         CreateMap<UpdateAcademicYearInput, AcademicYear>();
 
@@ -70,6 +82,16 @@ public class MapProfile: AutoMapper.Profile
         CreateMap<CreateLoanTypeInput, LoanType>();
         CreateMap<UpdateLoanTypeInput, LoanType>();
         
+        
+        //gl
+        CreateMap<CreateAccountHeadInput, AccountHead>();
+        CreateMap<UpdateAccountHeadInput, AccountHead>();
+        
+        CreateMap<CreateCoaControlInput, CoaControl>();
+        CreateMap<UpdateCoaControlInput, CoaControl>();
+        
+        CreateMap<CreateCoaDetailInput, CoaDetail>();
+        CreateMap<UpdateCoaDetailInput, CoaDetail>();
         
         
     }

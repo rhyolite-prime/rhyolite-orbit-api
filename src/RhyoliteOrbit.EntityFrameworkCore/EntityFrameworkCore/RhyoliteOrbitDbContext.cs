@@ -4,6 +4,7 @@ using RhyoliteOrbit.Authorization.Roles;
 using RhyoliteOrbit.Authorization.Users;
 using RhyoliteOrbit.MultiTenancy;
 using Microsoft.EntityFrameworkCore;
+using RhyoliteOrbit.Models.GeneralLedger;
 using RhyoliteOrbit.Models.Payroll;
 using RhyoliteOrbit.Models.SchoolManager;
 using RhyoliteOrbit.Models.Shared;
@@ -79,6 +80,23 @@ public class RhyoliteOrbitDbContext : AbpZeroDbContext<Tenant, Role, User, Rhyol
     public DbSet<SubjectRemark> SubjectRemarks { get; set; }
     public DbSet<TerminalReport> TerminalReports { get; set; }
     public DbSet<MiscellaneousPayment> MiscellaneousPayments { get; set; }
+    
+    //general ledger
+    public DbSet<AccountHead> AccountHeads { get; set; }
+    public DbSet<CoaControl> CoaControls { get; set; }
+    public DbSet<CoaDetail> CoaDetails { get; set; }
+    public DbSet<PettyCashRecipient> PettyCashRecipients { get; set; }
+    public DbSet<Budget> Budgets { get; set; }
+    public DbSet<Journal> Journals { get; set; }
+    public DbSet<PvRetention> PvRetentions { get; set; }
+    public DbSet<ImprestCategory> ImprestCategories { get; set; }
+    public DbSet<Imprest> Imprests { get; set; }
+    public DbSet<AccountingPeriod> AccountingPeriods { get; set; }
+    public DbSet<BankAccount> BankAccounts { get; set; }
+    public DbSet<AccountBalance> AccountBalances { get; set; }
+    public DbSet<DefaultGlNumber> DefaultGlNumbers { get; set; }
+    
+    
     
     //payroll
     public DbSet<EmployeeCategory> EmployeeCategories { get; set; }

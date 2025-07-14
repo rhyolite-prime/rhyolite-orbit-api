@@ -11,7 +11,7 @@ public class AllowanceType: Abp.Domain.Entities.Auditing.FullAuditedEntity<Guid>
     public string Name { get; set; }
     public int AllowanceDays { get; set; }
     public Guid ExpenseAccountId { get; set; }
-    [MaxLength(100)]
+    [MaxLength(150)]
     public string ExpenseAccountName { get; set; }
     public bool IsTaxable { get; set; }
     [Column(TypeName = "jsonb")] public List<AllowanceRate> AllowanceRates { get; set; }

@@ -29,7 +29,8 @@
   <ItemGroup>
     <Folder Include="DomainServices\AccountsPayable\" />
     <Folder Include="DomainServices\AccountsReceivable\" />
-    <Folder Include="DomainServices\GeneralLedger\" />
+    <Folder Include="DomainServices\GeneralLedger\Budgets\" />
+    <Folder Include="DomainServices\GeneralLedger\Journals\" />
     <Folder Include="DomainServices\Hr\" />
     <Folder Include="DomainServices\Inventory\" />
     <Folder Include="DomainServices\Payroll\Dashboard\" />
@@ -38,7 +39,6 @@
     <Folder Include="DomainServices\SupplyChain\" />
     <Folder Include="Models\AccountsPayable\" />
     <Folder Include="Models\AccountsReceivable\" />
-    <Folder Include="Models\GeneralLedger\" />
     <Folder Include="Models\Inventory\" />
     <Folder Include="Models\ProductionPlanning\" />
     <Folder Include="Models\SupplyChain\" />

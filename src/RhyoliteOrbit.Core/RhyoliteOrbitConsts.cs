@@ -11,7 +11,6 @@ public class RhyoliteOrbitConsts
 
     public const bool MultiTenancyEnabled = true;
     
-    
     public enum BillStatus
     {
         Draft = 0,
@@ -23,6 +22,15 @@ public class RhyoliteOrbitConsts
         PartiallyPaid = 6,
         Refunded = 7,
         PartiallyRefunded = 8
+    }
+    
+    public enum AccountHeadTypeDefinitions
+    {
+        Assets = 0,
+        Liabilities = 1,
+        Equity = 2,
+        Revenue = 3,
+        Expenses = 4,
     }
 
 

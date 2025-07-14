@@ -10,7 +10,7 @@ public class FeesDescription: Abp.Domain.Entities.Auditing.FullAuditedEntity<Gui
     public Guid BillTypeId { get; set; }
         
     public Guid ReceivableAccountId { get; set; }
-    [MaxLength(100)]
+    [MaxLength(150)]
     public string ReceivableAccountName { get; set; }
     [MaxLength(50)]
     public string BillTypeName { get; set; }
