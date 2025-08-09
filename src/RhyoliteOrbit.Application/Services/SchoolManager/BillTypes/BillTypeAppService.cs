@@ -45,6 +45,5 @@ public class BillTypeAppService: RhyoliteOrbitAppServiceBase
     public async Task Delete(Guid id)
     {
         await _billTypeManager.Delete(id);
-
     }
 }
