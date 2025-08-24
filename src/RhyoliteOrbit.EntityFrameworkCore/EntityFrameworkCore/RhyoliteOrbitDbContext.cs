@@ -81,6 +81,47 @@ public class RhyoliteOrbitDbContext : AbpZeroDbContext<Tenant, Role, User, Rhyol
     public DbSet<TerminalReport> TerminalReports { get; set; }
     public DbSet<MiscellaneousPayment> MiscellaneousPayments { get; set; }
     
+    //Academic Management
+    public DbSet<Department> AcademicDepartments { get; set; }
+    public DbSet<Curriculum> Curricula { get; set; }
+    public DbSet<Syllabus> Syllabi { get; set; }
+    public DbSet<LessonPlan> LessonPlans { get; set; }
+    public DbSet<TeacherSubjectAssignment> TeacherSubjectAssignments { get; set; }
+    public DbSet<ElectiveSubject> ElectiveSubjects { get; set; }
+    public DbSet<SubjectCategory> SubjectCategories { get; set; }
+    public DbSet<ExamSchedule> ExamSchedules { get; set; }
+    public DbSet<AssessmentType> AssessmentTypes { get; set; }
+    //Student Management
+    public DbSet<StudentClubMembership> StudentClubMemberships { get; set; }
+    public DbSet<Club> Clubs { get; set; }
+    public DbSet<StudentCounseling> StudentCounselings { get; set; }
+    public DbSet<Discipline> DisciplinaryActions { get; set; }
+    public DbSet<StudentHealthRecord> StudentHealthRecords { get; set; }
+    public DbSet<SpecialNeed> SpecialNeeds { get; set; }
+    public DbSet<Scholarship> Scholarships { get; set; }
+    public DbSet<StudentAward> StudentAwards { get; set; }
+    
+    // facilities and resources
+    public DbSet<Dormitory> Dormitories { get; set; }
+    public DbSet<DormitoryRoom> DormitoryRooms { get; set; }
+    public DbSet<StudentDormitoryAssignment> StudentDormitoryAssignments { get; set; }
+    public DbSet<SchoolLibrary> Libraries { get; set; }
+    public DbSet<LibraryBook> LibraryBooks { get; set; }
+    public DbSet<BookLending> BookLendings { get; set; }
+    public DbSet<Laboratory> Laboratories { get; set; }
+    public DbSet<LaboratoryEquipment> LaboratoryEquipments { get; set; }
+    
+    //Events and Activities
+    public DbSet<SchoolEvent> Events { get; set; }
+    public DbSet<SportsTeam> SportsTeams { get; set; }
+    public DbSet<SportsCompetition> SportsCompetitions { get; set; }
+    public DbSet<FieldTrip> FieldTrips { get; set; }
+    
+    //Communication
+    public DbSet<Announcement> Announcements { get; set; }
+    public DbSet<ParentTeacherMeeting> ParentTeacherMeetings { get; set; }
+    public DbSet<StaffMeeting> StaffMeetings { get; set; }
+    
     //general ledger
     public DbSet<AccountHead> AccountHeads { get; set; }
     public DbSet<CoaControl> CoaControls { get; set; }
@@ -95,7 +136,6 @@ public class RhyoliteOrbitDbContext : AbpZeroDbContext<Tenant, Role, User, Rhyol
     public DbSet<BankAccount> BankAccounts { get; set; }
     public DbSet<AccountBalance> AccountBalances { get; set; }
     public DbSet<DefaultGlNumber> DefaultGlNumbers { get; set; }
-    
     
     
     //payroll

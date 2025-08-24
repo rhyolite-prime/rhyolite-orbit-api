@@ -7,6 +7,7 @@ public class Parent: Abp.Domain.Entities.Auditing.FullAuditedEntity<Guid>, Abp.D
     public string FirstGuardianName { get; set; }
     public string FirstGuardianPhoneNo { get; set; }
     public string FirstGuardianEmail { get; set; }
+    
     public string FirstGuardianProfession { get; set; }
     public Guid FirstGuardianRelationshipId { get; set; }
     public string FirstGuardianRelationshipName { get; set; }

@@ -32,6 +32,51 @@ public class RhyoliteOrbitConsts
         Revenue = 3,
         Expenses = 4,
     }
+    
+    public enum BusinessPartnerType
+    {
+        Customer = 1,
+        Supplier = 2,
+        Both = 3
+    }
+    
+    //facility status
+    public enum FacilityStatus
+    {
+        Available = 0,
+        Occupied = 1,
+        UnderMaintenance = 2,
+        OutOfService = 3
+    }
+    
+    //LaboratoryEquipment condition
+    public enum EquipmentCondition
+    {
+        New = 0,
+        Good = 1,
+        Fair = 2,
+        Poor = 3,
+        Broken = 4
+    }
+    
+    public enum LaboratoryStatus
+    {
+        Active = 1,
+        Inactive = 2,
+        UnderMaintenance = 3,
+        UnderConstruction = 4,
+        Closed = 5
+    }
+    
+    //SportsTeam status
+    public enum TeamStatus
+    {
+        Active = 1,
+        Inactive = 2,
+        Suspended = 3,
+        Disbanded = 4,
+        OnBreak = 5
+    }
 
 
     /// <summary>
