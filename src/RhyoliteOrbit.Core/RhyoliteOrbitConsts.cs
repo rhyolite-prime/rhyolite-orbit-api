@@ -78,6 +78,22 @@ public class RhyoliteOrbitConsts
         OnBreak = 5
     }
 
+    //ProductionOrder status
+    public enum ProductionOrderStatus
+    {
+        Planned = 0,
+        InProgress = 1,
+        Completed = 2
+    }
+    
+    
+    //QualityControl status
+    public enum QualityControlStatus
+    {
+        Pending = 0,
+        Pass = 1,
+        Fail = 2
+    }
 
     /// <summary>
     /// Default pass phrase for SimpleStringCipher decrypt/encrypt operations

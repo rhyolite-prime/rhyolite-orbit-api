@@ -40,7 +40,6 @@
     <Folder Include="Models\AccountsPayable\" />
     <Folder Include="Models\AccountsReceivable\" />
     <Folder Include="Models\Inventory\" />
-    <Folder Include="Models\ProductionPlanning\" />
     <Folder Include="Models\SupplyChain\" />
     <Folder Include="Pdf\ApInvoice\" />
     <Folder Include="Pdf\ArInvoice\" />

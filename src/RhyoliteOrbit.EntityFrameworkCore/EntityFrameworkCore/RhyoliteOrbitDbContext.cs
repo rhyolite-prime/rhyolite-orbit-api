@@ -6,6 +6,7 @@ using RhyoliteOrbit.MultiTenancy;
 using Microsoft.EntityFrameworkCore;
 using RhyoliteOrbit.Models.GeneralLedger;
 using RhyoliteOrbit.Models.Payroll;
+using RhyoliteOrbit.Models.ProductionPlanning;
 using RhyoliteOrbit.Models.SchoolManager;
 using RhyoliteOrbit.Models.Shared;
 
@@ -91,6 +92,7 @@ public class RhyoliteOrbitDbContext : AbpZeroDbContext<Tenant, Role, User, Rhyol
     public DbSet<SubjectCategory> SubjectCategories { get; set; }
     public DbSet<ExamSchedule> ExamSchedules { get; set; }
     public DbSet<AssessmentType> AssessmentTypes { get; set; }
+    
     //Student Management
     public DbSet<StudentClubMembership> StudentClubMemberships { get; set; }
     public DbSet<Club> Clubs { get; set; }
@@ -201,5 +203,17 @@ public class RhyoliteOrbitDbContext : AbpZeroDbContext<Tenant, Role, User, Rhyol
     public DbSet<MonthlyOvertimeHistory> MonthlyOvertimeHistory { get; set; }
     public DbSet<MonthlyBonus> MonthlyBonuses { get; set; }
     public DbSet<MonthlyBonusHistory> MonthlyBonusHistory { get; set; }
+    
+    //production planning and process control
+    public DbSet<Product> Products { get; set; }
+    public DbSet<ProductionOrder> ProductionOrders { get; set; }
+    public DbSet<ProcessFlow> ProcessFlows { get; set; }
+    public DbSet<WorkCenter> WorkCenters { get; set; }
+    public DbSet<Inventory> Inventories { get; set; }
+    public DbSet<BillOfMaterial> BillOfMaterials { get; set; }
+    public DbSet<Routing> Routings { get; set; }
+    public DbSet<OperatorAssignment> OperatorAssignments { get; set; }
+    public DbSet<QualityControl> QualityControls { get; set; }
+    
    
 }

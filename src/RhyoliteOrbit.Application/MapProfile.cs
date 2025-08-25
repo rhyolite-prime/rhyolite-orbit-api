@@ -49,7 +49,6 @@ public class MapProfile: AutoMapper.Profile
         CreateMap<CreateSchClassInput, SchClass>();
         CreateMap<UpdateSchClassInput, SchClass>();
 
-
         CreateMap<CreateResultTypeInput, ResultType>();
         CreateMap<UpdateResultTypeInput, ResultType>();
 
