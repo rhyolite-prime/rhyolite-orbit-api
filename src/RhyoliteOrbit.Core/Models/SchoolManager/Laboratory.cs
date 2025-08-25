@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using RhyoliteOrbit.Models.Shared;
 
 namespace RhyoliteOrbit.Models.SchoolManager;
 

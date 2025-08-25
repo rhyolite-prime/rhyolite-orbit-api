@@ -20,7 +20,7 @@ public class RhyoliteOrbitDbContext : AbpZeroDbContext<Tenant, Role, User, Rhyol
         : base(options)
     {
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-        MigrateDatabase();
+        //MigrateDatabase();
     }
     
     public void MigrateDatabase()

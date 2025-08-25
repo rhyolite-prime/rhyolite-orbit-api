@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using RhyoliteOrbit.Models.GeneralLedger;
 using RhyoliteOrbit.Models.Payroll;
+using RhyoliteOrbit.Models.ProductionPlanning;
 using RhyoliteOrbit.Models.SchoolManager;
 using RhyoliteOrbit.Models.Shared;
 
@@ -461,7 +463,7 @@ namespace RhyoliteOrbit.Migrations
                     Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
                     BeginDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     EndDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    Order = table.Column<int>(type: "integer", nullable: false),
+                    Position = table.Column<int>(type: "integer", nullable: false),
                     Terms = table.Column<List<Term>>(type: "jsonb", nullable: true),
                     TenantId = table.Column<int>(type: "integer", nullable: false),
                     CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
@@ -478,6 +480,84 @@ namespace RhyoliteOrbit.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AccountBalances",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    AccountId = table.Column<Guid>(type: "uuid", nullable: false),
+                    AccountName = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true),
+                    CreditBalance = table.Column<decimal>(type: "numeric", nullable: false),
+                    DebitBalance = table.Column<decimal>(type: "numeric", nullable: false),
+                    CreditForeign = table.Column<decimal>(type: "numeric", nullable: false),
+                    DebitForeign = table.Column<decimal>(type: "numeric", nullable: false),
+                    OuId = table.Column<Guid>(type: "uuid", nullable: false),
+                    OuName = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
+                    CurrencyId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CurrencyName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    CurrencyCode = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
+                    BuyRate = table.Column<decimal>(type: "numeric", nullable: false),
+                    SellRate = table.Column<decimal>(type: "numeric", nullable: false),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AccountBalances", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AccountHeads",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    AccountHeadType = table.Column<int>(type: "integer", nullable: false),
+                    ParentId = table.Column<Guid>(type: "uuid", nullable: false),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AccountHeads", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AccountingPeriods",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    LastClosedDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    AccountingPeriodStartDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    AccountingPeriodEndDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    IsClosed = table.Column<bool>(type: "boolean", nullable: false),
+                    Period = table.Column<int>(type: "integer", nullable: false),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AccountingPeriods", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AllowanceTypes",
                 columns: table => new
                 {
@@ -485,7 +565,7 @@ namespace RhyoliteOrbit.Migrations
                     Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
                     AllowanceDays = table.Column<int>(type: "integer", nullable: false),
                     ExpenseAccountId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ExpenseAccountName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    ExpenseAccountName = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true),
                     IsTaxable = table.Column<bool>(type: "boolean", nullable: false),
                     AllowanceRates = table.Column<List<AllowanceRate>>(type: "jsonb", nullable: true),
                     TenantId = table.Column<int>(type: "integer", nullable: false),
@@ -500,6 +580,50 @@ namespace RhyoliteOrbit.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AllowanceTypes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Announcements",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Title = table.Column<string>(type: "text", nullable: true),
+                    Message = table.Column<string>(type: "text", nullable: true),
+                    Audience = table.Column<string>(type: "text", nullable: true),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Announcements", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AssessmentTypes",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: true),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AssessmentTypes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -526,6 +650,43 @@ namespace RhyoliteOrbit.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AssignedClasses", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BankAccounts",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    BankId = table.Column<Guid>(type: "uuid", nullable: false),
+                    BankName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    BankBranchId = table.Column<Guid>(type: "uuid", nullable: false),
+                    BankBranchName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    AccountId = table.Column<Guid>(type: "uuid", nullable: false),
+                    AccountName = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true),
+                    Address = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true),
+                    Location = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true),
+                    AccountNo = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    AccountType = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    CurrencyId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CurrencyName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    CurrencyCode = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
+                    ContactPerson = table.Column<string>(type: "character varying(130)", maxLength: 130, nullable: true),
+                    ContactNo = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
+                    ChequeBookStart = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
+                    ChequeBookEnd = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
+                    DateOpened = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BankAccounts", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -560,7 +721,7 @@ namespace RhyoliteOrbit.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
                     ExpenseAccountId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ExpenseAccountName = table.Column<Guid>(type: "uuid", maxLength: 100, nullable: false),
+                    ExpenseAccountName = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true),
                     IsTaxable = table.Column<bool>(type: "boolean", nullable: false),
                     BikRates = table.Column<List<BikRate>>(type: "jsonb", nullable: true),
                     TenantId = table.Column<int>(type: "integer", nullable: false),
@@ -575,6 +736,30 @@ namespace RhyoliteOrbit.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_BikTypes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BillOfMaterials",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: true),
+                    Type = table.Column<string>(type: "text", nullable: true),
+                    UnitOfMeasure = table.Column<string>(type: "text", nullable: true),
+                    CurrentStock = table.Column<decimal>(type: "numeric", nullable: false),
+                    ReorderLevel = table.Column<decimal>(type: "numeric", nullable: false),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BillOfMaterials", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -700,6 +885,60 @@ namespace RhyoliteOrbit.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_BonusAndOnetimeAllowances", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BookLendings",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    BookId = table.Column<Guid>(type: "uuid", nullable: false),
+                    BookTitle = table.Column<string>(type: "text", nullable: true),
+                    StudentId = table.Column<Guid>(type: "uuid", nullable: false),
+                    StudentName = table.Column<string>(type: "text", nullable: true),
+                    StudentClass = table.Column<string>(type: "text", nullable: true),
+                    LendingDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    DueDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    ReturnDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    Remarks = table.Column<string>(type: "text", nullable: true),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BookLendings", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Budgets",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    AccountId = table.Column<Guid>(type: "uuid", nullable: false),
+                    AccountName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    OuId = table.Column<Guid>(type: "uuid", nullable: false),
+                    OuName = table.Column<string>(type: "character varying(350)", maxLength: 350, nullable: true),
+                    BeginDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    BudgetDetails = table.Column<List<BudgetDetail>>(type: "jsonb", nullable: true),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Budgets", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -876,6 +1115,82 @@ namespace RhyoliteOrbit.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Clubs",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: true),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    FoundedDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Clubs", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CoaControls",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    SubGroupName = table.Column<string>(type: "character varying(120)", maxLength: 120, nullable: true),
+                    MinAccount = table.Column<int>(type: "integer", nullable: false),
+                    MaxAccount = table.Column<int>(type: "integer", nullable: false),
+                    AccountHeadId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ParentSubGroupId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ParentSubGroupName = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CoaControls", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CoaDetails",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    AccountName = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true),
+                    AccountNo = table.Column<int>(type: "integer", nullable: false),
+                    Status = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    AccountHeaderId = table.Column<Guid>(type: "uuid", nullable: false),
+                    AccountHeaderName = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true),
+                    CurrencyId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CurrencyName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    CurrencyCode = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
+                    CurrentBalance = table.Column<decimal>(type: "numeric", nullable: false),
+                    CurrentForeignBalance = table.Column<decimal>(type: "numeric", nullable: false),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CoaDetails", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "CostCenters",
                 columns: table => new
                 {
@@ -945,6 +1260,39 @@ namespace RhyoliteOrbit.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Curricula",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: true),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    Code = table.Column<string>(type: "text", nullable: true),
+                    GradeLevel = table.Column<int>(type: "integer", nullable: false),
+                    EffectiveStartDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    EffectiveEndDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
+                    DepartmentId = table.Column<Guid>(type: "uuid", nullable: false),
+                    DepartmentName = table.Column<string>(type: "text", nullable: true),
+                    AcademicStandards = table.Column<string>(type: "text", nullable: true),
+                    LearningObjectives = table.Column<string>(type: "text", nullable: true),
+                    AssessmentMethods = table.Column<string>(type: "text", nullable: true),
+                    RequiredResources = table.Column<string>(type: "text", nullable: true),
+                    Syllabi = table.Column<List<Syllabus>>(type: "jsonb", nullable: true),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Curricula", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Customers",
                 columns: table => new
                 {
@@ -992,7 +1340,7 @@ namespace RhyoliteOrbit.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
                     LiabilityAccountId = table.Column<Guid>(type: "uuid", nullable: false),
-                    LiabilityAccountName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    LiabilityAccountName = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true),
                     Rates = table.Column<List<DeductionRate>>(type: "jsonb", nullable: true),
                     TenantId = table.Column<int>(type: "integer", nullable: false),
                     CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
@@ -1009,7 +1357,64 @@ namespace RhyoliteOrbit.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Departments",
+                name: "DefaultGlNumbers",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    AccountPayablesBankAccountId = table.Column<Guid>(type: "uuid", nullable: false),
+                    PayRollBankAccountId = table.Column<Guid>(type: "uuid", nullable: false),
+                    SalesBankAccountId = table.Column<Guid>(type: "uuid", nullable: false),
+                    AccountsReceivableBankAccountId = table.Column<Guid>(type: "uuid", nullable: false),
+                    AccountsReceivableAccountId = table.Column<Guid>(type: "uuid", nullable: false),
+                    AccountsPayableAccountId = table.Column<Guid>(type: "uuid", nullable: false),
+                    WithholdingTaxAccountId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ImprestCategoryId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreditPurchasesAccountId = table.Column<Guid>(type: "uuid", nullable: false),
+                    AdvanceFromCustomerAccountId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CovidTaxReceivedAccountId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CommunicationsServiceTaxReceivedAccountId = table.Column<Guid>(type: "uuid", nullable: false),
+                    InventoryAccountId = table.Column<Guid>(type: "uuid", nullable: false),
+                    SalesRevenueAccountId = table.Column<Guid>(type: "uuid", nullable: false),
+                    StockPurchasesAccountId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CurrentEarningsAccountId = table.Column<Guid>(type: "uuid", nullable: false),
+                    RetainedEarningsAccountId = table.Column<Guid>(type: "uuid", nullable: false),
+                    VatReceivedAccountId = table.Column<Guid>(type: "uuid", nullable: false),
+                    VatRate = table.Column<decimal>(type: "numeric", nullable: false),
+                    ImprestGlAccountId = table.Column<Guid>(type: "uuid", nullable: false),
+                    PurchasesBankAccountId = table.Column<Guid>(type: "uuid", nullable: false),
+                    AdvanceToSupplierAccountId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CovidTaxPaidAccountId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CommunicationsServiceTaxPaidAccountId = table.Column<Guid>(type: "uuid", nullable: false),
+                    GoodsInTransitAccountId = table.Column<Guid>(type: "uuid", nullable: false),
+                    UnrealizedFxLossAccountId = table.Column<Guid>(type: "uuid", nullable: false),
+                    UnrealizedFxGainAccountId = table.Column<Guid>(type: "uuid", nullable: false),
+                    RealizedFxLossAccountId = table.Column<Guid>(type: "uuid", nullable: false),
+                    RealizedFxGainAccountId = table.Column<Guid>(type: "uuid", nullable: false),
+                    VatPaidAccountId = table.Column<Guid>(type: "uuid", nullable: false),
+                    GetflReceivedAccountId = table.Column<Guid>(type: "uuid", nullable: false),
+                    GetflPaidAccountId = table.Column<Guid>(type: "uuid", nullable: false),
+                    NhilReceivedAccountId = table.Column<Guid>(type: "uuid", nullable: false),
+                    NhilPaidAccountId = table.Column<Guid>(type: "uuid", nullable: false),
+                    SocialSecurityEmployerPortionDefaultExpenseGl = table.Column<Guid>(type: "uuid", nullable: false),
+                    SocialSecurityEmployeePortionDefaultExpenseGl = table.Column<Guid>(type: "uuid", nullable: false),
+                    SocialSecurityEmployerPortionDefaultLiabilityGl = table.Column<Guid>(type: "uuid", nullable: false),
+                    SocialSecurityEmployeePortionDefaultLiabilityGl = table.Column<Guid>(type: "uuid", nullable: false),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DefaultGlNumbers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Department",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -1026,7 +1431,102 @@ namespace RhyoliteOrbit.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Departments", x => x.Id);
+                    table.PrimaryKey("PK_Department", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DisciplinaryActions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    StudentId = table.Column<Guid>(type: "uuid", nullable: false),
+                    StudentName = table.Column<string>(type: "text", nullable: true),
+                    StudentClass = table.Column<string>(type: "text", nullable: true),
+                    IncidentDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    Offense = table.Column<string>(type: "text", nullable: true),
+                    ActionTaken = table.Column<string>(type: "text", nullable: true),
+                    Remarks = table.Column<string>(type: "text", nullable: true),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DisciplinaryActions", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Dormitories",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: true),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    Capacity = table.Column<int>(type: "integer", nullable: false),
+                    Location = table.Column<string>(type: "text", nullable: true),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Dormitories", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DormitoryRooms",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    DormitoryId = table.Column<Guid>(type: "uuid", nullable: false),
+                    RoomNumber = table.Column<string>(type: "text", nullable: true),
+                    Capacity = table.Column<int>(type: "integer", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DormitoryRooms", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ElectiveSubjects",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    SubjectName = table.Column<string>(type: "text", nullable: true),
+                    Code = table.Column<string>(type: "text", nullable: true),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    Level = table.Column<string>(type: "text", nullable: true),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ElectiveSubjects", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -1480,6 +1980,54 @@ namespace RhyoliteOrbit.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Events",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Title = table.Column<string>(type: "text", nullable: true),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    EventDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    Location = table.Column<string>(type: "text", nullable: true),
+                    Organizer = table.Column<string>(type: "text", nullable: true),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Events", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ExamSchedules",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Title = table.Column<string>(type: "text", nullable: true),
+                    Subject = table.Column<string>(type: "text", nullable: true),
+                    GradeLevel = table.Column<string>(type: "text", nullable: true),
+                    ExamDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    Venue = table.Column<string>(type: "text", nullable: true),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ExamSchedules", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "FeesDescriptions",
                 columns: table => new
                 {
@@ -1487,7 +2035,7 @@ namespace RhyoliteOrbit.Migrations
                     Description = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
                     BillTypeId = table.Column<Guid>(type: "uuid", nullable: false),
                     ReceivableAccountId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ReceivableAccountName = table.Column<string>(type: "text", nullable: true),
+                    ReceivableAccountName = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true),
                     BillTypeName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
                     TenantId = table.Column<int>(type: "integer", nullable: false),
                     CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
@@ -1501,6 +2049,36 @@ namespace RhyoliteOrbit.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_FeesDescriptions", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FieldTrips",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Title = table.Column<string>(type: "text", nullable: true),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    TripDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    Venue = table.Column<string>(type: "text", nullable: true),
+                    Organizer = table.Column<string>(type: "text", nullable: true),
+                    NumberOfParticipants = table.Column<int>(type: "integer", nullable: false),
+                    Status = table.Column<int>(type: "integer", nullable: false),
+                    LeadTeacherId = table.Column<Guid>(type: "uuid", nullable: false),
+                    LeadTeacherName = table.Column<string>(type: "text", nullable: true),
+                    LeadTeacherDesignation = table.Column<string>(type: "text", nullable: true),
+                    AdditionalSupervisors = table.Column<List<FieldTripSupervisor>>(type: "jsonb", nullable: true),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FieldTrips", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -1553,6 +2131,71 @@ namespace RhyoliteOrbit.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ImprestCategories",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ImprestCategories", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Imprests",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    EmployeeId = table.Column<Guid>(type: "uuid", nullable: false),
+                    EmployeeIdentifier = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
+                    EmployeeName = table.Column<string>(type: "character varying(130)", maxLength: 130, nullable: true),
+                    ImprestCategoryId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ImprestCategoryName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    Amount = table.Column<decimal>(type: "numeric", nullable: false),
+                    Balance = table.Column<decimal>(type: "numeric", nullable: false),
+                    DisbursementDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    ExpectedRetirementDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreditAccountId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreditAccountName = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true),
+                    PaymentMethod = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    ChequeNo = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    ImprestNo = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    DebitAccountId = table.Column<Guid>(type: "uuid", nullable: false),
+                    DebitAccountName = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true),
+                    ReferenceNo = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    Description = table.Column<string>(type: "character varying(350)", maxLength: 350, nullable: true),
+                    OuId = table.Column<Guid>(type: "uuid", nullable: false),
+                    OuName = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: true),
+                    CurrencyId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CurrencyName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    CurrencyCode = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
+                    BuyRate = table.Column<decimal>(type: "numeric", nullable: false),
+                    SellRate = table.Column<decimal>(type: "numeric", nullable: false),
+                    PostedToGl = table.Column<bool>(type: "boolean", nullable: false),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Imprests", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "InitializePayMonths",
                 columns: table => new
                 {
@@ -1574,6 +2217,136 @@ namespace RhyoliteOrbit.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Inventories",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    ProductOrMaterialId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ProductOrMaterialName = table.Column<string>(type: "text", nullable: true),
+                    Location = table.Column<string>(type: "text", nullable: true),
+                    Quantity = table.Column<decimal>(type: "numeric", nullable: false),
+                    BatchNumber = table.Column<string>(type: "text", nullable: true),
+                    ExpiryDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Inventories", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Journals",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    BatchNumber = table.Column<string>(type: "character varying(25)", maxLength: 25, nullable: true),
+                    BatchDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    TotalCredit = table.Column<decimal>(type: "numeric", nullable: false),
+                    TotalDebit = table.Column<decimal>(type: "numeric", nullable: false),
+                    IsPosted = table.Column<bool>(type: "boolean", nullable: false),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Journals", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Laboratories",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: true),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    Location = table.Column<string>(type: "text", nullable: true),
+                    Capacity = table.Column<int>(type: "integer", nullable: false),
+                    Status = table.Column<int>(type: "integer", nullable: false),
+                    EquipmentList = table.Column<List<LaboratoryEquipment>>(type: "jsonb", nullable: true),
+                    ManagerId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ManagerName = table.Column<string>(type: "text", nullable: true),
+                    ContactPhone = table.Column<string>(type: "text", nullable: true),
+                    ContactEmail = table.Column<string>(type: "text", nullable: true),
+                    ManagerDepartmentId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ManagerDepartmentName = table.Column<string>(type: "text", nullable: true),
+                    RequiredCertifications = table.Column<List<string>>(type: "jsonb", nullable: true),
+                    LastSafetyInspection = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    SafetyCertificationExpiry = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    SafetyLevel = table.Column<int>(type: "integer", nullable: false),
+                    BuildingName = table.Column<string>(type: "text", nullable: true),
+                    Floor = table.Column<string>(type: "text", nullable: true),
+                    RoomNumber = table.Column<string>(type: "text", nullable: true),
+                    OperatingHours = table.Column<List<OperatingHour>>(type: "jsonb", nullable: true),
+                    AccessRequirements = table.Column<List<string>>(type: "jsonb", nullable: true),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Laboratories", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "LaboratoryEquipments",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: true),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    SerialNumber = table.Column<string>(type: "text", nullable: true),
+                    PurchaseDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    Quantity = table.Column<int>(type: "integer", nullable: false),
+                    Condition = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LaboratoryEquipments", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "LessonPlans",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Title = table.Column<string>(type: "text", nullable: true),
+                    Subject = table.Column<string>(type: "text", nullable: true),
+                    GradeLevel = table.Column<string>(type: "text", nullable: true),
+                    Content = table.Column<string>(type: "text", nullable: true),
+                    PlanDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LessonPlans", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Levels",
                 columns: table => new
                 {
@@ -1591,6 +2364,55 @@ namespace RhyoliteOrbit.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Levels", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Libraries",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: true),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    Location = table.Column<string>(type: "text", nullable: true),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Libraries", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "LibraryBooks",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Title = table.Column<string>(type: "text", nullable: true),
+                    Author = table.Column<string>(type: "text", nullable: true),
+                    Isbn = table.Column<string>(type: "text", nullable: true),
+                    PublishedDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    Category = table.Column<string>(type: "text", nullable: true),
+                    LibraryId = table.Column<Guid>(type: "uuid", nullable: false),
+                    LibraryName = table.Column<Guid>(type: "uuid", nullable: false),
+                    Keywords = table.Column<List<string>>(type: "jsonb", nullable: true),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LibraryBooks", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -2597,6 +3419,31 @@ namespace RhyoliteOrbit.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "OperatorAssignments",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    OperatorId = table.Column<Guid>(type: "uuid", nullable: false),
+                    WorkCenterId = table.Column<Guid>(type: "uuid", nullable: false),
+                    WorkCenterName = table.Column<string>(type: "text", nullable: true),
+                    StartTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    EndTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    AssignedTask = table.Column<string>(type: "text", nullable: true),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OperatorAssignments", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "OvertimeTimeSheets",
                 columns: table => new
                 {
@@ -2632,7 +3479,7 @@ namespace RhyoliteOrbit.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
-                    Taxable = table.Column<bool>(type: "boolean", nullable: false),
+                    IsTaxable = table.Column<bool>(type: "boolean", nullable: false),
                     Rates = table.Column<List<OvertimeRate>>(type: "jsonb", nullable: true),
                     TenantId = table.Column<int>(type: "integer", nullable: false),
                     CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
@@ -2686,12 +3533,36 @@ namespace RhyoliteOrbit.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ParentTeacherMeetings",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    MeetingDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    Venue = table.Column<string>(type: "text", nullable: true),
+                    Agenda = table.Column<string>(type: "text", nullable: true),
+                    Minutes = table.Column<string>(type: "text", nullable: true),
+                    Attendance = table.Column<List<PtaAttendance>>(type: "jsonb", nullable: true),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ParentTeacherMeetings", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PartnerCategories",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
-                    Type = table.Column<int>(type: "integer", nullable: false),
+                    PartnerType = table.Column<int>(type: "integer", nullable: false),
                     TenantId = table.Column<int>(type: "integer", nullable: false),
                     CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
@@ -2927,6 +3798,105 @@ namespace RhyoliteOrbit.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "PettyCashRecipients",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    RecipientName = table.Column<string>(type: "character varying(130)", maxLength: 130, nullable: true),
+                    PhoneNo = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
+                    Email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PettyCashRecipients", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProcessFlows",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: true),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    IsDefault = table.Column<bool>(type: "boolean", nullable: false),
+                    ProductId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ProductName = table.Column<string>(type: "text", nullable: true),
+                    Steps = table.Column<List<ProcessStep>>(type: "jsonb", nullable: true),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProcessFlows", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProductionOrders",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    ProductId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ProductName = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
+                    PlannedQuantity = table.Column<decimal>(type: "numeric", nullable: false),
+                    ActualQuantity = table.Column<decimal>(type: "numeric", nullable: true),
+                    PlannedStartDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    ActualStartDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    PlannedEndDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    ActualEndDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    Status = table.Column<int>(type: "integer", nullable: false),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductionOrders", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Products",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: true),
+                    Category = table.Column<string>(type: "text", nullable: true),
+                    UnitOfMeasure = table.Column<string>(type: "text", nullable: true),
+                    StandardCost = table.Column<decimal>(type: "numeric", nullable: false),
+                    SellingPrice = table.Column<decimal>(type: "numeric", nullable: false),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Products", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PromotionHistory",
                 columns: table => new
                 {
@@ -2953,6 +3923,57 @@ namespace RhyoliteOrbit.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_PromotionHistory", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PvRetentions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Description = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    VoucherHeaderId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreditAccountId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreditAccountName = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true),
+                    IsFixedAmount = table.Column<bool>(type: "boolean", nullable: false),
+                    Amount = table.Column<decimal>(type: "numeric", nullable: false),
+                    TotalAmount = table.Column<decimal>(type: "numeric", nullable: false),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PvRetentions", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "QualityControls",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    ProductionOrderId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ProductId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ProductName = table.Column<string>(type: "text", nullable: true),
+                    TestType = table.Column<string>(type: "text", nullable: true),
+                    TestResult = table.Column<int>(type: "integer", nullable: false),
+                    TestDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_QualityControls", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -3082,6 +4103,33 @@ namespace RhyoliteOrbit.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Routings",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    ProductId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ProductName = table.Column<string>(type: "text", nullable: true),
+                    OperationNumber = table.Column<int>(type: "integer", nullable: false),
+                    WorkCenterId = table.Column<Guid>(type: "uuid", nullable: false),
+                    WorkCenterName = table.Column<string>(type: "text", nullable: true),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    StandardTime = table.Column<TimeSpan>(type: "interval", nullable: false),
+                    PreviousOperationId = table.Column<Guid>(type: "uuid", nullable: false),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Routings", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "SalaryAdvanceApplications",
                 columns: table => new
                 {
@@ -3183,6 +4231,33 @@ namespace RhyoliteOrbit.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Scholarships",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    StudentId = table.Column<Guid>(type: "uuid", nullable: false),
+                    StudentName = table.Column<string>(type: "text", nullable: true),
+                    StudentClass = table.Column<string>(type: "text", nullable: true),
+                    ScholarshipType = table.Column<string>(type: "text", nullable: true),
+                    AwardDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    Amount = table.Column<decimal>(type: "numeric", nullable: false),
+                    Sponsor = table.Column<string>(type: "text", nullable: true),
+                    Remarks = table.Column<string>(type: "text", nullable: true),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Scholarships", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "SchoolProfiles",
                 columns: table => new
                 {
@@ -3246,6 +4321,104 @@ namespace RhyoliteOrbit.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "SpecialNeeds",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    StudentId = table.Column<Guid>(type: "uuid", nullable: false),
+                    StudentName = table.Column<string>(type: "text", nullable: true),
+                    StudentClass = table.Column<string>(type: "text", nullable: true),
+                    NeedType = table.Column<string>(type: "text", nullable: true),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    IdentifiedDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SpecialNeeds", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SportsCompetitions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: true),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    StartDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    Venue = table.Column<string>(type: "text", nullable: true),
+                    Organizer = table.Column<string>(type: "text", nullable: true),
+                    Category = table.Column<string>(type: "text", nullable: true),
+                    RegistrationFee = table.Column<decimal>(type: "numeric", nullable: false),
+                    PrizeMoney = table.Column<decimal>(type: "numeric", nullable: false),
+                    DrugTestingRequired = table.Column<bool>(type: "boolean", nullable: false),
+                    ProhibitedItems = table.Column<List<string>>(type: "jsonb", nullable: true),
+                    RulesAndRegulations = table.Column<List<string>>(type: "jsonb", nullable: true),
+                    SafetyRequirements = table.Column<List<string>>(type: "jsonb", nullable: true),
+                    Schedule = table.Column<List<SportsCompetitionSchedule>>(type: "jsonb", nullable: true),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SportsCompetitions", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SportsTeams",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: true),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    CoachOrManager = table.Column<string>(type: "text", nullable: true),
+                    Category = table.Column<string>(type: "text", nullable: true),
+                    FoundedDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    Nickname = table.Column<string>(type: "text", nullable: true),
+                    LogoUrl = table.Column<string>(type: "text", nullable: true),
+                    AssistantCoaches = table.Column<List<string>>(type: "jsonb", nullable: true),
+                    CaptainId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CaptainName = table.Column<string>(type: "text", nullable: true),
+                    CaptainClass = table.Column<string>(type: "text", nullable: true),
+                    AgeGroup = table.Column<string>(type: "text", nullable: true),
+                    Status = table.Column<int>(type: "integer", nullable: false),
+                    GamesPlayed = table.Column<int>(type: "integer", nullable: false),
+                    Wins = table.Column<int>(type: "integer", nullable: false),
+                    Losses = table.Column<int>(type: "integer", nullable: false),
+                    Draws = table.Column<int>(type: "integer", nullable: false),
+                    Points = table.Column<int>(type: "integer", nullable: false),
+                    GoalsFor = table.Column<int>(type: "integer", nullable: false),
+                    GoalsAgainst = table.Column<int>(type: "integer", nullable: false),
+                    CurrentRanking = table.Column<int>(type: "integer", nullable: false),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SportsTeams", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "StaffDesignations",
                 columns: table => new
                 {
@@ -3263,6 +4436,33 @@ namespace RhyoliteOrbit.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_StaffDesignations", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StaffMeetings",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Title = table.Column<string>(type: "text", nullable: true),
+                    Agenda = table.Column<string>(type: "text", nullable: true),
+                    MeetingDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    Venue = table.Column<string>(type: "text", nullable: true),
+                    Organizer = table.Column<string>(type: "text", nullable: true),
+                    Minutes = table.Column<string>(type: "text", nullable: true),
+                    Attendance = table.Column<List<StaffAttendance>>(type: "jsonb", nullable: true),
+                    IsMandatory = table.Column<bool>(type: "boolean", nullable: false),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StaffMeetings", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -3332,6 +4532,32 @@ namespace RhyoliteOrbit.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_StudentAttendances", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StudentAwards",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    StudentId = table.Column<Guid>(type: "uuid", nullable: false),
+                    StudentName = table.Column<string>(type: "text", nullable: true),
+                    StudentClass = table.Column<string>(type: "text", nullable: true),
+                    AwardName = table.Column<string>(type: "text", nullable: true),
+                    AwardDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    Issuer = table.Column<string>(type: "text", nullable: true),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StudentAwards", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -3445,6 +4671,113 @@ namespace RhyoliteOrbit.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "StudentClubMemberships",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    StudentId = table.Column<Guid>(type: "uuid", nullable: false),
+                    StudentName = table.Column<string>(type: "text", nullable: true),
+                    StudentClass = table.Column<string>(type: "text", nullable: true),
+                    ClubId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ClubName = table.Column<Guid>(type: "uuid", nullable: false),
+                    JoinDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    Role = table.Column<string>(type: "text", nullable: true),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StudentClubMemberships", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StudentCounselings",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    StudentId = table.Column<Guid>(type: "uuid", nullable: false),
+                    StudentName = table.Column<string>(type: "text", nullable: true),
+                    StudentClass = table.Column<string>(type: "text", nullable: true),
+                    CounselingDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CounselorName = table.Column<string>(type: "text", nullable: true),
+                    Topic = table.Column<string>(type: "text", nullable: true),
+                    Notes = table.Column<string>(type: "text", nullable: true),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StudentCounselings", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StudentDormitoryAssignments",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    StudentId = table.Column<Guid>(type: "uuid", nullable: false),
+                    StudentName = table.Column<string>(type: "text", nullable: true),
+                    StudentClass = table.Column<string>(type: "text", nullable: true),
+                    DormitoryId = table.Column<Guid>(type: "uuid", nullable: false),
+                    DormitoryName = table.Column<string>(type: "text", nullable: true),
+                    DormitoryRoomId = table.Column<Guid>(type: "uuid", nullable: false),
+                    DormitoryRoomNumber = table.Column<string>(type: "text", nullable: true),
+                    AssignmentDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    Remarks = table.Column<string>(type: "text", nullable: true),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StudentDormitoryAssignments", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StudentHealthRecords",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    StudentId = table.Column<Guid>(type: "uuid", nullable: false),
+                    StudentName = table.Column<string>(type: "text", nullable: true),
+                    StudentClass = table.Column<string>(type: "text", nullable: true),
+                    RecordDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    HealthIssue = table.Column<string>(type: "text", nullable: true),
+                    Treatment = table.Column<string>(type: "text", nullable: true),
+                    Notes = table.Column<string>(type: "text", nullable: true),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StudentHealthRecords", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "StudentParents",
                 columns: table => new
                 {
@@ -3532,6 +4865,27 @@ namespace RhyoliteOrbit.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "SubjectCategories",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: true),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SubjectCategories", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "SubjectRemarks",
                 columns: table => new
                 {
@@ -3614,6 +4968,34 @@ namespace RhyoliteOrbit.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Suppliers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Syllabi",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Title = table.Column<string>(type: "text", nullable: true),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    CurriculumId = table.Column<Guid>(type: "uuid", nullable: false),
+                    SubjectId = table.Column<Guid>(type: "uuid", nullable: false),
+                    SubjectName = table.Column<string>(type: "text", nullable: true),
+                    TeacherId = table.Column<Guid>(type: "uuid", nullable: false),
+                    TeacherName = table.Column<string>(type: "text", nullable: true),
+                    CourseObjectives = table.Column<string>(type: "text", nullable: true),
+                    GradingPolicy = table.Column<string>(type: "text", nullable: true),
+                    RequiredMaterials = table.Column<string>(type: "text", nullable: true),
+                    ClassPolicies = table.Column<string>(type: "text", nullable: true),
+                    WeeklySchedule = table.Column<string>(type: "text", nullable: true),
+                    AcademicTerm = table.Column<string>(type: "text", nullable: true),
+                    AcademicYear = table.Column<int>(type: "integer", nullable: false),
+                    StartDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    TenantId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Syllabi", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -3734,6 +5116,33 @@ namespace RhyoliteOrbit.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "TeacherSubjectAssignments",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    TeacherId = table.Column<Guid>(type: "uuid", nullable: false),
+                    TeacherName = table.Column<string>(type: "text", nullable: true),
+                    SubjectId = table.Column<Guid>(type: "uuid", nullable: false),
+                    SubjectName = table.Column<string>(type: "text", nullable: true),
+                    AcademicYearId = table.Column<Guid>(type: "uuid", nullable: false),
+                    AcademicYearName = table.Column<string>(type: "text", nullable: true),
+                    ClassId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ClassName = table.Column<string>(type: "text", nullable: true),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TeacherSubjectAssignments", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "TerminalReports",
                 columns: table => new
                 {
@@ -3770,6 +5179,28 @@ namespace RhyoliteOrbit.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_TerminalReports", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "WorkCenters",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true),
+                    CapacityPerHour = table.Column<int>(type: "integer", nullable: false),
+                    OperatingHours = table.Column<List<OperatingHour>>(type: "jsonb", nullable: true),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WorkCenters", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -4633,16 +6064,37 @@ namespace RhyoliteOrbit.Migrations
                 name: "AcademicYears");
 
             migrationBuilder.DropTable(
+                name: "AccountBalances");
+
+            migrationBuilder.DropTable(
+                name: "AccountHeads");
+
+            migrationBuilder.DropTable(
+                name: "AccountingPeriods");
+
+            migrationBuilder.DropTable(
                 name: "AllowanceTypes");
 
             migrationBuilder.DropTable(
+                name: "Announcements");
+
+            migrationBuilder.DropTable(
+                name: "AssessmentTypes");
+
+            migrationBuilder.DropTable(
                 name: "AssignedClasses");
+
+            migrationBuilder.DropTable(
+                name: "BankAccounts");
 
             migrationBuilder.DropTable(
                 name: "Banks");
 
             migrationBuilder.DropTable(
                 name: "BikTypes");
+
+            migrationBuilder.DropTable(
+                name: "BillOfMaterials");
 
             migrationBuilder.DropTable(
                 name: "BillPayments");
@@ -4655,6 +6107,12 @@ namespace RhyoliteOrbit.Migrations
 
             migrationBuilder.DropTable(
                 name: "BonusAndOnetimeAllowances");
+
+            migrationBuilder.DropTable(
+                name: "BookLendings");
+
+            migrationBuilder.DropTable(
+                name: "Budgets");
 
             migrationBuilder.DropTable(
                 name: "BusinessDates");
@@ -4672,6 +6130,15 @@ namespace RhyoliteOrbit.Migrations
                 name: "ClassStreams");
 
             migrationBuilder.DropTable(
+                name: "Clubs");
+
+            migrationBuilder.DropTable(
+                name: "CoaControls");
+
+            migrationBuilder.DropTable(
+                name: "CoaDetails");
+
+            migrationBuilder.DropTable(
                 name: "CostCenters");
 
             migrationBuilder.DropTable(
@@ -4681,13 +6148,31 @@ namespace RhyoliteOrbit.Migrations
                 name: "Currencies");
 
             migrationBuilder.DropTable(
+                name: "Curricula");
+
+            migrationBuilder.DropTable(
                 name: "Customers");
 
             migrationBuilder.DropTable(
                 name: "DeductionTypes");
 
             migrationBuilder.DropTable(
-                name: "Departments");
+                name: "DefaultGlNumbers");
+
+            migrationBuilder.DropTable(
+                name: "Department");
+
+            migrationBuilder.DropTable(
+                name: "DisciplinaryActions");
+
+            migrationBuilder.DropTable(
+                name: "Dormitories");
+
+            migrationBuilder.DropTable(
+                name: "DormitoryRooms");
+
+            migrationBuilder.DropTable(
+                name: "ElectiveSubjects");
 
             migrationBuilder.DropTable(
                 name: "EmployeeAllowances");
@@ -4732,7 +6217,16 @@ namespace RhyoliteOrbit.Migrations
                 name: "EmployeeSnits");
 
             migrationBuilder.DropTable(
+                name: "Events");
+
+            migrationBuilder.DropTable(
+                name: "ExamSchedules");
+
+            migrationBuilder.DropTable(
                 name: "FeesDescriptions");
+
+            migrationBuilder.DropTable(
+                name: "FieldTrips");
 
             migrationBuilder.DropTable(
                 name: "GradingSchemes");
@@ -4741,10 +6235,37 @@ namespace RhyoliteOrbit.Migrations
                 name: "Gratuities");
 
             migrationBuilder.DropTable(
+                name: "ImprestCategories");
+
+            migrationBuilder.DropTable(
+                name: "Imprests");
+
+            migrationBuilder.DropTable(
                 name: "InitializePayMonths");
 
             migrationBuilder.DropTable(
+                name: "Inventories");
+
+            migrationBuilder.DropTable(
+                name: "Journals");
+
+            migrationBuilder.DropTable(
+                name: "Laboratories");
+
+            migrationBuilder.DropTable(
+                name: "LaboratoryEquipments");
+
+            migrationBuilder.DropTable(
+                name: "LessonPlans");
+
+            migrationBuilder.DropTable(
                 name: "Levels");
+
+            migrationBuilder.DropTable(
+                name: "Libraries");
+
+            migrationBuilder.DropTable(
+                name: "LibraryBooks");
 
             migrationBuilder.DropTable(
                 name: "LoanAmortizationHistory");
@@ -4846,6 +6367,9 @@ namespace RhyoliteOrbit.Migrations
                 name: "MonthlySsnitDeductions");
 
             migrationBuilder.DropTable(
+                name: "OperatorAssignments");
+
+            migrationBuilder.DropTable(
                 name: "OvertimeTimeSheets");
 
             migrationBuilder.DropTable(
@@ -4853,6 +6377,9 @@ namespace RhyoliteOrbit.Migrations
 
             migrationBuilder.DropTable(
                 name: "Parents");
+
+            migrationBuilder.DropTable(
+                name: "ParentTeacherMeetings");
 
             migrationBuilder.DropTable(
                 name: "PartnerCategories");
@@ -4876,7 +6403,25 @@ namespace RhyoliteOrbit.Migrations
                 name: "PersonnelStatuses");
 
             migrationBuilder.DropTable(
+                name: "PettyCashRecipients");
+
+            migrationBuilder.DropTable(
+                name: "ProcessFlows");
+
+            migrationBuilder.DropTable(
+                name: "ProductionOrders");
+
+            migrationBuilder.DropTable(
+                name: "Products");
+
+            migrationBuilder.DropTable(
                 name: "PromotionHistory");
+
+            migrationBuilder.DropTable(
+                name: "PvRetentions");
+
+            migrationBuilder.DropTable(
+                name: "QualityControls");
 
             migrationBuilder.DropTable(
                 name: "Relationships");
@@ -4894,6 +6439,9 @@ namespace RhyoliteOrbit.Migrations
                 name: "ResultTypes");
 
             migrationBuilder.DropTable(
+                name: "Routings");
+
+            migrationBuilder.DropTable(
                 name: "SalaryAdvanceApplications");
 
             migrationBuilder.DropTable(
@@ -4906,19 +6454,37 @@ namespace RhyoliteOrbit.Migrations
                 name: "SchClasses");
 
             migrationBuilder.DropTable(
+                name: "Scholarships");
+
+            migrationBuilder.DropTable(
                 name: "SchoolProfiles");
 
             migrationBuilder.DropTable(
                 name: "Siblings");
 
             migrationBuilder.DropTable(
+                name: "SpecialNeeds");
+
+            migrationBuilder.DropTable(
+                name: "SportsCompetitions");
+
+            migrationBuilder.DropTable(
+                name: "SportsTeams");
+
+            migrationBuilder.DropTable(
                 name: "StaffDesignations");
+
+            migrationBuilder.DropTable(
+                name: "StaffMeetings");
 
             migrationBuilder.DropTable(
                 name: "Staffs");
 
             migrationBuilder.DropTable(
                 name: "StudentAttendances");
+
+            migrationBuilder.DropTable(
+                name: "StudentAwards");
 
             migrationBuilder.DropTable(
                 name: "StudentBehaviorRecords");
@@ -4930,6 +6496,18 @@ namespace RhyoliteOrbit.Migrations
                 name: "StudentBills");
 
             migrationBuilder.DropTable(
+                name: "StudentClubMemberships");
+
+            migrationBuilder.DropTable(
+                name: "StudentCounselings");
+
+            migrationBuilder.DropTable(
+                name: "StudentDormitoryAssignments");
+
+            migrationBuilder.DropTable(
+                name: "StudentHealthRecords");
+
+            migrationBuilder.DropTable(
                 name: "StudentParents");
 
             migrationBuilder.DropTable(
@@ -4939,6 +6517,9 @@ namespace RhyoliteOrbit.Migrations
                 name: "StudentStatements");
 
             migrationBuilder.DropTable(
+                name: "SubjectCategories");
+
+            migrationBuilder.DropTable(
                 name: "SubjectRemarks");
 
             migrationBuilder.DropTable(
@@ -4946,6 +6527,9 @@ namespace RhyoliteOrbit.Migrations
 
             migrationBuilder.DropTable(
                 name: "Suppliers");
+
+            migrationBuilder.DropTable(
+                name: "Syllabi");
 
             migrationBuilder.DropTable(
                 name: "SystemNumbers");
@@ -4963,7 +6547,13 @@ namespace RhyoliteOrbit.Migrations
                 name: "TaxTables");
 
             migrationBuilder.DropTable(
+                name: "TeacherSubjectAssignments");
+
+            migrationBuilder.DropTable(
                 name: "TerminalReports");
+
+            migrationBuilder.DropTable(
+                name: "WorkCenters");
 
             migrationBuilder.DropTable(
                 name: "AbpDynamicEntityProperties");

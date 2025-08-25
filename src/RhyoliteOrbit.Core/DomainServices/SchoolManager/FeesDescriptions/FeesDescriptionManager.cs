@@ -87,6 +87,13 @@ public class FeesDescriptionManager: Abp.Domain.Services.DomainService, IFeesDes
 
         public async Task Update(FeesDescription entity)
         {
+            var billTypeInfo = await _repositoryBillType.FirstOrDefaultAsync(x=>x.Id == entity.BillTypeId);
+
+            if (billTypeInfo != null)
+            {
+                entity.BillTypeName = billTypeInfo.Name;
+            }
+
             await _repositoryFeesDescription.UpdateAsync(entity);
         }
 }
