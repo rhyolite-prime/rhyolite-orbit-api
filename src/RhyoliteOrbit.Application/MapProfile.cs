@@ -19,6 +19,7 @@ using RhyoliteOrbit.Services.SchoolManager.ClassStreams.Dto;
 using RhyoliteOrbit.Services.SchoolManager.Levels.Dto;
 using RhyoliteOrbit.Services.SchoolManager.ResultTypes.Dto;
 using RhyoliteOrbit.Services.SchoolManager.SchClasses.Dto;
+using RhyoliteOrbit.Services.SchoolManager.SubjectCategories.Dto;
 using RhyoliteOrbit.Services.SchoolManager.Subjects.Dto;
 using RhyoliteOrbit.Services.Shared.Currencies.Dto;
 
@@ -60,6 +61,10 @@ public class MapProfile: AutoMapper.Profile
         
         CreateMap<CreateSubjectRemarkInput, SubjectRemark>();
         CreateMap<UpdateSubjectRemarkInput, SubjectRemark>();
+        
+        
+        CreateMap<CreateSubjectCategoryInput, SubjectCategory>();
+        CreateMap<UpdateSubjectCategoryInput, SubjectCategory>();
         
         
         //payroll

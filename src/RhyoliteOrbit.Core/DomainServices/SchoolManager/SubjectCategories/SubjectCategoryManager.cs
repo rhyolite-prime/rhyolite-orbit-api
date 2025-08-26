@@ -10,19 +10,19 @@ namespace RhyoliteOrbit.DomainServices.SchoolManager.SubjectCategories;
 
 public class SubjectCategoryManager: DomainService, ISubjectCategoryManager
 {
-    private readonly IRepository<SubjectCategory, Guid> _repositorySubject;
+    private readonly IRepository<SubjectCategory, Guid> _repositorySubjectCategory;
 
     public SubjectCategoryManager(IRepository<SubjectCategory, Guid> repositorySubject)
     {
-        _repositorySubject = repositorySubject;
+        _repositorySubjectCategory = repositorySubject;
     }
 
     public async Task Create(SubjectCategory entity)
     {
-        var datta = await _repositorySubject.FirstOrDefaultAsync(x => x.Name == entity.Name);
+        var datta = await _repositorySubjectCategory.FirstOrDefaultAsync(x => x.Name == entity.Name);
         if (datta == null)
         {
-            await _repositorySubject.InsertAsync(entity);
+            await _repositorySubjectCategory.InsertAsync(entity);
 
             return;
         }
@@ -48,9 +48,9 @@ public class SubjectCategoryManager: DomainService, ISubjectCategoryManager
             
         var totalCount =
                 
-            await _repositorySubject.CountAsync(predicate);
+            await _repositorySubjectCategory.CountAsync(predicate);
             
-        var data = await (await _repositorySubject.GetAllAsync()).Where(predicate).Select(a=> new { a.Id, a.Name, }).Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
+        var data = await (await _repositorySubjectCategory.GetAllAsync()).Where(predicate).Select(a=> new { a.Id, a.Name, a.Description }).Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
 
         var totalPages = totalCount > 0 ? Convert.ToInt32(Math.Ceiling(totalCount / (decimal)pageSize)) : 0;
 
@@ -70,11 +70,11 @@ public class SubjectCategoryManager: DomainService, ISubjectCategoryManager
 
     public async Task Delete(Guid id)
     {
-        await _repositorySubject.DeleteAsync(id);
+        await _repositorySubjectCategory.DeleteAsync(id);
     }
 
     public async Task Update(SubjectCategory entity)
     {
-        await _repositorySubject.UpdateAsync(entity);
+        await _repositorySubjectCategory.UpdateAsync(entity);
     }
 }

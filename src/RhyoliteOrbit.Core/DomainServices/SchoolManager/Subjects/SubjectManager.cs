@@ -50,7 +50,7 @@ public class SubjectManager: Abp.Domain.Services.DomainService, ISubjectManager
                 
             await _repositorySubject.CountAsync(predicate);
             
-        var data = await (await _repositorySubject.GetAllAsync()).Where(predicate).Select(a=> new { a.Id, a.Name, }).Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
+        var data = await (await _repositorySubject.GetAllAsync()).Where(predicate).Select(a=> new { a.Id, a.Name, a.SubjectCategoryId, a.SubjectCategoryName }).Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
 
         var totalPages = totalCount > 0 ? Convert.ToInt32(Math.Ceiling(totalCount / (decimal)pageSize)) : 0;
 
