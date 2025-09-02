@@ -37,6 +37,8 @@ namespace RhyoliteOrbit.Services.SchoolManager.Levels
         public async Task Update(UpdateLevelInput input)
         {
             var obj = _mapper.Map<Level>(input);
+            var tenantInfo = await GetCurrentTenantAsync();
+            obj.TenantId = tenantInfo.Id;
             await _levelManager.Update(obj);
         }
 

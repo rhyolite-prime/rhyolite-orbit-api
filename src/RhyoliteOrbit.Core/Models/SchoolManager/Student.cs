@@ -27,6 +27,7 @@ public class Student: Abp.Domain.Entities.Auditing.FullAuditedEntity<Guid>, Abp.
     public Guid ClassId { get; set; }
     [MaxLength(100)]
     public string ClassName { get; set; }
+    public int Status { get; set; }
     public Guid AcademicYearId { get; set; }
     [MaxLength(100)]
     public string AcademicYearName { get; set; }
@@ -36,9 +37,6 @@ public class Student: Abp.Domain.Entities.Auditing.FullAuditedEntity<Guid>, Abp.
     public string CityOrLocation { get; set; }
     [MaxLength(350)]
     public string ImageUrl { get; set; }
-    public Guid StudentStatusId { get; set; }
-    [MaxLength(350)]
-    public string StudentStatusName { get; set; }
     [MaxLength(50)]
     public string EnrollmentType { get; set; }
     [MaxLength(100)]

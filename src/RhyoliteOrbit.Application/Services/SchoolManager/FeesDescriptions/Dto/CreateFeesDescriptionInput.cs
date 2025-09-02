@@ -8,10 +8,10 @@ public class CreateFeesDescriptionInput
 {
     public string Description { get; set; }
     public Guid BillTypeId { get; set; }
-        
+    public int Quantity { get; set; }
+    public string Unit { get; set; }
     public Guid ReceivableAccountId { get; set; }
     public string ReceivableAccountName { get; set; }
-    
     public string BillTypeName { get; set; }
 }
 
@@ -19,9 +19,9 @@ public class UpdateFeesDescriptionInput: EntityDto<Guid>
 {
     public string Description { get; set; }
     public Guid BillTypeId { get; set; }
-        
+    public int Quantity { get; set; }
+    public string Unit { get; set; }
     public Guid ReceivableAccountId { get; set; }
     public string ReceivableAccountName { get; set; }
-    
     public string BillTypeName { get; set; }
 }

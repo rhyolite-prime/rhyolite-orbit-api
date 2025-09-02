@@ -8,7 +8,7 @@ namespace RhyoliteOrbit.DomainServices.SchoolManager.Students;
 
 public interface IStudentManager: Abp.Domain.Services.IDomainService
 {
-    Task<IEnumerable<object>> ListAll();
+    Task<object> GetAll(int pageNo, int pageSize, string query);
     Task<object> GetAsync(Guid id);
     Task<IEnumerable<object>> ListAllByClass(Guid InputQuery);
     Task<IEnumerable<object>> ListStudsByClass(Guid InputQuery);

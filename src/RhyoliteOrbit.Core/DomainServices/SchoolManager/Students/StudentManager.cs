@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
-using Abp.Events.Bus;
+using Abp.Linq.Expressions;
 using HashidsNet;
 using Microsoft.EntityFrameworkCore;
 using RhyoliteOrbit.DomainServices.SchoolManager.Students.Dto;
@@ -13,9 +13,9 @@ using RhyoliteOrbit.Models.Shared;
 
 namespace RhyoliteOrbit.DomainServices.SchoolManager.Students;
 
-public class StudentManager: Abp.Domain.Services.IDomainService, IStudentManager
+public class StudentManager: Abp.Domain.Services.DomainService, IStudentManager
 {
-    private readonly IRepository<Student, Guid> _repositoryStudent;
+        private readonly IRepository<Student, Guid> _repositoryStudent;
         private readonly IRepository<PromotionHistory, Guid> _repositoryPromotionHistory;
         private readonly IRepository<SchClass, Guid> _repositorySchClass;
         private readonly IRepository<Religion, Guid> _repositoryReligion;
@@ -43,18 +43,16 @@ public class StudentManager: Abp.Domain.Services.IDomainService, IStudentManager
         public async Task<object> Create(Student entity)
         {
             //obtain default employee status...
-            var defaultStatus = await _repositoryPersonnelStatus.FirstOrDefaultAsync(x => x.IsDefault);
             var classInfo = await _repositorySchClass.FirstOrDefaultAsync(entity.ClassId);
             var religionInfo = await _repositoryReligion.FirstOrDefaultAsync(entity.ReligionId);
             var countryInfo = await _repositoryCountry.FirstOrDefaultAsync(entity.NationalityId);
             var academicYearInfo = await _repositoryAcademicYear.FirstOrDefaultAsync(entity.AcademicYearId);
 
             var datta = await _repositoryStudent.FirstOrDefaultAsync(x => x.StudentIdentifier == entity.StudentIdentifier);
+            
             if (datta == null)
             {
-                entity.StudentStatusId = entity.StudentStatusId == Guid.Empty ? defaultStatus.Id : entity.StudentStatusId;
-                entity.StudentStatusName = defaultStatus == null ? "" : defaultStatus.Name;
-               
+                 
                 if (classInfo != null && !string.IsNullOrEmpty(classInfo.StreamName))
                 {
                     entity.ClassName = $"{classInfo.ClassName}-{classInfo.StreamName}";
@@ -72,19 +70,16 @@ public class StudentManager: Abp.Domain.Services.IDomainService, IStudentManager
                 if (countryInfo != null)
                 {
                     entity.NationalityName = countryInfo.Nationality;
-
                 }
 
                 if (academicYearInfo != null)
                 {
                     entity.AcademicYearName = academicYearInfo.Name;
-
                 }
 
                 entity.FirstName = entity.FirstName.Trim();
 
                 entity.LastName = entity.LastName.Trim();
-
 
                 if (!string.IsNullOrEmpty(entity.MiddleName))
                 {
@@ -92,18 +87,10 @@ public class StudentManager: Abp.Domain.Services.IDomainService, IStudentManager
 
                 }
 
-
                 return await _repositoryStudent.InsertAsync(entity);
             }
 
-            datta.StudentStatusId = entity.StudentStatusId == Guid.Empty ? defaultStatus.Id : entity.StudentStatusId;
-            datta.StudentStatusName = defaultStatus == null ? "" : defaultStatus.Name;
-
-            //var studentCount = await _repositoryStudent.CountAsync();
-
-            // produce to pricing model ...
-            //await EventBus.TriggerAsync(new PricingModelData { ParameterName = "student-count", ParameterCount = studentCount + 1, AccountSource = "erp", ModuleName = "School Manager", TenantId = entity.TenantId });
-
+             
             return await _repositoryStudent.UpdateAsync(datta);
         }
 
@@ -112,9 +99,41 @@ public class StudentManager: Abp.Domain.Services.IDomainService, IStudentManager
             return await _repositoryStudent.FirstOrDefaultAsync(id);
         }
 
-        public async Task<IEnumerable<object>> ListAll()
+        public async Task<object> GetAll(int pageNo, int pageSize, string query)
         {
-            return await _repositoryStudent.GetAllListAsync();
+            var predicate = PredicateBuilder.New<Student>();
+
+            predicate.And(x => !x.IsDeleted);
+            
+            if (!string.IsNullOrEmpty(query))
+            {
+                predicate.And(x => x.FirstName.ToLower().Contains(query.ToLower()) ||
+                                   x.LastName.ToLower().Contains(query.ToLower()) ||
+                                   x.MiddleName.ToLower().Contains(query.ToLower()) ||
+                                   x.StudentIdentifier.ToLower().Contains(query.ToLower()) ||
+                                   x.ClassName.ToLower().Contains(query.ToLower()));
+            }
+            
+            var totalCount =
+                
+                await _repositoryStudent.CountAsync(predicate);
+            
+            var data = await (await _repositoryStudent.GetAllAsync()).Where(predicate).Select(a=> new { a.Id, a.FirstName, a.LastName, a.MiddleName, a.ClassName, Status = RhyoliteOrbitConsts.GetStudentStatusString((RhyoliteOrbitConsts.StudentStatus)a.Status), a.AcademicYearName, a.DateOfBirth, a.CityOrLocation, a.Gender, a.HomeAddress, a.NationalityName, a.EnrollmentType, a.StudentIdentifier, a.ReligionName, a.ReligionId, a.NationalityId, a.ClassId,  a.EnrollmentDate }).Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            var totalPages = totalCount > 0 ? Convert.ToInt32(Math.Ceiling(totalCount / (decimal)pageSize)) : 0;
+
+            var paginatedResult = new
+            {
+                pageNo,
+                pageSize,
+                totalCount,
+                totalPages,
+                data,
+                lowerBound = pageSize * (pageNo - 1) + 1,
+                upperBound = totalPages == pageNo ? totalCount : pageNo * pageSize,
+            };
+
+            return paginatedResult;
         }
 
         public async Task Promote(StudentPromotion studentPromotion)
@@ -177,8 +196,7 @@ public class StudentManager: Abp.Domain.Services.IDomainService, IStudentManager
                     continue;
                 }
                 
-                studentInfo.StudentStatusId = Guid.Empty;
-                studentInfo.StudentStatusName = "Alumni";
+                studentInfo.Status = (int)RhyoliteOrbitConsts.StudentStatus.Graduated;
                 studentInfo.ClassId = Guid.Empty;
                 studentInfo.ClassName = "Alumni";
                 studentInfo.CompletionDate = completionDate;
@@ -302,10 +320,6 @@ public class StudentManager: Abp.Domain.Services.IDomainService, IStudentManager
             var classInfo = await _repositorySchClass.FirstOrDefaultAsync(entity.ClassId);
             var religionInfo = await _repositoryReligion.FirstOrDefaultAsync(entity.ReligionId);
             var countryInfo = await _repositoryCountry.FirstOrDefaultAsync(entity.NationalityId);
-            var defaultStatus = await _repositoryPersonnelStatus.FirstOrDefaultAsync(x => x.IsDefault);
-
-            entity.StudentStatusId = entity.StudentStatusId == Guid.Empty ? defaultStatus.Id : entity.StudentStatusId;
-            entity.StudentStatusName = defaultStatus == null ? "Active" : defaultStatus.Name;
 
             if (classInfo != null && !string.IsNullOrEmpty(classInfo.StreamName))
             {

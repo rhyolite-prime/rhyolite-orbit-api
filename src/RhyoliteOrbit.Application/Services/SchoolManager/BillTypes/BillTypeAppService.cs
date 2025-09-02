@@ -26,10 +26,10 @@ public class BillTypeAppService: RhyoliteOrbitAppServiceBase
     }
 
     [HttpPost]
-    public async Task<object> Create(CreateBillTypeInput input)
+    public async Task Create(CreateBillTypeInput input)
     {
         var obj = _mapper.Map<BillType>(input);
-        return await _billTypeManager.Create(obj);
+        await _billTypeManager.Create(obj);
     }
 
     [HttpPost]

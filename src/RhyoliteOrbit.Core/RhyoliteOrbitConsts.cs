@@ -94,10 +94,36 @@ public class RhyoliteOrbitConsts
         Pass = 1,
         Fail = 2
     }
+    
+    // student status
+    public enum StudentStatus
+    {
+        Active = 1,
+        Inactive = 2,
+        Graduated = 3,
+        Suspended = 4,
+        Expelled = 5,
+    }
+    
+    //employee status
+    public enum EmployeeStatus
+    {
+        Active = 1,
+        Inactive = 2,
+        OnLeave = 3,
+        Resigned = 4,
+        Retired = 5,
+        Hospitalized = 6
+    }
 
     /// <summary>
     /// Default pass phrase for SimpleStringCipher decrypt/encrypt operations
     /// </summary>
     public static readonly string DefaultPassPhrase =
         DebugHelper.IsDebug ? "gsKxGZ012HLL3MI5" : "f9be3a4eed7441d1bb1da71898a30d95";
+
+    public static string GetStudentStatusString(StudentStatus status)
+    {
+        return status.ToString();
+    }
 }

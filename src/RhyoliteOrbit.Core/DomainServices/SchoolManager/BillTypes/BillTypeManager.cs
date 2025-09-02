@@ -19,19 +19,14 @@ public class BillTypeManager: Abp.Domain.Services.DomainService, IBillTypeManage
         _repositoryBillType = repositoryBillType;
     }
 
-    public async Task<object> Create(BillType entity)
+    public async Task Create(BillType entity)
     {
         var datta = await _repositoryBillType.FirstOrDefaultAsync(x => x.Name == entity.Name);
 
         if (datta == null)
         {
             await _repositoryBillType.InsertAsync(entity);
-
-            return new
-            {
-                code = 200,
-                message = "successful"
-            };
+            return;
         }
         
         throw new UserFriendlyException(400, "Duplicate records are not allowed.");
