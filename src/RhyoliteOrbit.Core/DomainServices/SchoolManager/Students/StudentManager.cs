@@ -99,7 +99,7 @@ public class StudentManager: Abp.Domain.Services.DomainService, IStudentManager
             return await _repositoryStudent.FirstOrDefaultAsync(id);
         }
 
-        public async Task<object> GetAll(int pageNo, int pageSize, string query)
+        public async Task<object> GetAll(int pageNo, int pageSize, string query, Guid classId)
         {
             var predicate = PredicateBuilder.New<Student>();
 
@@ -114,11 +114,37 @@ public class StudentManager: Abp.Domain.Services.DomainService, IStudentManager
                                    x.ClassName.ToLower().Contains(query.ToLower()));
             }
             
+            if (classId != Guid.Empty)
+            {
+                predicate.And(x => x.ClassId == classId);
+            }
+            
             var totalCount =
                 
                 await _repositoryStudent.CountAsync(predicate);
             
-            var data = await (await _repositoryStudent.GetAllAsync()).Where(predicate).Select(a=> new { a.Id, a.FirstName, a.LastName, a.MiddleName, a.ClassName, Status = RhyoliteOrbitConsts.GetStudentStatusString((RhyoliteOrbitConsts.StudentStatus)a.Status), a.AcademicYearName, a.DateOfBirth, a.CityOrLocation, a.Gender, a.HomeAddress, a.NationalityName, a.EnrollmentType, a.StudentIdentifier, a.ReligionName, a.ReligionId, a.NationalityId, a.ClassId,  a.EnrollmentDate }).Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
+            var data = await (await _repositoryStudent.GetAllAsync()).Where(predicate).Select(a=> new {
+                a.Id,
+                a.FirstName,
+                a.LastName,
+                a.MiddleName,
+                a.ClassName,
+                Status = RhyoliteOrbitConsts.GetStudentStatusString((RhyoliteOrbitConsts.StudentStatus)a.Status),
+                a.AcademicYearName,
+                a.DateOfBirth,
+                a.CityOrLocation,
+                a.Gender,
+                a.HomeAddress,
+                a.NationalityName,
+                a.EnrollmentType,
+                a.StudentIdentifier,
+                a.ReligionName,
+                a.ReligionId,
+                a.NationalityId,
+                a.ClassId,
+                Pin = _hashids.Decode(a.Pin).Length > 0 ? _hashids.Decode(a.Pin)[0].ToString("D4") : null,
+                a.EnrollmentDate
+            }).Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
 
             var totalPages = totalCount > 0 ? Convert.ToInt32(Math.Ceiling(totalCount / (decimal)pageSize)) : 0;
 
@@ -140,18 +166,20 @@ public class StudentManager: Abp.Domain.Services.DomainService, IStudentManager
         {
             var schoolProfile = await (await _repositorySchoolProfile.GetAllAsync()).FirstOrDefaultAsync();
 
-            foreach (var student in studentPromotion.Students)
+            foreach (var studentId in studentPromotion.StudentIds)
             {
+                
+                var student = await _repositoryStudent.FirstOrDefaultAsync(studentId);
                 await _repositoryStudent.UpdateAsync(student);
 
-                var promotedFromClassInfo = await _repositorySchClass.FirstOrDefaultAsync(x => x.Id == studentPromotion.PromotedFrom);
-                var promotedToClassInfo = await _repositorySchClass.FirstOrDefaultAsync(x => x.Id == studentPromotion.PromotedTo);
+                var promotedFromClassInfo = await _repositorySchClass.FirstOrDefaultAsync(x => x.Id == studentPromotion.CurrentClassId);
+                var promotedToClassInfo = await _repositorySchClass.FirstOrDefaultAsync(x => x.Id == studentPromotion.DestinationClassId);
 
                 var history = new PromotionHistory
                 {
                     DatePromoted = studentPromotion.DatePromoted,
-                    PromotedFrom = studentPromotion.PromotedFrom,
-                    PromotedTo = studentPromotion.PromotedTo,
+                    PromotedFrom = studentPromotion.CurrentClassId,
+                    PromotedTo = studentPromotion.DestinationClassId,
                     StudentId = student.Id,
                     AcademicYearId = schoolProfile.CurrentAcademicYearId,
                     AcademicYearName = schoolProfile.CurrentAcademicYearName,
@@ -207,12 +235,12 @@ public class StudentManager: Abp.Domain.Services.DomainService, IStudentManager
             }
         }
 
-        public async Task<IEnumerable<object>> ListStudentsForPromotion(Guid classId)
+        public async Task<object> ListStudentsForPromotion(Guid classId)
         {
             return await _repositoryStudent.GetAllListAsync(a => a.ClassId == classId);
         }
 
-        public async Task<IEnumerable<object>> ListAllByClass(Guid classId)
+        public async Task<object> ListAllByClass(Guid classId)
         {
            return await _repositoryStudent.GetAllListAsync(a => a.ClassId == classId);
         }
@@ -384,12 +412,17 @@ public class StudentManager: Abp.Domain.Services.DomainService, IStudentManager
             return await _repositoryStudent.GetAllListAsync(a => a.ReligionId == religionId);
         }
         
-        //api
+        //api ...
+        
+        
+        
         public async Task<object> GetStudentInfo(string studentId, string pin, int tenantId)
         {
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
-                var studentInfo = await _repositoryStudent.FirstOrDefaultAsync(a => a.StudentIdentifier.Trim() == studentId.Trim());
+                string hashedPin = _hashids.Encode(int.Parse(pin));
+                
+                var studentInfo = await _repositoryStudent.FirstOrDefaultAsync(a => a.StudentIdentifier.Trim() == studentId.Trim() && a.Pin == hashedPin);
                 
                 if (studentInfo != null)
                 {
@@ -399,8 +432,6 @@ public class StudentManager: Abp.Domain.Services.DomainService, IStudentManager
                         studentInfo.Id,
                         FullName = studentInfo.MiddleName == null ? $"{studentInfo.FirstName} {studentInfo.LastName}" : $"{studentInfo.FirstName} {studentInfo.MiddleName} {studentInfo.LastName}",
                         studentInfo.ClassName,
-                        IsStudentVerified = true
-                        
                     };
                 }
 
@@ -425,4 +456,18 @@ public class StudentManager: Abp.Domain.Services.DomainService, IStudentManager
             }
 
         }
+
+        public async Task AssignPinsToAllStudents()
+        {
+            var students = await _repositoryStudent.GetAllListAsync();
+            var random = new Random();
+            foreach (var student in students)
+            {
+                int pin = random.Next(1000, 10000); // 4-digit pin
+                string hashedPin = _hashids.Encode(pin);
+                student.Pin = hashedPin;
+                await _repositoryStudent.UpdateAsync(student);
+            }
+        }
 }
+

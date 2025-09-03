@@ -13,6 +13,8 @@ public class CreateFeesDescriptionInput
     public Guid ReceivableAccountId { get; set; }
     public string ReceivableAccountName { get; set; }
     public string BillTypeName { get; set; }
+    
+    
 }
 
 public class UpdateFeesDescriptionInput: EntityDto<Guid>

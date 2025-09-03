@@ -59,7 +59,7 @@ public class FeesDescriptionManager: Abp.Domain.Services.DomainService, IFeesDes
             
             var totalCount =  await _repositoryFeesDescription.CountAsync(predicate);
             
-            var data = await (await _repositoryFeesDescription.GetAllAsync()).Where(predicate).Select(a=> new { a.Id, a.Description, a.BillTypeName, a.ReceivableAccountName, a.BillTypeId, a.ReceivableAccountId }).Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
+            var data = await (await _repositoryFeesDescription.GetAllAsync()).Where(predicate).Select(a=> new { a.Id, a.Description, a.BillTypeName, a.ReceivableAccountName, a.BillTypeId, a.Unit, a.Quantity, a.ReceivableAccountId }).Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
 
             var totalPages = totalCount > 0 ? Convert.ToInt32(Math.Ceiling(totalCount / (decimal)pageSize)) : 0;
 

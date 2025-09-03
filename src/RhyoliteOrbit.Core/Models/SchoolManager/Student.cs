@@ -41,6 +41,8 @@ public class Student: Abp.Domain.Entities.Auditing.FullAuditedEntity<Guid>, Abp.
     public string EnrollmentType { get; set; }
     [MaxLength(100)]
     public string BiometricIdentifier { get; set; }
+    [MaxLength(15)]
+    public string Pin { get; set; }
     public bool IsAlumni { get; set; }
     public DateTime CompletionDate { get; set; }
     public int TenantId { get; set; }

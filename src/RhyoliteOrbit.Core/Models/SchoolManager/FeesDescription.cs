@@ -13,6 +13,11 @@ public class FeesDescription: Abp.Domain.Entities.Auditing.FullAuditedEntity<Gui
     [MaxLength(150)]
     public string ReceivableAccountName { get; set; }
     [MaxLength(50)]
+    public int Quantity { get; set; }
+    
+    [MaxLength(85)]
+    public string Unit { get; set; }
+    [MaxLength(100)]
     public string BillTypeName { get; set; }
     public int TenantId { get; set; }
 }

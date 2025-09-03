@@ -14,7 +14,7 @@ namespace RhyoliteOrbit.DomainServices.SchoolManager.BillSetups;
 
 public class BillSetupManager: Abp.Domain.Services.DomainService, IBillSetupManager
 {
-    private readonly IRepository<BillSetup, Guid> _repositoryBillSetup;
+        private readonly IRepository<BillSetup, Guid> _repositoryBillSetup;
         private readonly IRepository<BillType, Guid> _repositoryBillType;
         private readonly IRepository<FeesDescription, Guid> _repositoryFeesDescription;
         private readonly IAcademicPeriodMetaDataManager _academicPeriodMetaDataManager;

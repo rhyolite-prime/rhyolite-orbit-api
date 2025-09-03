@@ -15,7 +15,5 @@ public class CreateBillSetupInput
     public Guid BillTypeId { get; set; }
     public string BillTypeName { get; set; }
     public decimal TotalBillAmount { get; set; }
-    public int Quantity { get; set; }
-    public string Unit { get; set; }
     public List<BillSetupDetail> Details { get; set; }
 }

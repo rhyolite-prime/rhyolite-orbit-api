@@ -20,11 +20,6 @@ public class BillSetup: Abp.Domain.Entities.Auditing.FullAuditedEntity<Guid>, Ab
     [MaxLength(50)]
     public string BillTypeName { get; set; }
     public decimal TotalBillAmount { get; set; }
-    
-    public int Quantity { get; set; }
-    
-    [MaxLength(85)]
-    public string Unit { get; set; }
     [Column(TypeName = "jsonb")] public List<BillSetupDetail> Details { get; set; }
     public int TenantId { get; set; }
 }
