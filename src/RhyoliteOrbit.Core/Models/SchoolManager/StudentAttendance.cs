@@ -19,5 +19,6 @@ public class StudentAttendance: Abp.Domain.Entities.Auditing.FullAuditedEntity<G
     [MaxLength(50)]
     public string TermName { get; set; }
     public int TenantId { get; set; }
+    public bool IsPosted { get; set; }
     [Column(TypeName = "jsonb")] public List<StudentAttendanceDetail> Details { get; set; }
 }

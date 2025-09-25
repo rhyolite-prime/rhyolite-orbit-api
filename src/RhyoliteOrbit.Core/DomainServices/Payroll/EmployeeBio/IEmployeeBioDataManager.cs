@@ -9,11 +9,11 @@ namespace RhyoliteOrbit.DomainServices.Payroll.EmployeeBio;
 public interface IEmployeeBioDataManager: Abp.Domain.Services.IDomainService
 {
     Task<object> ListAll(int pageNo, int pageSize, string query);
-    Task<object> Create(EmployeeBioData input);
+    Task Create(EmployeeBioData input);
     Task<EmployeeBioData> GetAsync(string employeeIdentifier);
     Task Update(EmployeeBioData input);
     Task Delete(Guid id);
-    Task UpdateStatus(Guid employeeId, Guid statusId);
+    Task UpdateStatus(Guid employeeId, RhyoliteOrbitConsts.EmployeeStatus status);
 
     //export
     Task<List<AllowanceExportDto>> ExportAllowances();

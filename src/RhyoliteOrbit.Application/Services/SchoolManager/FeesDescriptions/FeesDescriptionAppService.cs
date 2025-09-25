@@ -18,9 +18,9 @@ public class FeesDescriptionAppService : RhyoliteOrbitAppServiceBase
     }
 
     [HttpGet]
-    public async Task<object> GetAll(int pageNo, int pageSize, string query)
+    public async Task<object> GetAll(int pageNo, int pageSize, string query, Guid billTypeId)
     {
-        return await _feesDescriptionManager.ListAll(pageNo, pageSize, query);
+        return await _feesDescriptionManager.ListAll(pageNo, pageSize, query, billTypeId);
     }
 
     [HttpGet]

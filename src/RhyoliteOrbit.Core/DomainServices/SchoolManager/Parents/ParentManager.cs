@@ -9,6 +9,7 @@ using Abp.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using RhyoliteOrbit.Models.SchoolManager;
 using RhyoliteOrbit.Models.Shared;
+using RhyoliteOrbit.Redis;
 
 namespace RhyoliteOrbit.DomainServices.SchoolManager.Parents;
 
@@ -18,14 +19,16 @@ public class ParentManager: Abp.Domain.Services.DomainService, IParentManager
         private readonly IRepository<Relationship, Guid> _repositoryRelationship;
         private readonly IRepository<Student, Guid> _repositoryStudent;
         private readonly IRepository<StudentParent, Guid> _repositoryStudentParent;
+        private readonly IRedisCacheManager _redisCacheManager;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
-        public ParentManager(IRepository<Parent, Guid> repositoryParent, IRepository<Relationship, Guid> repositoryRelationship, IRepository<Student, Guid> repositoryStudent, IRepository<StudentParent, Guid> repositoryStudentParent, IUnitOfWorkManager unitOfWorkManager)
+        public ParentManager(IRepository<Parent, Guid> repositoryParent, IRepository<Relationship, Guid> repositoryRelationship, IRepository<Student, Guid> repositoryStudent, IRepository<StudentParent, Guid> repositoryStudentParent, IUnitOfWorkManager unitOfWorkManager, IRedisCacheManager redisCacheManager)
         {
             _repositoryParent = repositoryParent;
             _repositoryRelationship = repositoryRelationship;
             _repositoryStudent = repositoryStudent;
             _repositoryStudentParent = repositoryStudentParent;
             _unitOfWorkManager = unitOfWorkManager;
+            _redisCacheManager = redisCacheManager;
         }
 
         public async Task<object> Create(Parent entity)
@@ -168,19 +171,46 @@ public class ParentManager: Abp.Domain.Services.DomainService, IParentManager
         }
 
         // external api
-        public async Task<object> VerifyParent(string phoneNo, string pin, int tenantId)
+        
+        public async Task<object> VerifyParent(string phoneNumber, int tenantId)
         {
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
                 var parentInfo =
-                    await _repositoryParent.FirstOrDefaultAsync(a => (a.FirstGuardianPhoneNo.Trim() == phoneNo.Trim() && a.FirstGuardianPin.Trim() == pin.Trim()) || (a.SecondGuardianPhoneNo.Trim() == phoneNo.Trim() && a.SecondGuardianPin.Trim() == pin.Trim()) );
+                    await _repositoryParent.FirstOrDefaultAsync(a => a.FirstGuardianPhoneNo.Trim() == phoneNumber.Trim() || a.SecondGuardianPhoneNo.Trim() == phoneNumber.Trim());
+
+                if (parentInfo == null)
+                    return new
+                    {
+                        IsGuardianVerified = false,
+                        PhoneNo = phoneNumber,
+                        code = 1
+                    };
+
+                // 2. Generate OTP
+                var otp = GenerateOtp();
+
+                await _redisCacheManager.SetValueAsync(phoneNumber, otp);
+                await _redisCacheManager.SetExpireTimeAsync(phoneNumber, TimeSpan.FromMinutes(5));
+
+                //retrieve SMS configuration and settings AND Send OTP via SMS/EMAIL
+
+                //_smsActorProvider.Tell(new SmsModel { });
 
                 return new
                 {
-                    IsGuardianVerified = parentInfo != null,
-                    PhoneNo = phoneNo
+                    IsGuardianVerified = true,
+                    PhoneNo = phoneNumber,
+                    code = 0
                 };
                 
             }
         }
+        
+        private string GenerateOtp()
+        {
+            var random = new Random();
+            return random.Next(1000, 9999).ToString();
+        }
+        
 }

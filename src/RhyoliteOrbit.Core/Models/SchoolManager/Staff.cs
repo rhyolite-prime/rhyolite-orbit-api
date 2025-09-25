@@ -41,8 +41,8 @@ public class Staff: Abp.Domain.Entities.Auditing.FullAuditedEntity<Guid>, Abp.Do
     public Guid NationalityId { get; set; }
     [MaxLength(100)]
     public string NationalityName { get; set; }
-    public Guid StaffStatusId { get; set; }
-    [MaxLength(100)] 
-    public string StaffStatusName { get; set; }
+    public int Status { get; set; } //EmployeeStatus enum
+    [MaxLength(15)]
+    public string Pin { get; set; } 
     public int TenantId { get; set; }
 }

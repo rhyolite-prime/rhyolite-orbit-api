@@ -22,7 +22,7 @@ public class PaymentTypeManager: Abp.Domain.Services.DomainService, IPaymentType
             _unitOfWorkManager = unitOfWorkManager;
         }
 
-        public async Task<object> Create(PaymentType entity)
+        public async Task Create(PaymentType entity)
         {
             var datta = await _repositoryPaymentType.FirstOrDefaultAsync(x => x.Name == entity.Name);
             
@@ -30,11 +30,7 @@ public class PaymentTypeManager: Abp.Domain.Services.DomainService, IPaymentType
             {
                 await _repositoryPaymentType.InsertAsync(entity);
 
-                return new
-                {
-                    code = 200,
-                    message = "successful"
-                };
+                return;
             }
 
             throw new UserFriendlyException(400, "Duplicate records are not allowed.");

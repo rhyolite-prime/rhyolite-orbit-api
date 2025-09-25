@@ -26,7 +26,7 @@ public class FeesDescriptionManager: Abp.Domain.Services.DomainService, IFeesDes
             var datta = await _repositoryFeesDescription.FirstOrDefaultAsync(x => x.Description == entity.Description && x.BillTypeId == entity.BillTypeId);
             if (datta == null)
             {
-                var billTypeInfo = await _repositoryBillType.FirstOrDefaultAsync(x=>x.Id == entity.BillTypeId);
+                var billTypeInfo = await _repositoryBillType.FirstOrDefaultAsync(x=> x.Id == entity.BillTypeId);
 
                 if (billTypeInfo != null)
                 {
@@ -46,7 +46,7 @@ public class FeesDescriptionManager: Abp.Domain.Services.DomainService, IFeesDes
             
         }
 
-        public async Task<object> ListAll(int pageNo, int pageSize, string query)
+        public async Task<object> ListAll(int pageNo, int pageSize, string query, Guid billTypeId)
         {
             var predicate = PredicateBuilder.New<FeesDescription>();
 
@@ -55,6 +55,11 @@ public class FeesDescriptionManager: Abp.Domain.Services.DomainService, IFeesDes
             if (!string.IsNullOrEmpty(query))
             {
                 predicate.And(x => x.Description.Contains(query));
+            }
+
+            if (billTypeId != Guid.Empty)
+            {
+                predicate.And(x => x.BillTypeId == billTypeId);
             }
             
             var totalCount =  await _repositoryFeesDescription.CountAsync(predicate);

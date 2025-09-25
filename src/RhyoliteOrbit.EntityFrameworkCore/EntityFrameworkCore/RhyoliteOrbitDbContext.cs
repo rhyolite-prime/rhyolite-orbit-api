@@ -46,6 +46,8 @@ public class RhyoliteOrbitDbContext : AbpZeroDbContext<Tenant, Role, User, Rhyol
     public DbSet<SystemNumber> SystemNumbers { get; set; }
     public DbSet<Country> Countries { get; set; }
     public DbSet<BusinessDate> BusinessDates { get; set; }
+    public DbSet<UnitOfMeasure> UnitOfMeasurements { get; set; }
+    
     
     //school manager...
     public DbSet<AcademicYear> AcademicYears { get; set; }
@@ -207,13 +209,22 @@ public class RhyoliteOrbitDbContext : AbpZeroDbContext<Tenant, Role, User, Rhyol
     //production planning and process control
     public DbSet<Product> Products { get; set; }
     public DbSet<ProductionOrder> ProductionOrders { get; set; }
+    public DbSet<JobTicket> JobTickets { get; set; }
     public DbSet<ProcessFlow> ProcessFlows { get; set; }
     public DbSet<WorkCenter> WorkCenters { get; set; }
-    public DbSet<Inventory> Inventories { get; set; }
-    public DbSet<BillOfMaterial> BillOfMaterials { get; set; }
-    public DbSet<Routing> Routings { get; set; }
-    public DbSet<OperatorAssignment> OperatorAssignments { get; set; }
-    public DbSet<QualityControl> QualityControls { get; set; }
+    public DbSet<ProductionSchedule> ProductionSchedules { get; set; }
+    public DbSet<FinishedGood> FinishedGoods { get; set; }
+    public DbSet<FinishedGoodAllocation> FinishedGoodAllocation { get; set; }
+    public DbSet<ScrapAndWaste> ScrapAndWastes { get; set; }
+    public DbSet<MaterialConsumption> MaterialConsumptions { get; set; }
+    public DbSet<RawMaterial> RawMaterials { get; set; }
+    public DbSet<BillOfMaterialItem> BillOfMaterialItems { get; set; }
+    public DbSet<QcChecklist> QcChecklists { get; set; }
+    public DbSet<InProcessInspection> InProcessInspections { get; set; }
+    public DbSet<FinalProductTest> FinalProductTests { get; set; }
+    public DbSet<NonConformance> NonConformance { get; set; }
+    //public DbSet<DemandForecast> DemandForecasts { get; set; }
+    
     
    
 }

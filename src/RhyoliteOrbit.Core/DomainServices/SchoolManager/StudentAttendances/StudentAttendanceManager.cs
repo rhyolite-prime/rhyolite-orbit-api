@@ -32,57 +32,62 @@ public class StudentAttendanceManager: Abp.Domain.Services.DomainService, IStude
         }
 
 
+        
         public async Task Create(StudentAttendance entity)
         {
-            //obtain current Academic Year and Term
+            // Get current school profile
             var schoolProfile = await (await _repositorySchoolProfile.GetAllAsync()).FirstOrDefaultAsync();
-
-            if (schoolProfile != null)
+            if (schoolProfile == null)
             {
-
-                var datta = await _repositoryStudentAttendance.FirstOrDefaultAsync(x => x.AttendanceDate.Date == entity.AttendanceDate.Date);
-
-                var metaData = await _academicPeriodMetaDataManager.GetAcademicPeriodMeta(schoolProfile.CurrentAcademicYearId, schoolProfile.CurrentTermId, entity.ClassId);
-
-                if (datta != null)
-                {
-                    datta.AcademicYearId = schoolProfile.CurrentAcademicYearId;
-                    datta.TermId = schoolProfile.CurrentTermId;
-                    datta.ClassId = entity.ClassId;
-                    datta.NoPresent = entity.NoPresent;
-                    datta.AttendanceDate = entity.AttendanceDate;
-                    datta.Details = entity.Details;
-
-                    if (metaData != null)
-                    {
-                        datta.AcademicYearName = metaData.AcademicYearName;
-                        datta.TermName = metaData.TermName;
-                        datta.ClassName = metaData.ClassName;
-
-                    }
-                    await _repositoryStudentAttendance.UpdateAsync(datta);
-
-                }
-                else
-                {
-                    entity.AcademicYearId = schoolProfile.CurrentAcademicYearId;
-                    entity.TermId = schoolProfile.CurrentTermId;
-
-                    if (metaData != null)
-                    {
-                        entity.AcademicYearName = metaData.AcademicYearName;
-                        entity.TermName = metaData.TermName;
-                        entity.ClassName = metaData.ClassName;
-
-                    }
-
-                    await _repositoryStudentAttendance.InsertAsync(entity);
-                }
-
+                return; // No profile means we can’t assign academic context
             }
-            
 
+            // Get existing attendance record for the same date and class
+            var existingAttendance = await _repositoryStudentAttendance.FirstOrDefaultAsync(
+                x => x.AttendanceDate.Date == entity.AttendanceDate.Date && x.ClassId == entity.ClassId);
+
+            // Get academic metadata (year, term, class names)
+            var metaData = await _academicPeriodMetaDataManager.GetAcademicPeriodMeta(
+                schoolProfile.CurrentAcademicYearId,
+                schoolProfile.CurrentTermId,
+                entity.ClassId);
+
+            if (existingAttendance != null)
+            {
+                // Update existing record
+                existingAttendance.AcademicYearId = schoolProfile.CurrentAcademicYearId;
+                existingAttendance.TermId = schoolProfile.CurrentTermId;
+                existingAttendance.ClassId = entity.ClassId;
+                existingAttendance.NoPresent = entity.NoPresent;
+                existingAttendance.AttendanceDate = entity.AttendanceDate;
+                existingAttendance.Details = entity.Details;
+
+                if (metaData != null)
+                {
+                    existingAttendance.AcademicYearName = metaData.AcademicYearName;
+                    existingAttendance.TermName = metaData.TermName;
+                    existingAttendance.ClassName = metaData.ClassName;
+                }
+
+                await _repositoryStudentAttendance.UpdateAsync(existingAttendance);
+            }
+            else
+            {
+                // Assign academic context for new record
+                entity.AcademicYearId = schoolProfile.CurrentAcademicYearId;
+                entity.TermId = schoolProfile.CurrentTermId;
+
+                if (metaData != null)
+                {
+                    entity.AcademicYearName = metaData.AcademicYearName;
+                    entity.TermName = metaData.TermName;
+                    entity.ClassName = metaData.ClassName;
+                }
+
+                await _repositoryStudentAttendance.InsertAsync(entity);
+            }
         }
+        
 
 
         public async Task Delete(Guid id)
@@ -111,7 +116,7 @@ public class StudentAttendanceManager: Abp.Domain.Services.DomainService, IStude
                 
                 await _repositoryStudentAttendance.CountAsync(predicate);
             
-            var data = await (await _repositoryStudentAttendance.GetAllAsync()).Where(predicate).Select(a=> new { a.Id, a.ClassName, a.ClassId, a.AcademicYearId, a.AcademicYearName, a.NoPresent, a.AttendanceDate }).Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
+            var data = await (await _repositoryStudentAttendance.GetAllAsync()).Where(predicate).Select(a=> new { a.Id, a.ClassName, a.ClassId, a.AcademicYearId, a.AcademicYearName, a.NoPresent, a.AttendanceDate, a.Details }).Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
 
             var totalPages = totalCount > 0 ? Convert.ToInt32(Math.Ceiling(totalCount / (decimal)pageSize)) : 0;
 

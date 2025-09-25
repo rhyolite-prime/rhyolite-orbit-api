@@ -2,12 +2,21 @@
 using RhyoliteOrbit.Sessions.Dto;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using HashidsNet;
 using Microsoft.AspNetCore.Mvc;
 
 namespace RhyoliteOrbit.Sessions;
 
 public class SessionAppService : RhyoliteOrbitAppServiceBase, ISessionAppService
 {
+    
+    private readonly IHashids _hashids;
+
+    public SessionAppService(IHashids hashids)
+    {
+        _hashids = hashids;
+    }
+    
     [HttpGet]
     [DisableAuditing]
     public async Task<GetCurrentLoginInformationsOutput> GetCurrentLoginInformations()
@@ -33,6 +42,21 @@ public class SessionAppService : RhyoliteOrbitAppServiceBase, ISessionAppService
         }
 
         return output;
+    }
+    
+    [HttpGet]
+    [DisableAuditing]
+    public object GetAccountSecret()
+    {
+        var tenantId = AbpSession.TenantId ?? 0;
+            
+        var userId = AbpSession.UserId ?? 0;
+            
+        var accountSecret = _hashids.Encode(tenantId);
+            
+        var accountKey = _hashids.EncodeLong(userId);
+            
+        return new { AccountSecret = accountSecret, AccountKey = accountKey};
     }
     
     

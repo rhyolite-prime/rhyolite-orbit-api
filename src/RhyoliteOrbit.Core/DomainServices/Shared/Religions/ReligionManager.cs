@@ -20,19 +20,14 @@ public class ReligionManager: Abp.Domain.Services.DomainService, IReligionManage
         _repositoryReligion = repositoryReligion;
     }
 
-    public async Task<object> Create(Religion entity)
+    public async Task Create(Religion entity)
     {
         var datta = await _repositoryReligion.FirstOrDefaultAsync(x => x.Name.Trim().ToLower() == entity.Name.Trim().ToLower());
 
         if (datta == null)
         {
             await _repositoryReligion.InsertAsync(entity);
-
-            return new
-            {
-                code = 200,
-                message = "successful"
-            };
+            return;
         }
         
         throw new UserFriendlyException(

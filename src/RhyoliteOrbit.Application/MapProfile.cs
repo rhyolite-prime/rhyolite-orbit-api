@@ -1,6 +1,7 @@
 using RhyoliteOrbit.Application.Services.SchoolManager.SubjectRemarks.Dto;
 using RhyoliteOrbit.Models.GeneralLedger;
 using RhyoliteOrbit.Models.Payroll;
+using RhyoliteOrbit.Models.ProductionPlanning;
 using RhyoliteOrbit.Models.SchoolManager;
 using RhyoliteOrbit.Models.Shared;
 using RhyoliteOrbit.Services.GeneralLedger.AccountHeads.Dto;
@@ -13,7 +14,9 @@ using RhyoliteOrbit.Services.Payroll.EmployeeCategories.Dto;
 using RhyoliteOrbit.Services.Payroll.FeesDescriptions.Dto;
 using RhyoliteOrbit.Services.Payroll.LoanTypes.Dto;
 using RhyoliteOrbit.Services.Payroll.OvertimeTypes.Dto;
+using RhyoliteOrbit.Services.ProductionPlanning.RawMaterials.Dto;
 using RhyoliteOrbit.Services.SchoolManager.AcademicYears.Dto;
+using RhyoliteOrbit.Services.SchoolManager.BillSetups.Dto;
 using RhyoliteOrbit.Services.SchoolManager.BillTypes.Dto;
 using RhyoliteOrbit.Services.SchoolManager.ClassStreams.Dto;
 using RhyoliteOrbit.Services.SchoolManager.Levels.Dto;
@@ -23,6 +26,7 @@ using RhyoliteOrbit.Services.SchoolManager.Students.Dto;
 using RhyoliteOrbit.Services.SchoolManager.SubjectCategories.Dto;
 using RhyoliteOrbit.Services.SchoolManager.Subjects.Dto;
 using RhyoliteOrbit.Services.Shared.Currencies.Dto;
+using RhyoliteOrbit.Services.Shared.UnitOfMeasurements.Dto;
 
 namespace RhyoliteOrbit;
 
@@ -41,6 +45,10 @@ public class MapProfile: AutoMapper.Profile
 
         CreateMap<CreateBillTypeInput, BillType>();
         CreateMap<UpdateBillTypeInput, BillType>();
+        
+        CreateMap<CreateBillSetupInput, BillSetup>();
+        CreateMap<BillSetup, BillSetupInfo>();
+        
 
         CreateMap<CreateFeesDescriptionInput, FeesDescription>();
         CreateMap<UpdateFeesDescriptionInput, FeesDescription>();
@@ -90,7 +98,6 @@ public class MapProfile: AutoMapper.Profile
         CreateMap<CreateLoanTypeInput, LoanType>();
         CreateMap<UpdateLoanTypeInput, LoanType>();
         
-        
         //gl
         CreateMap<CreateAccountHeadInput, AccountHead>();
         CreateMap<UpdateAccountHeadInput, AccountHead>();
@@ -101,6 +108,12 @@ public class MapProfile: AutoMapper.Profile
         CreateMap<CreateCoaDetailInput, CoaDetail>();
         CreateMap<UpdateCoaDetailInput, CoaDetail>();
         
+        //manufacturing...
         
+        CreateMap<CreateUnitOfMeasureInput, UnitOfMeasure>();
+        CreateMap<UpdateUnitOfMeasureInput, UnitOfMeasure>();
+        
+        CreateMap<CreateRawMaterialInput, RawMaterial>();
+        CreateMap<UpdateRawMaterialInput, RawMaterial>();
     }
 }

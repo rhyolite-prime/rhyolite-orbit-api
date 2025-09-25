@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Abp.Domain.Repositories;
 using Abp.Linq.Expressions;
+using Abp.UI;
 using Microsoft.EntityFrameworkCore;
 using RhyoliteOrbit.DomainServices.Payroll.EmployeeBio.Dto;
 using RhyoliteOrbit.Models.Payroll;
@@ -14,30 +15,20 @@ namespace RhyoliteOrbit.DomainServices.Payroll.EmployeeBio;
 public class EmployeeBioDataManager: Abp.Domain.Services.DomainService, IEmployeeBioDataManager
 {
     private readonly IRepository<EmployeeBioData, Guid> _repositoryEmployeeBioData;
-        private readonly IRepository<PersonnelStatus, Guid> _repositoryPersonnelStatus;
         private readonly IRepository<SystemNumber, Guid> _repositorySystemNumber; 
 
-        public EmployeeBioDataManager(IRepository<EmployeeBioData, Guid> repositoryEmployeeBioData, IRepository<PersonnelStatus, Guid> repositoryPersonnelStatus, IRepository<SystemNumber, Guid> repositorySystemNumber)
+        public EmployeeBioDataManager(IRepository<EmployeeBioData, Guid> repositoryEmployeeBioData, IRepository<SystemNumber, Guid> repositorySystemNumber)
         {
             _repositoryEmployeeBioData = repositoryEmployeeBioData;
-            _repositoryPersonnelStatus = repositoryPersonnelStatus;
             _repositorySystemNumber = repositorySystemNumber;
         }
 
-        public async Task<object> Create(EmployeeBioData entity)
+        public async Task Create(EmployeeBioData entity)
         {
             var datta = await _repositoryEmployeeBioData.FirstOrDefaultAsync(x => x.EmployeeIdentifier == entity.EmployeeIdentifier);
 
             if (datta == null)
             {
-                //get default status
-                var defaultStatus = await _repositoryPersonnelStatus.FirstOrDefaultAsync(x=>x.IsDefault);
-
-                if (defaultStatus != null && entity.StatusId == Guid.Empty)
-                {
-                    entity.StatusName = defaultStatus.Name;
-                    entity.StatusId= defaultStatus.Id;
-                }
 
                 entity.FirstName = entity.FirstName.Trim();
                 entity.LastName = entity.LastName.Trim();
@@ -53,20 +44,13 @@ public class EmployeeBioDataManager: Abp.Domain.Services.DomainService, IEmploye
 
                     await _repositorySystemNumber.UpdateAsync(systemNumberInfo);
                 }
-                
 
-                return new
-                {
-                    code = 200,
-                    message = "successful"
-                };
+
+                return;
             }
 
-            return new
-            {
-                code = 400,
-                message = "Duplicate Employee ID's are not allowed."
-            };
+            throw new UserFriendlyException(400, "Duplicate Employee ID's are not allowed.", "");
+
         }
 
         public async Task Update(EmployeeBioData entity)
@@ -128,13 +112,13 @@ public class EmployeeBioDataManager: Abp.Domain.Services.DomainService, IEmploye
 
         }
         
-        public async Task UpdateStatus(Guid employeeId, Guid statusId)
+        public async Task UpdateStatus(Guid employeeId, RhyoliteOrbitConsts.EmployeeStatus status)
         {
             var employeeInfo = await _repositoryEmployeeBioData.FirstOrDefaultAsync(employeeId);
 
             if (employeeInfo != null)
             {
-                employeeInfo.StatusId = statusId;
+                employeeInfo.Status = (int)status;
 
                 await _repositoryEmployeeBioData.UpdateAsync(employeeInfo);
             }

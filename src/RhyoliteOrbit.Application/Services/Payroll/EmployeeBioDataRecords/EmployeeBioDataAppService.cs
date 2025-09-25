@@ -56,10 +56,10 @@ public class EmployeeBioDataAppService: RhyoliteOrbitAppServiceBase
         /// <param name="input"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<object> Create(CreateEmployeeBioDataInput input)
+        public async Task Create(CreateEmployeeBioDataInput input)
         {
             var obj = _mapper.Map<EmployeeBioData>(input);
-            return await _employeeBioDataManager.Create(obj);
+            await _employeeBioDataManager.Create(obj);
         }
 
         /// <summary>
@@ -166,9 +166,9 @@ public class EmployeeBioDataAppService: RhyoliteOrbitAppServiceBase
         /// <param name="employeeId"></param>
         /// <param name="statusId"></param>
         [HttpGet]
-        public async Task UpdateStatus(Guid employeeId, Guid statusId)
+        public async Task UpdateStatus(Guid employeeId, RhyoliteOrbitConsts.EmployeeStatus status)
         {
-            await _employeeBioDataManager.UpdateStatus(employeeId, statusId);
+            await _employeeBioDataManager.UpdateStatus(employeeId, status);
         }
 
         // export ...

@@ -414,7 +414,7 @@ public class StudentManager: Abp.Domain.Services.DomainService, IStudentManager
         
         //api ...
         
-        
+       
         
         public async Task<object> GetStudentInfo(string studentId, string pin, int tenantId)
         {
@@ -426,12 +426,18 @@ public class StudentManager: Abp.Domain.Services.DomainService, IStudentManager
                 
                 if (studentInfo != null)
                 {
-                    return new 
+                    string studentInfoSummary = 
+                        $"Student ID: {studentInfo.StudentIdentifier}\n" +
+                        $"Full Name: {(studentInfo.MiddleName == null ? $"{studentInfo.FirstName} {studentInfo.LastName}" : $"{studentInfo.FirstName} {studentInfo.MiddleName} {studentInfo.LastName}")}\n" +
+                        $"Class: {studentInfo.ClassName}";
+
+                    return new
                     {
                         studentInfo.StudentIdentifier,
                         studentInfo.Id,
                         FullName = studentInfo.MiddleName == null ? $"{studentInfo.FirstName} {studentInfo.LastName}" : $"{studentInfo.FirstName} {studentInfo.MiddleName} {studentInfo.LastName}",
                         studentInfo.ClassName,
+                        StudentInfoSummary = studentInfoSummary
                     };
                 }
 

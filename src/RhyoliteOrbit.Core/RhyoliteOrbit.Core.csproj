@@ -34,7 +34,6 @@
     <Folder Include="DomainServices\Hr\" />
     <Folder Include="DomainServices\Inventory\" />
     <Folder Include="DomainServices\Payroll\Dashboard\" />
-    <Folder Include="DomainServices\ProductionPlanning\" />
     <Folder Include="DomainServices\SchoolManager\StudentBillReceipts\" />
     <Folder Include="DomainServices\SupplyChain\" />
     <Folder Include="Models\AccountsPayable\" />

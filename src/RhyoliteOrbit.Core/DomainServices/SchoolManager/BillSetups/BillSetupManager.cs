@@ -4,8 +4,10 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Abp.Linq.Expressions;
 using Abp.UI;
+using HashidsNet;
 using Microsoft.EntityFrameworkCore;
 using RhyoliteOrbit.DomainServices.Shared.MetaData;
 using RhyoliteOrbit.Models.SchoolManager;
@@ -17,58 +19,74 @@ public class BillSetupManager: Abp.Domain.Services.DomainService, IBillSetupMana
         private readonly IRepository<BillSetup, Guid> _repositoryBillSetup;
         private readonly IRepository<BillType, Guid> _repositoryBillType;
         private readonly IRepository<FeesDescription, Guid> _repositoryFeesDescription;
+        private readonly IRepository<Student, Guid> _repositoryStudent;
         private readonly IAcademicPeriodMetaDataManager _academicPeriodMetaDataManager;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
+        private readonly IHashids _hashids;
 
-        public BillSetupManager(IRepository<BillSetup, Guid> repositoryBillSetup, IAcademicPeriodMetaDataManager academicPeriodMetaDataManager, IRepository<BillType, Guid> repositoryBillType, IRepository<FeesDescription, Guid> repositoryFeesDescription)
+        public BillSetupManager(IRepository<BillSetup, Guid> repositoryBillSetup, IAcademicPeriodMetaDataManager academicPeriodMetaDataManager, IRepository<BillType, Guid> repositoryBillType, IRepository<FeesDescription, Guid> repositoryFeesDescription, IUnitOfWorkManager unitOfWorkManager, IRepository<Student, Guid> repositoryStudent, IHashids hashids)
         {
             _repositoryBillSetup = repositoryBillSetup;
             _academicPeriodMetaDataManager = academicPeriodMetaDataManager;
             _repositoryBillType = repositoryBillType;
             _repositoryFeesDescription = repositoryFeesDescription;
+            _unitOfWorkManager = unitOfWorkManager;
+            _repositoryStudent = repositoryStudent;
+            _hashids = hashids;
         }
 
 
+        
         public async Task<object> Create(BillSetup entity)
         {
             // Validate input
             if (entity == null)
-            {
                 throw new UserFriendlyException(400, "Argument Exception");
-            }
 
             if (entity.Details == null || !entity.Details.Any())
-            {
                 throw new UserFriendlyException(400, "Argument Exception", "Bill details cannot be empty");
-            }
 
             // Get related data
             var billTypeInfo = await _repositoryBillType.FirstOrDefaultAsync(x => x.Id == entity.BillTypeId);
             var basicInfo = await _academicPeriodMetaDataManager.GetAcademicPeriodMeta(entity.AcademicYearId, entity.TermId, entity.ClassId);
-            var existingBillSetup = await _repositoryBillSetup.FirstOrDefaultAsync(x => 
-                x.AcademicYearId == entity.AcademicYearId && 
-                x.TermId == entity.TermId && 
-                x.ClassId == entity.ClassId && 
+
+            var existingBillSetup = await _repositoryBillSetup.FirstOrDefaultAsync(x =>
+                x.AcademicYearId == entity.AcademicYearId &&
+                x.TermId == entity.TermId &&
+                x.ClassId == entity.ClassId &&
                 x.BillTypeId == entity.BillTypeId);
 
-            // Process first bill detail
-            var billDetail = entity.Details.FirstOrDefault();
-            var feeDescriptionInfo = await _repositoryFeesDescription.FirstOrDefaultAsync(x => x.Id == billDetail.FeeId);
-            
-            // Create the bill detail object
-            var newBillDetail = CreateBillDetail(billDetail, feeDescriptionInfo, entity.BillTypeId, billTypeInfo?.Name);
+            // Batch fetch fee descriptions for all details
+            var feeIds = entity.Details
+                .Where(d => d.FeeId != Guid.Empty)
+                .Select(d => d.FeeId)
+                .Distinct()
+                .ToList();
+
+            var feeDescriptions = feeIds.Any()
+                ? await _repositoryFeesDescription.GetAllListAsync(fd => feeIds.Contains(fd.Id))
+                : new List<FeesDescription>();
+
+            // Build BillSetupDetail objects for each incoming detail
+            var newBillDetails = entity.Details.Select(d =>
+            {
+                var feeDesc = feeDescriptions.FirstOrDefault(f => f.Id == d.FeeId);
+                return CreateBillDetail(d, feeDesc, entity.BillTypeId, billTypeInfo?.Name);
+            }).ToList();
 
             if (existingBillSetup != null)
             {
-                return await UpdateExistingBillSetup(existingBillSetup, entity, basicInfo, billTypeInfo, newBillDetail);
+                return await UpdateExistingBillSetup(existingBillSetup, entity, basicInfo, billTypeInfo, newBillDetails);
             }
             else
             {
-                return await CreateNewBillSetup(entity, basicInfo, billTypeInfo, newBillDetail);
+                return await CreateNewBillSetup(entity, basicInfo, billTypeInfo, newBillDetails);
             }
         }
 
         private BillSetupDetail CreateBillDetail(BillSetupDetail sourceDetail, FeesDescription feeDescriptionInfo, Guid billTypeId, string billTypeName)
         {
+            // preserve Id if provided; otherwise repository can generate
             return new BillSetupDetail
             {
                 Id = sourceDetail.Id,
@@ -76,16 +94,17 @@ public class BillSetupManager: Abp.Domain.Services.DomainService, IBillSetupMana
                 FeeId = sourceDetail.FeeId,
                 FeeName = feeDescriptionInfo?.Description,
                 BillTypeId = billTypeId,
+                Gender = string.IsNullOrWhiteSpace(sourceDetail.Gender) ? string.Empty : sourceDetail.Gender,
                 BillTypeName = billTypeName ?? string.Empty
             };
         }
 
         private async Task<object> UpdateExistingBillSetup(
-            BillSetup existingBillSetup, 
-            BillSetup newEntity, 
-            dynamic basicInfo, 
-            BillType billTypeInfo, 
-            BillSetupDetail newBillDetail)
+            BillSetup existingBillSetup,
+            BillSetup newEntity,
+            dynamic basicInfo,
+            BillType billTypeInfo,
+            List<BillSetupDetail> newBillDetails)
         {
             // Update basic information
             existingBillSetup.AcademicYearName = basicInfo.AcademicYearName;
@@ -95,26 +114,34 @@ public class BillSetupManager: Abp.Domain.Services.DomainService, IBillSetupMana
             existingBillSetup.BillTypeName = billTypeInfo?.Name;
             existingBillSetup.TotalBillAmount = newEntity.TotalBillAmount;
 
-            // Update bill details
-            var billDetails = existingBillSetup.Details;
-            var existingBillDetail = billDetails.FirstOrDefault(x => x.FeeId == newEntity.Details[0].FeeId);
-            
-            if (existingBillDetail != null)
+            // Ensure existing details collection exists
+            var billDetails = existingBillSetup.Details ?? new List<BillSetupDetail>();
+
+            // Merge incoming details:
+            // - Remove an existing detail if it matches FeeId + Gender (case-insensitive)
+            // - Add the incoming detail
+            foreach (var incoming in newBillDetails)
             {
-                billDetails.Remove(existingBillDetail);
+                var existingDetail = billDetails.FirstOrDefault(x =>
+                    x.FeeId == incoming.FeeId &&
+                    string.Equals((x.Gender ?? ""), (incoming.Gender ?? ""), StringComparison.OrdinalIgnoreCase));
+
+                if (existingDetail != null)
+                    billDetails.Remove(existingDetail);
+
+                billDetails.Add(incoming);
             }
 
-            billDetails.Add(newBillDetail);
             existingBillSetup.Details = billDetails;
 
             return await _repositoryBillSetup.UpdateAsync(existingBillSetup);
         }
 
         private async Task<object> CreateNewBillSetup(
-            BillSetup entity, 
-            dynamic basicInfo, 
-            BillType billTypeInfo, 
-            BillSetupDetail billDetail)
+            BillSetup entity,
+            dynamic basicInfo,
+            BillType billTypeInfo,
+            List<BillSetupDetail> billDetails)
         {
             var newBillSetup = new BillSetup
             {
@@ -127,13 +154,13 @@ public class BillSetupManager: Abp.Domain.Services.DomainService, IBillSetupMana
                 BillTypeId = entity.BillTypeId,
                 BillTypeName = billTypeInfo?.Name,
                 TotalBillAmount = entity.TotalBillAmount,
-                Details = new List<BillSetupDetail> { billDetail },
+                Details = billDetails ?? new List<BillSetupDetail>(),
                 TenantId = entity.TenantId
             };
 
             return await _repositoryBillSetup.InsertAsync(newBillSetup);
         }
-
+        
         public async Task<object> ListAll(int pageNo, int pageSize, string query, Guid academicYearId, Guid termId, Guid classId, Guid billTypeId)
         {
             var predicate = PredicateBuilder.New<BillSetup>();

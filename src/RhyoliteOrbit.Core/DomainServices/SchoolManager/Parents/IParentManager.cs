@@ -15,5 +15,6 @@ public interface IParentManager: Abp.Domain.Services.IDomainService
     Task Delete(Guid id);
     Task<object> ListParents();
 
-    Task<object> VerifyParent(string phoneNo, string pin, int tenantId);
+    //Task<object> VerifyParent(string phoneNo, string pin, int tenantId);
+    Task<object> VerifyParent(string phoneNumber, int tenantId);
 }
