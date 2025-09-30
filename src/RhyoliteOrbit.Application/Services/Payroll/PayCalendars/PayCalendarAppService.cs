@@ -50,6 +50,8 @@ public class PayCalendarAppService: RhyoliteOrbitAppServiceBase
     public async Task Update(UpdatePayCalendarInput input)
     {
         var obj = _mapper.Map<PayCalendar>(input);
+        var tenantInfo = await GetCurrentTenantAsync();
+        obj.TenantId = tenantInfo.Id;
         await _payCalendarManager.Update(obj);
     }
 

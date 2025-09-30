@@ -55,10 +55,9 @@ public class EmployeeBioData: Abp.Domain.Entities.Auditing.FullAuditedEntity<Gui
         public string PersonalEmail { get; set; }
         [MaxLength(20)]
         public string MaritalStatus { get; set; }
-        public Guid ReligionId { get; set; }
         
         [MaxLength(100)]
-        public string ReligionName { get; set; }
+        public string Religion { get; set; }
         public Guid NationalityId { get; set; }
         [MaxLength(100)]
         public string NationalityName { get; set; }
@@ -77,10 +76,12 @@ public class EmployeeBioData: Abp.Domain.Entities.Auditing.FullAuditedEntity<Gui
         public string NationalIdentificationNo { get; set; }
         [MaxLength(20)]
         public string NationalHealthInsuranceNo { get; set; }
+        
         [MaxLength(20)]
         public string DriverLicenseNo { get; set; }
-        public DateTime? LicenseIssueDate { get; set; }
-        public DateTime? LicenseExpiryDate { get; set; }
+        public DateTime? DriverLicenseIssueDate { get; set; }
+        public DateTime? DriverLicenseExpiryDate { get; set; }
+        
         [MaxLength(50)]
         public string IdentityType { get; set; }
         [MaxLength(20)]

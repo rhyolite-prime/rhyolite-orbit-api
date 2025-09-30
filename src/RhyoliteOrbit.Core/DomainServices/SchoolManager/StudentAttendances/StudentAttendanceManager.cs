@@ -89,7 +89,6 @@ public class StudentAttendanceManager: Abp.Domain.Services.DomainService, IStude
         }
         
 
-
         public async Task Delete(Guid id)
         {
             await _repositoryStudentAttendance.DeleteAsync(id);

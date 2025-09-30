@@ -61,7 +61,7 @@ public class StaffManager: Abp.Domain.Services.DomainService, IStaffManager
                     DateOfBirth = entity.DateOfBirth,
                     PersonalEmail = entity.EmailAddress,
                     MaritalStatus = entity.MaritalStatus,
-                    ReligionId = Guid.Empty,
+                    Religion = entity.Religion,
                     NationalityId = entity.NationalityId,
                     Hometown = "",
                     PrimaryPhoneNumber = entity.PrimaryPhone,
@@ -71,9 +71,9 @@ public class StaffManager: Abp.Domain.Services.DomainService, IStaffManager
                     TenantId = entity.TenantId,
                     NationalIdentificationNo = "",
                     NationalHealthInsuranceNo = "",
-                    LicenseIssueDate = null,
+                    DriverLicenseIssueDate = null,
                     DriverLicenseNo = null,
-                    LicenseExpiryDate = null,
+                    DriverLicenseExpiryDate = null,
                     IdentityNo = string.Empty,
                     IdentityType = string.Empty,
                     Height = 0,
@@ -101,7 +101,7 @@ public class StaffManager: Abp.Domain.Services.DomainService, IStaffManager
             var employeeId = Guid.NewGuid();
             
             //generate staff Id
-            var systemNumber = await _repositorySystemNumber.FirstOrDefaultAsync(x => x.Module == (int)RhyoliteOrbitConsts.ErpModules.SchoolInformationSystem && x.ItemName == "StaffID");
+            var systemNumber = await _repositorySystemNumber.FirstOrDefaultAsync(x => x.Module == (int)RhyoliteOrbitConsts.ErpModule.SchoolInformationSystem && x.ItemName == "StaffID");
         
             // Increment the last number
             systemNumber.LastNo++;
@@ -142,7 +142,7 @@ public class StaffManager: Abp.Domain.Services.DomainService, IStaffManager
                 DateOfBirth = entity.DateOfBirth,
                 PersonalEmail = entity.EmailAddress,
                 MaritalStatus = entity.MaritalStatus,
-                ReligionId = Guid.Empty,
+                Religion = entity.Religion,
                 NationalityId = entity.NationalityId,
                 Hometown = "",
                 PrimaryPhoneNumber = entity.PrimaryPhone,
@@ -152,9 +152,9 @@ public class StaffManager: Abp.Domain.Services.DomainService, IStaffManager
                 TenantId = entity.TenantId,
                 NationalIdentificationNo = "",
                 NationalHealthInsuranceNo = "",
-                LicenseIssueDate = null,
+                DriverLicenseIssueDate = null,
                 DriverLicenseNo = null,
-                LicenseExpiryDate = null,
+                DriverLicenseExpiryDate = null,
                 IdentityNo = string.Empty,
                 IdentityType = string.Empty,
                 Height = 0,

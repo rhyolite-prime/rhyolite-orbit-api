@@ -8,42 +8,42 @@ using RhyoliteOrbit.Services.ProductionPlanning.JobTickets.Dto;
 
 namespace RhyoliteOrbit.Services.ProductionPlanning.JobTickets;
 
-public class JobTicketAppService: RhyoliteOrbitAppServiceBase
+public class OperationAppService: RhyoliteOrbitAppServiceBase
 {
-    private readonly IJobTicketManager _jobTicketManager;
+    private readonly IOperationManager _operationManager;
     private readonly IMapper _mapper;
 
-    public JobTicketAppService(IJobTicketManager jobTicketManager, IMapper mapper)
+    public OperationAppService(IOperationManager operationManager, IMapper mapper)
     {
-        _jobTicketManager = jobTicketManager;
+        _operationManager = operationManager;
         _mapper = mapper;
     }
     
     [HttpGet]
     public async Task<object> GetAll(int pageNo, int pageSize, string query)
     {
-        return await _jobTicketManager.ListAll(pageNo, pageSize, query);
+        return await _operationManager.ListAll(pageNo, pageSize, query);
     }
 
     [HttpPost]
-    public async Task Create(CreateJobTicketInput input)
+    public async Task Create(CreateOperationInput input)
     {
-        var obj = _mapper.Map<JobTicket>(input);
-        await _jobTicketManager.Create(obj);
+        var obj = _mapper.Map<Operation>(input);
+        await _operationManager.Create(obj);
     }
 
     [HttpPost]
-    public async Task Update(UpdateJobTicketInput input)
+    public async Task Update(UpdateOperationInput input)
     {
-        var obj = _mapper.Map<JobTicket>(input);
+        var obj = _mapper.Map<Operation>(input);
         var tenantInfo = await GetCurrentTenantAsync();
         obj.TenantId = tenantInfo.Id;
-        await _jobTicketManager.Update(obj);
+        await _operationManager.Update(obj);
     }
 
     [HttpDelete]
     public async Task Delete(Guid id)
     {
-        await _jobTicketManager.Delete(id);
+        await _operationManager.Delete(id);
     }
 }

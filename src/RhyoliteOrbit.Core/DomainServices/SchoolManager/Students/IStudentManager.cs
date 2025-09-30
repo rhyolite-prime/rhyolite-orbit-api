@@ -21,9 +21,9 @@ public interface IStudentManager: Abp.Domain.Services.IDomainService
     Task<object> ListStudentsForPromotion(Guid classId);
 
     //Enquiry
-    Task<IEnumerable<object>> EnqStudsByClass(Guid classId);
-    Task<IEnumerable<object>> EnqStudsByNationality(Guid nationalityId);
-    Task<IEnumerable<object>> EnqStudsByReligion(Guid religionId);
+    Task<object> EnqStudsByClass(Guid classId);
+    Task<object> EnqStudsByNationality(Guid nationalityId);
+    Task<object> EnqStudsByReligion(string religion);
 
     //exports
     Task<IEnumerable<object>> AttitudeExcelExport(Guid classId);

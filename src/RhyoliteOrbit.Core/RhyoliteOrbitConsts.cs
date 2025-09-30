@@ -135,7 +135,7 @@ public class RhyoliteOrbitConsts
         Hospitalized = 5
     }
     
-    public enum ErpModules
+    public enum ErpModule
     {
        SchoolInformationSystem = 1,
        PayrollSystem = 2,
@@ -167,7 +167,7 @@ public class RhyoliteOrbitConsts
         Critical = 3
     }
     
-    public enum ProductionScheduleStatus 
+    public enum OperationStatus 
     {
         Pending = 0,
         InProgress = 1,

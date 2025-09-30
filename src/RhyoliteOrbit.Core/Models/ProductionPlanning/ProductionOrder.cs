@@ -5,11 +5,13 @@ namespace RhyoliteOrbit.Models.ProductionPlanning;
 
 public class ProductionOrder: Abp.Domain.Entities.Auditing.FullAuditedEntity<Guid>, Abp.Domain.Entities.IMustHaveTenant
 {
+    [MaxLength(100)]
+    public string Title { get; set; }
+    [MaxLength(100)]
+    public string Tag { get; set; }
     [MaxLength(20)]
     public string ProductionOrderIdentifier { get; set; }
-    public Guid ProductionScheduleId { get; set; }
-    [MaxLength(20)]
-    public string ProductionScheduleIdentifier { get; set; }
+    
     public Guid ProductId { get; set; }
     [MaxLength(200)]
     public string ProductName { get; set; }
@@ -19,6 +21,8 @@ public class ProductionOrder: Abp.Domain.Entities.Auditing.FullAuditedEntity<Gui
     public DateTime ActualStartDate { get; set; }
     public DateTime PlannedEndDate { get; set; }
     public DateTime ActualEndDate { get; set; }
+    public decimal EstimatedBudget { get; set; }
+    public int PriorityLevel { get; set; } // Priority enum
     public int Status { get; set; } // ProductionOrder status enum
     // Manager properties : from employees
     // Not everyone in the company will be a user on the portal/app

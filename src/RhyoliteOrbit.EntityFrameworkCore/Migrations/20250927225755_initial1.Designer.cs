@@ -18,8 +18,8 @@ using RhyoliteOrbit.Models.Shared;
 namespace RhyoliteOrbit.Migrations
 {
     [DbContext(typeof(RhyoliteOrbitDbContext))]
-    [Migration("20250902144127_initial111")]
-    partial class initial111
+    [Migration("20250927225755_initial1")]
+    partial class initial1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -2940,13 +2940,16 @@ namespace RhyoliteOrbit.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("CategoryName")
-                        .HasColumnType("text");
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
 
                     b.Property<string>("CityOrLocation")
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("CompanyEmail")
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("timestamp without time zone");
@@ -2970,46 +2973,61 @@ namespace RhyoliteOrbit.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("DepartmentName")
-                        .HasColumnType("text");
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.Property<DateTime?>("DriverLicenseExpiryDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime?>("DriverLicenseIssueDate")
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("DriverLicenseNo")
-                        .HasColumnType("text");
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.Property<string>("EmployeeIdentifier")
-                        .HasColumnType("text");
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.Property<string>("EmployeePhoto")
-                        .HasColumnType("text");
+                        .HasMaxLength(350)
+                        .HasColumnType("character varying(350)");
 
                     b.Property<string>("FirstName")
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("Gender")
-                        .HasColumnType("text");
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)");
 
-                    b.PrimitiveCollection<List<string>>("HealthIssues")
-                        .HasColumnType("text[]");
+                    b.Property<List<string>>("HealthIssues")
+                        .HasColumnType("jsonb");
 
                     b.Property<decimal>("Height")
                         .HasColumnType("numeric");
 
                     b.Property<string>("Hometown")
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("IdentityNo")
-                        .HasColumnType("text");
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.Property<string>("IdentityType")
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
-                    b.PrimitiveCollection<List<string>>("Interests")
-                        .HasColumnType("text[]");
+                    b.Property<List<string>>("Interests")
+                        .HasColumnType("jsonb");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
-                    b.PrimitiveCollection<List<string>>("Languages")
-                        .HasColumnType("text[]");
+                    b.Property<List<string>>("Languages")
+                        .HasColumnType("jsonb");
 
                     b.Property<DateTime?>("LastModificationTime")
                         .HasColumnType("timestamp without time zone");
@@ -3018,97 +3036,95 @@ namespace RhyoliteOrbit.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("LastName")
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<int>("LeaveDaysEntitled")
                         .HasColumnType("integer");
 
-                    b.Property<string>("LicenseExpiryDate")
-                        .HasColumnType("text");
-
-                    b.Property<string>("LicenseIssueDate")
-                        .HasColumnType("text");
-
                     b.Property<string>("MaritalStatus")
-                        .HasColumnType("text");
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.Property<decimal>("MedicalExpensesLimit")
                         .HasColumnType("numeric");
 
                     b.Property<string>("NationalHealthInsuranceNo")
-                        .HasColumnType("text");
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.Property<string>("NationalIdentificationNo")
-                        .HasColumnType("text");
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.Property<Guid>("NationalityId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("NationalityName")
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("OtherName")
-                        .HasColumnType("text");
-
-                    b.Property<string>("PassportExpiryDate")
-                        .HasColumnType("text");
-
-                    b.Property<string>("PassportIssueDate")
-                        .HasColumnType("text");
-
-                    b.Property<string>("PassportNo")
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("PersonalEmail")
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("PrimaryPhoneNumber")
-                        .HasColumnType("text");
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.Property<Guid>("RankId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("RankName")
-                        .HasColumnType("text");
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
 
                     b.Property<Guid>("ReligionId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("ReligionName")
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("ResidenceAddress")
-                        .HasColumnType("text");
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
 
                     b.Property<Guid>("SalaryGradeId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("SalaryGradeName")
-                        .HasColumnType("text");
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
 
                     b.Property<Guid>("SalaryNotchId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("SalaryNotchName")
-                        .HasColumnType("text");
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
 
                     b.Property<string>("SecondaryPhoneNumber")
-                        .HasColumnType("text");
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
-                    b.Property<Guid>("StatusId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("StatusName")
-                        .HasColumnType("text");
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
 
                     b.Property<string>("TaxIdentificationNo")
-                        .HasColumnType("text");
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.Property<int>("TenantId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("TitleName")
-                        .HasColumnType("text");
+                    b.Property<string>("Title")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("integer");
@@ -7085,7 +7101,7 @@ namespace RhyoliteOrbit.Migrations
                     b.ToTable("TaxTableHistory");
                 });
 
-            modelBuilder.Entity("RhyoliteOrbit.Models.ProductionPlanning.BillOfMaterial", b =>
+            modelBuilder.Entity("RhyoliteOrbit.Models.ProductionPlanning.BillOfMaterialItem", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -7097,8 +7113,65 @@ namespace RhyoliteOrbit.Migrations
                     b.Property<long?>("CreatorUserId")
                         .HasColumnType("bigint");
 
-                    b.Property<decimal>("CurrentStock")
+                    b.Property<long?>("DeleterUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<long?>("LastModifierUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<Guid>("MaterialId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("MaterialName")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ProductName")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<decimal>("QuantityPerUnit")
                         .HasColumnType("numeric");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UnitOfMeasure")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BillOfMaterialItems");
+                });
+
+            modelBuilder.Entity("RhyoliteOrbit.Models.ProductionPlanning.FinalProductTest", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<long?>("CreatorUserId")
+                        .HasColumnType("bigint");
 
                     b.Property<long?>("DeleterUserId")
                         .HasColumnType("bigint");
@@ -7106,8 +7179,294 @@ namespace RhyoliteOrbit.Migrations
                     b.Property<DateTime?>("DeletionTime")
                         .HasColumnType("timestamp without time zone");
 
+                    b.Property<Guid>("InspectorId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("InspectorName")
+                        .HasMaxLength(130)
+                        .HasColumnType("character varying(130)");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<long?>("LastModifierUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<Guid>("ProductionOrderId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ProductionOrderIdentifier")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<Guid>("QcChecklistId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("QcChecklistName")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<List<InspectionResult>>("Results")
+                        .HasColumnType("jsonb");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("TestDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("FinalProductTests");
+                });
+
+            modelBuilder.Entity("RhyoliteOrbit.Models.ProductionPlanning.FinishedGood", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("BatchNumber")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<long?>("CreatorUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("DeleterUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("InventoryCategory")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsQaApproved")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<long?>("LastModifierUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ProductName")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTime>("ProductionDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<Guid>("ProductionOrderId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ProductionOrderIdentifier")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<decimal>("QuantityProduced")
+                        .HasColumnType("numeric");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UnitOfMeasure")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<Guid>("UnitOfMeasureId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("FinishedGoods");
+                });
+
+            modelBuilder.Entity("RhyoliteOrbit.Models.ProductionPlanning.FinishedGoodAllocation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ArInvoiceId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ArInvoiceNumber")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<long?>("CreatorUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("CustomerName")
+                        .HasColumnType("text");
+
+                    b.Property<long?>("DeleterUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<Guid>("FinishedGoodId")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<long?>("LastModifierUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<decimal>("QuantityAllocated")
+                        .HasColumnType("numeric");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("FinishedGoodAllocation");
+                });
+
+            modelBuilder.Entity("RhyoliteOrbit.Models.ProductionPlanning.InProcessInspection", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<long?>("CreatorUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("DeleterUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime>("InspectionDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<Guid>("InspectorId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("InspectorName")
+                        .HasMaxLength(130)
+                        .HasColumnType("character varying(130)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<Guid>("JobTicketId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("JobTicketIdentifier")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<long?>("LastModifierUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<Guid>("ProductionOrderId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ProductionOrderIdentifier")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<Guid>("QcChecklistId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("QcChecklistName")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<List<InspectionResult>>("Results")
+                        .HasColumnType("jsonb");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("InProcessInspections");
+                });
+
+            modelBuilder.Entity("RhyoliteOrbit.Models.ProductionPlanning.JobTicket", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("AssignedOperatorId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("AssignedOperatorName")
+                        .HasMaxLength(130)
+                        .HasColumnType("character varying(130)");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<long?>("CreatorUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("DeleterUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<decimal>("EstimatedDurationInHours")
+                        .HasColumnType("numeric");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsMandatory")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("JobTicketIdentifier")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.Property<DateTime?>("LastModificationTime")
                         .HasColumnType("timestamp without time zone");
@@ -7116,116 +7475,40 @@ namespace RhyoliteOrbit.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("Name")
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
-                    b.Property<decimal>("ReorderLevel")
-                        .HasColumnType("numeric");
+                    b.Property<Guid>("ProductionOrderId")
+                        .HasColumnType("uuid");
 
-                    b.Property<int>("TenantId")
+                    b.Property<string>("ProductionOrderIdentifier")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<int>("SequenceNumber")
                         .HasColumnType("integer");
-
-                    b.Property<string>("Type")
-                        .HasColumnType("text");
-
-                    b.Property<string>("UnitOfMeasure")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("BillOfMaterials");
-                });
-
-            modelBuilder.Entity("RhyoliteOrbit.Models.ProductionPlanning.Inventory", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("BatchNumber")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("DeleterUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("DeletionTime")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<DateTime?>("ExpiryDate")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<long?>("LastModifierUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Location")
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("ProductOrMaterialId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("ProductOrMaterialName")
-                        .HasColumnType("text");
-
-                    b.Property<decimal>("Quantity")
-                        .HasColumnType("numeric");
-
-                    b.Property<int>("TenantId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Inventories");
-                });
-
-            modelBuilder.Entity("RhyoliteOrbit.Models.ProductionPlanning.OperatorAssignment", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("AssignedTask")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("DeleterUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("DeletionTime")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<DateTime>("EndTime")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<long?>("LastModifierUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<Guid>("OperatorId")
-                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("SupervisorDepartment")
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.Property<string>("SupervisorEmail")
+                        .HasMaxLength(130)
+                        .HasColumnType("character varying(130)");
+
+                    b.Property<Guid>("SupervisorId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("SupervisorName")
+                        .HasMaxLength(130)
+                        .HasColumnType("character varying(130)");
+
+                    b.Property<string>("SupervisorPhone")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.Property<int>("TenantId")
                         .HasColumnType("integer");
@@ -7234,11 +7517,141 @@ namespace RhyoliteOrbit.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("WorkCenterName")
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("OperatorAssignments");
+                    b.ToTable("JobTickets");
+                });
+
+            modelBuilder.Entity("RhyoliteOrbit.Models.ProductionPlanning.MaterialConsumption", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ConsumptionIdentifier")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<long?>("CreatorUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("DeleterUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<List<MaterialConsumptionDetail>>("Details")
+                        .HasColumnType("jsonb");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<long?>("LastModifierUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<Guid>("ProductionOrderId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ProductionOrderIdentifier")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("WorkCenterId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("WorkCenterName")
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MaterialConsumptions");
+                });
+
+            modelBuilder.Entity("RhyoliteOrbit.Models.ProductionPlanning.NonConformance", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("CorrectiveAction")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<long?>("CreatorUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("DeleterUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<Guid>("FinalProductTestingId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("InProcessInspectionId")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<long?>("LastModifierUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("PreventiveAction")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<DateTime>("ReportedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<Guid>("ReportedById")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ReportedByName")
+                        .HasMaxLength(130)
+                        .HasColumnType("character varying(130)");
+
+                    b.Property<string>("RootCause")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<int>("Severity")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("NonConformance");
                 });
 
             modelBuilder.Entity("RhyoliteOrbit.Models.ProductionPlanning.ProcessFlow", b =>
@@ -7260,7 +7673,8 @@ namespace RhyoliteOrbit.Migrations
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Description")
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<bool>("IsDefault")
                         .HasColumnType("boolean");
@@ -7275,13 +7689,15 @@ namespace RhyoliteOrbit.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("Name")
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<Guid>("ProductId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("ProductName")
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<List<ProcessStep>>("Steps")
                         .HasColumnType("jsonb");
@@ -7301,7 +7717,8 @@ namespace RhyoliteOrbit.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("Category")
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("timestamp without time zone");
@@ -7324,8 +7741,12 @@ namespace RhyoliteOrbit.Migrations
                     b.Property<long?>("LastModifierUserId")
                         .HasColumnType("bigint");
 
+                    b.Property<int>("MinimumOrderQuantity")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Name")
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<decimal>("SellingPrice")
                         .HasColumnType("numeric");
@@ -7337,7 +7758,11 @@ namespace RhyoliteOrbit.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("UnitOfMeasure")
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<Guid>("UnitOfMeasureId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -7350,13 +7775,13 @@ namespace RhyoliteOrbit.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime?>("ActualEndDate")
+                    b.Property<DateTime>("ActualEndDate")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<decimal?>("ActualQuantity")
+                    b.Property<decimal>("ActualQuantity")
                         .HasColumnType("numeric");
 
-                    b.Property<DateTime?>("ActualStartDate")
+                    b.Property<DateTime>("ActualStartDate")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime>("CreationTime")
@@ -7379,6 +7804,25 @@ namespace RhyoliteOrbit.Migrations
 
                     b.Property<long?>("LastModifierUserId")
                         .HasColumnType("bigint");
+
+                    b.Property<string>("ManagerDepartment")
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.Property<string>("ManagerEmail")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<Guid>("ManagerId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ManagerName")
+                        .HasMaxLength(130)
+                        .HasColumnType("character varying(130)");
+
+                    b.Property<string>("ManagerPhone")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.Property<DateTime>("PlannedEndDate")
                         .HasColumnType("timestamp without time zone");
@@ -7396,6 +7840,17 @@ namespace RhyoliteOrbit.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
+                    b.Property<string>("ProductionOrderIdentifier")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<Guid>("ProductionScheduleId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ProductionScheduleIdentifier")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
                     b.Property<int>("Status")
                         .HasColumnType("integer");
 
@@ -7407,60 +7862,7 @@ namespace RhyoliteOrbit.Migrations
                     b.ToTable("ProductionOrders");
                 });
 
-            modelBuilder.Entity("RhyoliteOrbit.Models.ProductionPlanning.QualityControl", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("DeleterUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("DeletionTime")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<long?>("LastModifierUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("ProductName")
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("ProductionOrderId")
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("TenantId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("TestDate")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<int>("TestResult")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("TestType")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("QualityControls");
-                });
-
-            modelBuilder.Entity("RhyoliteOrbit.Models.ProductionPlanning.Routing", b =>
+            modelBuilder.Entity("RhyoliteOrbit.Models.ProductionPlanning.QcChecklist", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -7479,7 +7881,74 @@ namespace RhyoliteOrbit.Migrations
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Description")
-                        .HasColumnType("text");
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<List<QcChecklistItem>>("Items")
+                        .HasColumnType("jsonb");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<long?>("LastModifierUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ProductName")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("QcChecklists");
+                });
+
+            modelBuilder.Entity("RhyoliteOrbit.Models.ProductionPlanning.RawMaterial", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("CostingMethod")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<long?>("CreatorUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<decimal>("CurrentStock")
+                        .HasColumnType("numeric");
+
+                    b.Property<long?>("DeleterUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)");
+
+                    b.Property<int>("InventoryCategory")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
@@ -7490,33 +7959,92 @@ namespace RhyoliteOrbit.Migrations
                     b.Property<long?>("LastModifierUserId")
                         .HasColumnType("bigint");
 
-                    b.Property<int>("OperationNumber")
-                        .HasColumnType("integer");
+                    b.Property<string>("Name")
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
 
-                    b.Property<Guid>("PreviousOperationId")
-                        .HasColumnType("uuid");
+                    b.Property<decimal>("SellingPrice")
+                        .HasColumnType("numeric");
 
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("uuid");
+                    b.Property<string>("Sku")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
-                    b.Property<string>("ProductName")
-                        .HasColumnType("text");
-
-                    b.Property<TimeSpan>("StandardTime")
-                        .HasColumnType("interval");
+                    b.Property<decimal>("StandardCost")
+                        .HasColumnType("numeric");
 
                     b.Property<int>("TenantId")
                         .HasColumnType("integer");
 
-                    b.Property<Guid>("WorkCenterId")
-                        .HasColumnType("uuid");
+                    b.Property<string>("UnitOfMeasure")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
-                    b.Property<string>("WorkCenterName")
-                        .HasColumnType("text");
+                    b.Property<Guid>("UnitOfMeasureId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Routings");
+                    b.ToTable("RawMaterials");
+                });
+
+            modelBuilder.Entity("RhyoliteOrbit.Models.ProductionPlanning.ScrapAndWaste", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<long?>("CreatorUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("DeleterUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<long?>("LastModifierUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<Guid>("ProductionOrderId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ProductionOrderIdentifier")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<decimal>("Quantity")
+                        .HasColumnType("numeric");
+
+                    b.Property<string>("Reason")
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)");
+
+                    b.Property<int>("ScrapType")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UnitOfMeasure")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<Guid>("UnitOfMeasureId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ScrapAndWastes");
                 });
 
             modelBuilder.Entity("RhyoliteOrbit.Models.ProductionPlanning.WorkCenter", b =>
@@ -7555,6 +8083,21 @@ namespace RhyoliteOrbit.Migrations
 
                     b.Property<List<OperatingHour>>("OperatingHours")
                         .HasColumnType("jsonb");
+
+                    b.Property<string>("SupervisorEmail")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<Guid>("SupervisorId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("SupervisorName")
+                        .HasMaxLength(130)
+                        .HasColumnType("character varying(130)");
+
+                    b.Property<string>("SupervisorPhoneNo")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.Property<int>("TenantId")
                         .HasColumnType("integer");
@@ -10349,6 +10892,10 @@ namespace RhyoliteOrbit.Migrations
                         .HasMaxLength(60)
                         .HasColumnType("character varying(60)");
 
+                    b.Property<string>("Pin")
+                        .HasMaxLength(15)
+                        .HasColumnType("character varying(15)");
+
                     b.Property<string>("PrimaryPhone")
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
@@ -10365,12 +10912,8 @@ namespace RhyoliteOrbit.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
 
-                    b.Property<Guid>("StaffStatusId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("StaffStatusName")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
 
                     b.Property<int>("TenantId")
                         .HasColumnType("integer");
@@ -10574,6 +11117,10 @@ namespace RhyoliteOrbit.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
+                    b.Property<string>("Pin")
+                        .HasMaxLength(15)
+                        .HasColumnType("character varying(15)");
+
                     b.Property<Guid>("ReligionId")
                         .HasColumnType("uuid");
 
@@ -10635,6 +11182,9 @@ namespace RhyoliteOrbit.Migrations
                         .HasColumnType("jsonb");
 
                     b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsPosted")
                         .HasColumnType("boolean");
 
                     b.Property<DateTime?>("LastModificationTime")
@@ -12534,6 +13084,10 @@ namespace RhyoliteOrbit.Migrations
                     b.Property<DateTime?>("DeletionTime")
                         .HasColumnType("timestamp without time zone");
 
+                    b.Property<string>("FormatPattern")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
@@ -12550,9 +13104,8 @@ namespace RhyoliteOrbit.Migrations
                     b.Property<int>("LastNo")
                         .HasColumnType("integer");
 
-                    b.Property<string>("ModuleId")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                    b.Property<int>("Module")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Prefix")
                         .HasMaxLength(100)
@@ -12642,6 +13195,49 @@ namespace RhyoliteOrbit.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("SystemSetting");
+                });
+
+            modelBuilder.Entity("RhyoliteOrbit.Models.Shared.UnitOfMeasure", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<long?>("CreatorUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("DeleterUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<long?>("LastModifierUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UnitOfMeasurements");
                 });
 
             modelBuilder.Entity("RhyoliteOrbit.MultiTenancy.Tenant", b =>

@@ -739,15 +739,17 @@ namespace RhyoliteOrbit.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "BillOfMaterials",
+                name: "BillOfMaterialItems",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: true),
-                    Type = table.Column<string>(type: "text", nullable: true),
-                    UnitOfMeasure = table.Column<string>(type: "text", nullable: true),
-                    CurrentStock = table.Column<decimal>(type: "numeric", nullable: false),
-                    ReorderLevel = table.Column<decimal>(type: "numeric", nullable: false),
+                    ProductId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ProductName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    Description = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: true),
+                    MaterialId = table.Column<Guid>(type: "uuid", nullable: false),
+                    MaterialName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    QuantityPerUnit = table.Column<decimal>(type: "numeric", nullable: false),
+                    UnitOfMeasure = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
                     TenantId = table.Column<int>(type: "integer", nullable: false),
                     CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
@@ -759,7 +761,7 @@ namespace RhyoliteOrbit.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BillOfMaterials", x => x.Id);
+                    table.PrimaryKey("PK_BillOfMaterialItems", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -1589,55 +1591,51 @@ namespace RhyoliteOrbit.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    EmployeeIdentifier = table.Column<string>(type: "text", nullable: true),
-                    FirstName = table.Column<string>(type: "text", nullable: true),
-                    OtherName = table.Column<string>(type: "text", nullable: true),
-                    LastName = table.Column<string>(type: "text", nullable: true),
-                    EmployeePhoto = table.Column<string>(type: "text", nullable: true),
-                    TitleName = table.Column<string>(type: "text", nullable: true),
-                    Gender = table.Column<string>(type: "text", nullable: true),
-                    StatusId = table.Column<Guid>(type: "uuid", nullable: false),
-                    StatusName = table.Column<string>(type: "text", nullable: true),
-                    CityOrLocation = table.Column<string>(type: "text", nullable: true),
-                    ResidenceAddress = table.Column<string>(type: "text", nullable: true),
+                    EmployeeIdentifier = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
+                    FirstName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    OtherName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    LastName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    EmployeePhoto = table.Column<string>(type: "character varying(350)", maxLength: 350, nullable: true),
+                    Title = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    Gender = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: true),
+                    Status = table.Column<int>(type: "integer", nullable: false),
+                    CityOrLocation = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    ResidenceAddress = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true),
                     DepartmentId = table.Column<Guid>(type: "uuid", nullable: false),
-                    DepartmentName = table.Column<string>(type: "text", nullable: true),
+                    DepartmentName = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true),
                     CategoryId = table.Column<Guid>(type: "uuid", nullable: false),
-                    CategoryName = table.Column<string>(type: "text", nullable: true),
+                    CategoryName = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true),
                     DateAppointed = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     SalaryGradeId = table.Column<Guid>(type: "uuid", nullable: false),
-                    SalaryGradeName = table.Column<string>(type: "text", nullable: true),
+                    SalaryGradeName = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true),
                     SalaryNotchId = table.Column<Guid>(type: "uuid", nullable: false),
-                    SalaryNotchName = table.Column<string>(type: "text", nullable: true),
+                    SalaryNotchName = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true),
                     RankId = table.Column<Guid>(type: "uuid", nullable: false),
-                    RankName = table.Column<string>(type: "text", nullable: true),
-                    TaxIdentificationNo = table.Column<string>(type: "text", nullable: true),
+                    RankName = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true),
+                    TaxIdentificationNo = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
                     DateOfBirth = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    PersonalEmail = table.Column<string>(type: "text", nullable: true),
-                    MaritalStatus = table.Column<string>(type: "text", nullable: true),
+                    PersonalEmail = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    MaritalStatus = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
                     ReligionId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ReligionName = table.Column<string>(type: "text", nullable: true),
+                    ReligionName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
                     NationalityId = table.Column<Guid>(type: "uuid", nullable: false),
-                    NationalityName = table.Column<string>(type: "text", nullable: true),
-                    Hometown = table.Column<string>(type: "text", nullable: true),
-                    PrimaryPhoneNumber = table.Column<string>(type: "text", nullable: true),
-                    SecondaryPhoneNumber = table.Column<string>(type: "text", nullable: true),
-                    CompanyEmail = table.Column<string>(type: "text", nullable: true),
-                    NationalIdentificationNo = table.Column<string>(type: "text", nullable: true),
-                    NationalHealthInsuranceNo = table.Column<string>(type: "text", nullable: true),
-                    PassportNo = table.Column<string>(type: "text", nullable: true),
-                    PassportIssueDate = table.Column<string>(type: "text", nullable: true),
-                    PassportExpiryDate = table.Column<string>(type: "text", nullable: true),
-                    DriverLicenseNo = table.Column<string>(type: "text", nullable: true),
-                    LicenseIssueDate = table.Column<string>(type: "text", nullable: true),
-                    LicenseExpiryDate = table.Column<string>(type: "text", nullable: true),
-                    IdentityType = table.Column<string>(type: "text", nullable: true),
-                    IdentityNo = table.Column<string>(type: "text", nullable: true),
+                    NationalityName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    Hometown = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    PrimaryPhoneNumber = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
+                    SecondaryPhoneNumber = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
+                    CompanyEmail = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    NationalIdentificationNo = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
+                    NationalHealthInsuranceNo = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
+                    DriverLicenseNo = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
+                    DriverLicenseIssueDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    DriverLicenseExpiryDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    IdentityType = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    IdentityNo = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
                     Height = table.Column<decimal>(type: "numeric", nullable: false),
                     Weight = table.Column<decimal>(type: "numeric", nullable: false),
-                    Languages = table.Column<List<string>>(type: "text[]", nullable: true),
-                    Interests = table.Column<List<string>>(type: "text[]", nullable: true),
-                    HealthIssues = table.Column<List<string>>(type: "text[]", nullable: true),
+                    Languages = table.Column<List<string>>(type: "jsonb", nullable: true),
+                    Interests = table.Column<List<string>>(type: "jsonb", nullable: true),
+                    HealthIssues = table.Column<List<string>>(type: "jsonb", nullable: true),
                     LeaveDaysEntitled = table.Column<int>(type: "integer", nullable: false),
                     MedicalExpensesLimit = table.Column<decimal>(type: "numeric", nullable: false),
                     UserId = table.Column<int>(type: "integer", nullable: false),
@@ -2036,7 +2034,9 @@ namespace RhyoliteOrbit.Migrations
                     BillTypeId = table.Column<Guid>(type: "uuid", nullable: false),
                     ReceivableAccountId = table.Column<Guid>(type: "uuid", nullable: false),
                     ReceivableAccountName = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true),
-                    BillTypeName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    Quantity = table.Column<int>(type: "integer", maxLength: 50, nullable: false),
+                    Unit = table.Column<string>(type: "character varying(85)", maxLength: 85, nullable: true),
+                    BillTypeName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
                     TenantId = table.Column<int>(type: "integer", nullable: false),
                     CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
@@ -2079,6 +2079,89 @@ namespace RhyoliteOrbit.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_FieldTrips", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FinalProductTests",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    ProductionOrderId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ProductionOrderIdentifier = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
+                    TestDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    InspectorId = table.Column<Guid>(type: "uuid", nullable: false),
+                    InspectorName = table.Column<string>(type: "character varying(130)", maxLength: 130, nullable: true),
+                    QcChecklistId = table.Column<Guid>(type: "uuid", nullable: false),
+                    QcChecklistName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    Results = table.Column<List<InspectionResult>>(type: "jsonb", nullable: true),
+                    Status = table.Column<int>(type: "integer", nullable: false),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FinalProductTests", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FinishedGoodAllocation",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    FinishedGoodId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CustomerId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CustomerName = table.Column<string>(type: "text", nullable: true),
+                    QuantityAllocated = table.Column<decimal>(type: "numeric", nullable: false),
+                    ArInvoiceId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ArInvoiceNumber = table.Column<string>(type: "text", nullable: true),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FinishedGoodAllocation", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FinishedGoods",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    BatchNumber = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
+                    ProductionOrderIdentifier = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
+                    ProductionOrderId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ProductId = table.Column<Guid>(type: "uuid", nullable: false),
+                    UnitOfMeasure = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    UnitOfMeasureId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ProductName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    QuantityProduced = table.Column<decimal>(type: "numeric", nullable: false),
+                    InventoryCategory = table.Column<int>(type: "integer", nullable: false),
+                    ProductionDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    IsQaApproved = table.Column<bool>(type: "boolean", nullable: false),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FinishedGoods", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -2217,16 +2300,21 @@ namespace RhyoliteOrbit.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Inventories",
+                name: "InProcessInspections",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    ProductOrMaterialId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ProductOrMaterialName = table.Column<string>(type: "text", nullable: true),
-                    Location = table.Column<string>(type: "text", nullable: true),
-                    Quantity = table.Column<decimal>(type: "numeric", nullable: false),
-                    BatchNumber = table.Column<string>(type: "text", nullable: true),
-                    ExpiryDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    ProductionOrderId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ProductionOrderIdentifier = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
+                    JobTicketId = table.Column<Guid>(type: "uuid", nullable: false),
+                    JobTicketIdentifier = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
+                    InspectionDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    InspectorId = table.Column<Guid>(type: "uuid", nullable: false),
+                    InspectorName = table.Column<string>(type: "character varying(130)", maxLength: 130, nullable: true),
+                    QcChecklistId = table.Column<Guid>(type: "uuid", nullable: false),
+                    QcChecklistName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    Results = table.Column<List<InspectionResult>>(type: "jsonb", nullable: true),
+                    Status = table.Column<int>(type: "integer", nullable: false),
                     TenantId = table.Column<int>(type: "integer", nullable: false),
                     CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
@@ -2238,7 +2326,45 @@ namespace RhyoliteOrbit.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Inventories", x => x.Id);
+                    table.PrimaryKey("PK_InProcessInspections", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "JobTickets",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    ProductionOrderId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ProductionOrderIdentifier = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
+                    SequenceNumber = table.Column<int>(type: "integer", nullable: false),
+                    JobTicketIdentifier = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
+                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    Description = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
+                    WorkCenterId = table.Column<Guid>(type: "uuid", nullable: false),
+                    WorkCenterName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    EstimatedDurationInHours = table.Column<decimal>(type: "numeric", nullable: false),
+                    StartTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    EndTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    IsMandatory = table.Column<bool>(type: "boolean", nullable: false),
+                    SupervisorId = table.Column<Guid>(type: "uuid", nullable: false),
+                    SupervisorName = table.Column<string>(type: "character varying(130)", maxLength: 130, nullable: true),
+                    SupervisorEmail = table.Column<string>(type: "character varying(130)", maxLength: 130, nullable: true),
+                    SupervisorDepartment = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true),
+                    SupervisorPhone = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
+                    AssignedOperatorId = table.Column<Guid>(type: "uuid", nullable: false),
+                    AssignedOperatorName = table.Column<string>(type: "character varying(130)", maxLength: 130, nullable: true),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_JobTickets", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -2505,6 +2631,31 @@ namespace RhyoliteOrbit.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_LoanTypes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MaterialConsumptions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    ProductionOrderId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ProductionOrderIdentifier = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
+                    ConsumptionIdentifier = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
+                    WorkCenterId = table.Column<Guid>(type: "uuid", nullable: false),
+                    WorkCenterName = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true),
+                    Details = table.Column<List<MaterialConsumptionDetail>>(type: "jsonb", nullable: true),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MaterialConsumptions", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -3419,16 +3570,21 @@ namespace RhyoliteOrbit.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "OperatorAssignments",
+                name: "NonConformance",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    OperatorId = table.Column<Guid>(type: "uuid", nullable: false),
-                    WorkCenterId = table.Column<Guid>(type: "uuid", nullable: false),
-                    WorkCenterName = table.Column<string>(type: "text", nullable: true),
-                    StartTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    EndTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    AssignedTask = table.Column<string>(type: "text", nullable: true),
+                    InProcessInspectionId = table.Column<Guid>(type: "uuid", nullable: false),
+                    FinalProductTestingId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Description = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
+                    Severity = table.Column<int>(type: "integer", nullable: false),
+                    RootCause = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
+                    CorrectiveAction = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
+                    PreventiveAction = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
+                    ReportedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    ReportedById = table.Column<Guid>(type: "uuid", nullable: false),
+                    ReportedByName = table.Column<string>(type: "character varying(130)", maxLength: 130, nullable: true),
+                    Status = table.Column<int>(type: "integer", nullable: false),
                     TenantId = table.Column<int>(type: "integer", nullable: false),
                     CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
@@ -3440,7 +3596,7 @@ namespace RhyoliteOrbit.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OperatorAssignments", x => x.Id);
+                    table.PrimaryKey("PK_NonConformance", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -3824,11 +3980,11 @@ namespace RhyoliteOrbit.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: true),
-                    Description = table.Column<string>(type: "text", nullable: true),
+                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    Description = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
                     IsDefault = table.Column<bool>(type: "boolean", nullable: false),
                     ProductId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ProductName = table.Column<string>(type: "text", nullable: true),
+                    ProductName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
                     Steps = table.Column<List<ProcessStep>>(type: "jsonb", nullable: true),
                     TenantId = table.Column<int>(type: "integer", nullable: false),
                     CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
@@ -3849,15 +4005,23 @@ namespace RhyoliteOrbit.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    ProductionOrderIdentifier = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
+                    ProductionScheduleId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ProductionScheduleIdentifier = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
                     ProductId = table.Column<Guid>(type: "uuid", nullable: false),
                     ProductName = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
                     PlannedQuantity = table.Column<decimal>(type: "numeric", nullable: false),
-                    ActualQuantity = table.Column<decimal>(type: "numeric", nullable: true),
+                    ActualQuantity = table.Column<decimal>(type: "numeric", nullable: false),
                     PlannedStartDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    ActualStartDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    ActualStartDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     PlannedEndDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    ActualEndDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    ActualEndDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     Status = table.Column<int>(type: "integer", nullable: false),
+                    ManagerId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ManagerName = table.Column<string>(type: "character varying(130)", maxLength: 130, nullable: true),
+                    ManagerEmail = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    ManagerDepartment = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true),
+                    ManagerPhone = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
                     TenantId = table.Column<int>(type: "integer", nullable: false),
                     CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
@@ -3877,9 +4041,11 @@ namespace RhyoliteOrbit.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: true),
-                    Category = table.Column<string>(type: "text", nullable: true),
-                    UnitOfMeasure = table.Column<string>(type: "text", nullable: true),
+                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    Category = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    UnitOfMeasure = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    UnitOfMeasureId = table.Column<Guid>(type: "uuid", nullable: false),
+                    MinimumOrderQuantity = table.Column<int>(type: "integer", nullable: false),
                     StandardCost = table.Column<decimal>(type: "numeric", nullable: false),
                     SellingPrice = table.Column<decimal>(type: "numeric", nullable: false),
                     TenantId = table.Column<int>(type: "integer", nullable: false),
@@ -3952,16 +4118,15 @@ namespace RhyoliteOrbit.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "QualityControls",
+                name: "QcChecklists",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    ProductionOrderId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
+                    Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
                     ProductId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ProductName = table.Column<string>(type: "text", nullable: true),
-                    TestType = table.Column<string>(type: "text", nullable: true),
-                    TestResult = table.Column<int>(type: "integer", nullable: false),
-                    TestDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    ProductName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    Items = table.Column<List<QcChecklistItem>>(type: "jsonb", nullable: true),
                     TenantId = table.Column<int>(type: "integer", nullable: false),
                     CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
@@ -3973,7 +4138,37 @@ namespace RhyoliteOrbit.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_QualityControls", x => x.Id);
+                    table.PrimaryKey("PK_QcChecklists", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RawMaterials",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Sku = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
+                    Name = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true),
+                    Description = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: true),
+                    UnitOfMeasure = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    UnitOfMeasureId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CurrentStock = table.Column<decimal>(type: "numeric", nullable: false),
+                    CostingMethod = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    StandardCost = table.Column<decimal>(type: "numeric", nullable: false),
+                    SellingPrice = table.Column<decimal>(type: "numeric", nullable: false),
+                    InventoryCategory = table.Column<int>(type: "integer", nullable: false),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RawMaterials", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -4100,33 +4295,6 @@ namespace RhyoliteOrbit.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ResultTypes", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Routings",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    ProductId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ProductName = table.Column<string>(type: "text", nullable: true),
-                    OperationNumber = table.Column<int>(type: "integer", nullable: false),
-                    WorkCenterId = table.Column<Guid>(type: "uuid", nullable: false),
-                    WorkCenterName = table.Column<string>(type: "text", nullable: true),
-                    Description = table.Column<string>(type: "text", nullable: true),
-                    StandardTime = table.Column<TimeSpan>(type: "interval", nullable: false),
-                    PreviousOperationId = table.Column<Guid>(type: "uuid", nullable: false),
-                    TenantId = table.Column<int>(type: "integer", nullable: false),
-                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
-                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
-                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
-                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
-                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Routings", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -4291,6 +4459,32 @@ namespace RhyoliteOrbit.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_SchoolProfiles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ScrapAndWastes",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    ProductionOrderIdentifier = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
+                    ProductionOrderId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ScrapType = table.Column<int>(type: "integer", nullable: false),
+                    Quantity = table.Column<decimal>(type: "numeric", nullable: false),
+                    UnitOfMeasure = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    UnitOfMeasureId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Reason = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: true),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ScrapAndWastes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -4490,8 +4684,8 @@ namespace RhyoliteOrbit.Migrations
                     EmergencyContactPhone = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
                     NationalityId = table.Column<Guid>(type: "uuid", nullable: false),
                     NationalityName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
-                    StaffStatusId = table.Column<Guid>(type: "uuid", nullable: false),
-                    StaffStatusName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    Status = table.Column<int>(type: "integer", nullable: false),
+                    Pin = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: true),
                     TenantId = table.Column<int>(type: "integer", nullable: false),
                     CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
@@ -4520,6 +4714,7 @@ namespace RhyoliteOrbit.Migrations
                     TermId = table.Column<Guid>(type: "uuid", nullable: false),
                     TermName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
                     TenantId = table.Column<int>(type: "integer", nullable: false),
+                    IsPosted = table.Column<bool>(type: "boolean", nullable: false),
                     Details = table.Column<List<StudentAttendanceDetail>>(type: "jsonb", nullable: true),
                     CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
@@ -4824,6 +5019,7 @@ namespace RhyoliteOrbit.Migrations
                     ImageUrl = table.Column<string>(type: "character varying(350)", maxLength: 350, nullable: true),
                     EnrollmentType = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
                     BiometricIdentifier = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    Pin = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: true),
                     IsAlumni = table.Column<bool>(type: "boolean", nullable: false),
                     CompletionDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     TenantId = table.Column<int>(type: "integer", nullable: false),
@@ -5004,10 +5200,11 @@ namespace RhyoliteOrbit.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    ModuleId = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    Module = table.Column<int>(type: "integer", nullable: false),
                     ItemName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
                     Prefix = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
                     Suffix = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    FormatPattern = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
                     TenantId = table.Column<int>(type: "integer", nullable: false),
                     LastNo = table.Column<int>(type: "integer", nullable: false),
                     CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
@@ -5183,12 +5380,37 @@ namespace RhyoliteOrbit.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "UnitOfMeasurements",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    Description = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UnitOfMeasurements", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "WorkCenters",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true),
                     CapacityPerHour = table.Column<int>(type: "integer", nullable: false),
+                    SupervisorId = table.Column<Guid>(type: "uuid", nullable: false),
+                    SupervisorName = table.Column<string>(type: "character varying(130)", maxLength: 130, nullable: true),
+                    SupervisorPhoneNo = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
+                    SupervisorEmail = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
                     OperatingHours = table.Column<List<OperatingHour>>(type: "jsonb", nullable: true),
                     TenantId = table.Column<int>(type: "integer", nullable: false),
                     CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
@@ -6095,7 +6317,7 @@ namespace RhyoliteOrbit.Migrations
                 name: "BikTypes");
 
             migrationBuilder.DropTable(
-                name: "BillOfMaterials");
+                name: "BillOfMaterialItems");
 
             migrationBuilder.DropTable(
                 name: "BillPayments");
@@ -6230,6 +6452,15 @@ namespace RhyoliteOrbit.Migrations
                 name: "FieldTrips");
 
             migrationBuilder.DropTable(
+                name: "FinalProductTests");
+
+            migrationBuilder.DropTable(
+                name: "FinishedGoodAllocation");
+
+            migrationBuilder.DropTable(
+                name: "FinishedGoods");
+
+            migrationBuilder.DropTable(
                 name: "GradingSchemes");
 
             migrationBuilder.DropTable(
@@ -6245,7 +6476,10 @@ namespace RhyoliteOrbit.Migrations
                 name: "InitializePayMonths");
 
             migrationBuilder.DropTable(
-                name: "Inventories");
+                name: "InProcessInspections");
+
+            migrationBuilder.DropTable(
+                name: "JobTickets");
 
             migrationBuilder.DropTable(
                 name: "Journals");
@@ -6276,6 +6510,9 @@ namespace RhyoliteOrbit.Migrations
 
             migrationBuilder.DropTable(
                 name: "LoanTypes");
+
+            migrationBuilder.DropTable(
+                name: "MaterialConsumptions");
 
             migrationBuilder.DropTable(
                 name: "MessageTemplates");
@@ -6368,7 +6605,7 @@ namespace RhyoliteOrbit.Migrations
                 name: "MonthlySsnitDeductions");
 
             migrationBuilder.DropTable(
-                name: "OperatorAssignments");
+                name: "NonConformance");
 
             migrationBuilder.DropTable(
                 name: "OvertimeTimeSheets");
@@ -6422,7 +6659,10 @@ namespace RhyoliteOrbit.Migrations
                 name: "PvRetentions");
 
             migrationBuilder.DropTable(
-                name: "QualityControls");
+                name: "QcChecklists");
+
+            migrationBuilder.DropTable(
+                name: "RawMaterials");
 
             migrationBuilder.DropTable(
                 name: "Relationships");
@@ -6438,9 +6678,6 @@ namespace RhyoliteOrbit.Migrations
 
             migrationBuilder.DropTable(
                 name: "ResultTypes");
-
-            migrationBuilder.DropTable(
-                name: "Routings");
 
             migrationBuilder.DropTable(
                 name: "SalaryAdvanceApplications");
@@ -6459,6 +6696,9 @@ namespace RhyoliteOrbit.Migrations
 
             migrationBuilder.DropTable(
                 name: "SchoolProfiles");
+
+            migrationBuilder.DropTable(
+                name: "ScrapAndWastes");
 
             migrationBuilder.DropTable(
                 name: "Siblings");
@@ -6552,6 +6792,9 @@ namespace RhyoliteOrbit.Migrations
 
             migrationBuilder.DropTable(
                 name: "TerminalReports");
+
+            migrationBuilder.DropTable(
+                name: "UnitOfMeasurements");
 
             migrationBuilder.DropTable(
                 name: "WorkCenters");

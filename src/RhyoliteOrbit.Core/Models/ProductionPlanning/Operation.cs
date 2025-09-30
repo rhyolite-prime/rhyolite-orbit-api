@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace RhyoliteOrbit.Models.ProductionPlanning;
 
-public class JobTicket: Abp.Domain.Entities.Auditing.FullAuditedEntity<Guid>, Abp.Domain.Entities.IMustHaveTenant
+public class Operation: Abp.Domain.Entities.Auditing.FullAuditedEntity<Guid>, Abp.Domain.Entities.IMustHaveTenant
 {
     public Guid ProductionOrderId { get; set; }
     
@@ -25,6 +25,10 @@ public class JobTicket: Abp.Domain.Entities.Auditing.FullAuditedEntity<Guid>, Ab
     public DateTime StartTime { get; set; }
     public DateTime EndTime { get; set; }
     public bool IsMandatory { get; set; }
+    public int PriorityLevel { get; set; } // Priority enum
+    public int Status { get; set; } // JobTicketStatus enum
+    [MaxLength(50)]
+    public string Tag { get; set; } // Priority enum
     // Manager properties : from employees.
     // Not everyone in the company will be a user on the portal/app.
     public Guid SupervisorId { get; set; }

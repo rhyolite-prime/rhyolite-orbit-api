@@ -3,7 +3,7 @@ using Abp.Application.Services.Dto;
 
 namespace RhyoliteOrbit.Services.ProductionPlanning.JobTickets.Dto;
 
-public class CreateJobTicketInput
+public class CreateOperationInput
 {
     public Guid ProductionOrderId { get; set; }
     
@@ -23,7 +23,7 @@ public class CreateJobTicketInput
      
 }
 
-public class UpdateJobTicketInput: EntityDto<Guid>
+public class UpdateOperationInput: EntityDto<Guid>
 {
     public Guid ProductionOrderId { get; set; }
     public string ProductionOrderIdentifier { get; set; }

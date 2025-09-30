@@ -146,6 +146,8 @@ public class EmployeeLoanAppService: RhyoliteOrbitAppServiceBase
         public async Task Update(UpdateEmployeeLoanInput input)
         {
             var obj = _mapper.Map<EmployeeLoan>(input);
+            var tenantInfo = await GetCurrentTenantAsync();
+            obj.TenantId = tenantInfo.Id;
             await _employeeLoanManager.Update(obj);
         }
 

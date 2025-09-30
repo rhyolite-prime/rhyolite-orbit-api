@@ -18,7 +18,6 @@ public class StudentManager: Abp.Domain.Services.DomainService, IStudentManager
         private readonly IRepository<Student, Guid> _repositoryStudent;
         private readonly IRepository<PromotionHistory, Guid> _repositoryPromotionHistory;
         private readonly IRepository<SchClass, Guid> _repositorySchClass;
-        private readonly IRepository<Religion, Guid> _repositoryReligion;
         private readonly IRepository<Country, Guid> _repositoryCountry;
         private readonly IRepository<AcademicYear, Guid> _repositoryAcademicYear;
         private readonly IRepository<PersonnelStatus, Guid> _repositoryPersonnelStatus;
@@ -26,12 +25,11 @@ public class StudentManager: Abp.Domain.Services.DomainService, IStudentManager
         private readonly IUnitOfWorkManager _unitOfWorkManager;
         private readonly IHashids _hashids;
 
-        public StudentManager(IRepository<Student, Guid> repositoryStudent, IRepository<PersonnelStatus, Guid> repositoryPersonnelStatus, IRepository<SchClass, Guid> repositorySchClass, IRepository<Religion, Guid> repositoryReligion, IRepository<Country, Guid> repositoryCountry, IRepository<PromotionHistory, Guid> repositoryPromotionHistory, IRepository<AcademicYear, Guid> repositoryAcademicYear, IRepository<SchoolProfile, Guid> repositorySchoolProfile, IUnitOfWorkManager unitOfWorkManager, IHashids hashids)
+        public StudentManager(IRepository<Student, Guid> repositoryStudent, IRepository<PersonnelStatus, Guid> repositoryPersonnelStatus, IRepository<SchClass, Guid> repositorySchClass, IRepository<Country, Guid> repositoryCountry, IRepository<PromotionHistory, Guid> repositoryPromotionHistory, IRepository<AcademicYear, Guid> repositoryAcademicYear, IRepository<SchoolProfile, Guid> repositorySchoolProfile, IUnitOfWorkManager unitOfWorkManager, IHashids hashids)
         {
             _repositoryStudent = repositoryStudent;
             _repositoryPersonnelStatus = repositoryPersonnelStatus;
             _repositorySchClass = repositorySchClass;
-            _repositoryReligion = repositoryReligion;
             _repositoryCountry = repositoryCountry;
             _repositoryPromotionHistory = repositoryPromotionHistory;
             _repositoryAcademicYear = repositoryAcademicYear;
@@ -44,7 +42,6 @@ public class StudentManager: Abp.Domain.Services.DomainService, IStudentManager
         {
             //obtain default employee status...
             var classInfo = await _repositorySchClass.FirstOrDefaultAsync(entity.ClassId);
-            var religionInfo = await _repositoryReligion.FirstOrDefaultAsync(entity.ReligionId);
             var countryInfo = await _repositoryCountry.FirstOrDefaultAsync(entity.NationalityId);
             var academicYearInfo = await _repositoryAcademicYear.FirstOrDefaultAsync(entity.AcademicYearId);
 
@@ -60,11 +57,6 @@ public class StudentManager: Abp.Domain.Services.DomainService, IStudentManager
                 else if (classInfo != null && string.IsNullOrEmpty(classInfo.StreamName))
                 {
                     entity.ClassName = classInfo.ClassName;
-                }
-
-                if (religionInfo != null)
-                {
-                    entity.ReligionName = religionInfo.Name;
                 }
 
                 if (countryInfo != null)
@@ -138,8 +130,7 @@ public class StudentManager: Abp.Domain.Services.DomainService, IStudentManager
                 a.NationalityName,
                 a.EnrollmentType,
                 a.StudentIdentifier,
-                a.ReligionName,
-                a.ReligionId,
+                a.Religion,
                 a.NationalityId,
                 a.ClassId,
                 Pin = _hashids.Decode(a.Pin).Length > 0 ? _hashids.Decode(a.Pin)[0].ToString("D4") : null,
@@ -346,7 +337,7 @@ public class StudentManager: Abp.Domain.Services.DomainService, IStudentManager
         public async Task<object> Update(Student entity)
         {
             var classInfo = await _repositorySchClass.FirstOrDefaultAsync(entity.ClassId);
-            var religionInfo = await _repositoryReligion.FirstOrDefaultAsync(entity.ReligionId);
+             
             var countryInfo = await _repositoryCountry.FirstOrDefaultAsync(entity.NationalityId);
 
             if (classInfo != null && !string.IsNullOrEmpty(classInfo.StreamName))
@@ -358,10 +349,6 @@ public class StudentManager: Abp.Domain.Services.DomainService, IStudentManager
                 entity.ClassName = classInfo.ClassName;
             }
 
-            if (religionInfo != null)
-            {
-                entity.ReligionName = religionInfo.Name;
-            }
 
             if (countryInfo != null)
             {
@@ -396,20 +383,20 @@ public class StudentManager: Abp.Domain.Services.DomainService, IStudentManager
         }
 
         //
-        public async Task<IEnumerable<object>> EnqStudsByClass(Guid classId)
+        public async Task<object> EnqStudsByClass(Guid classId)
         {
             return await _repositoryStudent.GetAllListAsync(a => a.ClassId == classId);
         }
 
-        public async Task<IEnumerable<object>> EnqStudsByNationality(Guid nationalityId)
+        public async Task<object> EnqStudsByNationality(Guid nationalityId)
         {
             return await _repositoryStudent.GetAllListAsync(a => a.NationalityId == nationalityId);
         }
 
 
-        public async Task<IEnumerable<object>> EnqStudsByReligion(Guid religionId)
+        public async Task<object> EnqStudsByReligion(string religion)
         {
-            return await _repositoryStudent.GetAllListAsync(a => a.ReligionId == religionId);
+            return await _repositoryStudent.GetAllListAsync(a => a.Religion == religion);
         }
         
         //api ...

@@ -15,16 +15,14 @@ namespace RhyoliteOrbit.DomainServices.SchoolManager.Parents;
 
 public class ParentManager: Abp.Domain.Services.DomainService, IParentManager
 {
-    private readonly IRepository<Parent, Guid> _repositoryParent;
-        private readonly IRepository<Relationship, Guid> _repositoryRelationship;
+        private readonly IRepository<Parent, Guid> _repositoryParent;
         private readonly IRepository<Student, Guid> _repositoryStudent;
         private readonly IRepository<StudentParent, Guid> _repositoryStudentParent;
         private readonly IRedisCacheManager _redisCacheManager;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
-        public ParentManager(IRepository<Parent, Guid> repositoryParent, IRepository<Relationship, Guid> repositoryRelationship, IRepository<Student, Guid> repositoryStudent, IRepository<StudentParent, Guid> repositoryStudentParent, IUnitOfWorkManager unitOfWorkManager, IRedisCacheManager redisCacheManager)
+        public ParentManager(IRepository<Parent, Guid> repositoryParent, IRepository<Student, Guid> repositoryStudent, IRepository<StudentParent, Guid> repositoryStudentParent, IUnitOfWorkManager unitOfWorkManager, IRedisCacheManager redisCacheManager)
         {
             _repositoryParent = repositoryParent;
-            _repositoryRelationship = repositoryRelationship;
             _repositoryStudent = repositoryStudent;
             _repositoryStudentParent = repositoryStudentParent;
             _unitOfWorkManager = unitOfWorkManager;
@@ -33,19 +31,7 @@ public class ParentManager: Abp.Domain.Services.DomainService, IParentManager
 
         public async Task<object> Create(Parent entity)
         {
-            var firstGuardianRelationship = await _repositoryRelationship.FirstOrDefaultAsync(x => x.Id == entity.FirstGuardianRelationshipId);
-            var SecondGuardianRelationship = await _repositoryRelationship.FirstOrDefaultAsync(x => x.Id == entity.SecondGuardianRelationshipId);
-
-            if (firstGuardianRelationship != null)
-            {
-                entity.FirstGuardianRelationshipName = firstGuardianRelationship.Name;
-            }
-
-            if (SecondGuardianRelationship != null)
-            {
-                entity.SecondGuardianRelationshipName = SecondGuardianRelationship.Name;
-            }
-
+            
             if (!string.IsNullOrEmpty(entity.FirstGuardianPhoneNo))
             {
                 entity.FirstGuardianPhoneNo = Regex.Replace(entity.FirstGuardianPhoneNo, @"\s", "").Trim();
@@ -108,7 +94,7 @@ public class ParentManager: Abp.Domain.Services.DomainService, IParentManager
                 
                 await _repositoryParent.CountAsync(predicate);
             
-            var data = await (await _repositoryParent.GetAllAsync()).Where(predicate).Select(a=> new { a.Id,a.FirstGuardianName, a.FirstGuardianEmail, a.FirstGuardianPhoneNo, a.FirstGuardianRelationshipName, a.SecondGuardianName, a.SecondGuardianEmail, a.SecondGuardianPhoneNo, a.SecondGuardianRelationshipName  }).Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
+            var data = await (await _repositoryParent.GetAllAsync()).Where(predicate).Select(a=> new { a.Id,a.FirstGuardianName, a.FirstGuardianEmail, a.FirstGuardianPhoneNo, a.SecondGuardianName, a.SecondGuardianEmail, a.SecondGuardianPhoneNo,  }).Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
 
             var totalPages = totalCount > 0 ? Convert.ToInt32(Math.Ceiling(totalCount / (decimal)pageSize)) : 0;
 
@@ -144,18 +130,6 @@ public class ParentManager: Abp.Domain.Services.DomainService, IParentManager
 
         public async Task<object> Update(Parent entity)
         {
-            var firstGuardianRelationship = await _repositoryRelationship.FirstOrDefaultAsync(x => x.Id == entity.FirstGuardianRelationshipId);
-            var SecondGuardianRelationship = await _repositoryRelationship.FirstOrDefaultAsync(x => x.Id == entity.SecondGuardianRelationshipId);
-
-            if (firstGuardianRelationship != null)
-            {
-                entity.FirstGuardianRelationshipName = firstGuardianRelationship.Name;
-            }
-
-            if (SecondGuardianRelationship != null)
-            {
-                entity.SecondGuardianRelationshipName = SecondGuardianRelationship.Name;
-            }
 
             if (!string.IsNullOrEmpty(entity.FirstGuardianPhoneNo))
             {

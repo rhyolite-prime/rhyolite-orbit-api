@@ -21,9 +21,8 @@ public class Student: Abp.Domain.Entities.Auditing.FullAuditedEntity<Guid>, Abp.
     public string FirstName { get; set; }
     [MaxLength(10)]
     public string Gender { get; set; }
-    public Guid ReligionId { get; set; }
     [MaxLength(100)]
-    public string ReligionName { get; set; }
+    public string Religion { get; set; }
     public Guid ClassId { get; set; }
     [MaxLength(100)]
     public string ClassName { get; set; }

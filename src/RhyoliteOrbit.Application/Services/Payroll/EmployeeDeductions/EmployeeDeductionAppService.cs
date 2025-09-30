@@ -79,6 +79,8 @@ public class EmployeeDeductionAppService: RhyoliteOrbitAppServiceBase
         public async Task Update(UpdateEmployeeDeductionInput input)
         {
             var obj = _mapper.Map<EmployeeDeduction>(input);
+            var tenantInfo = await GetCurrentTenantAsync();
+            obj.TenantId = tenantInfo.Id;
             await _employeeDeductionManager.Update(obj);
         }
 

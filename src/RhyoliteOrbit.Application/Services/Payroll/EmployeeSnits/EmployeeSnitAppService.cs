@@ -76,6 +76,8 @@ public class EmployeeSnitAppService: RhyoliteOrbitAppServiceBase
         public async Task Update(UpdateEmployeeSnitInput input)
         {
             var obj = _mapper.Map<EmployeeSnit>(input);
+            var tenantInfo = await GetCurrentTenantAsync();
+            obj.TenantId = tenantInfo.Id;
             await _employeeSnitManager.Update(obj);
         }
 

@@ -11,9 +11,12 @@ using RhyoliteOrbit.Services.Payroll.AllowanceTypes.Dto;
 using RhyoliteOrbit.Services.Payroll.BikTypes.Dto;
 using RhyoliteOrbit.Services.Payroll.DeductionTypes.Dto;
 using RhyoliteOrbit.Services.Payroll.EmployeeCategories.Dto;
+using RhyoliteOrbit.Services.Payroll.EmployeeRanks.Dto;
 using RhyoliteOrbit.Services.Payroll.FeesDescriptions.Dto;
 using RhyoliteOrbit.Services.Payroll.LoanTypes.Dto;
 using RhyoliteOrbit.Services.Payroll.OvertimeTypes.Dto;
+using RhyoliteOrbit.Services.Payroll.TaxReliefs.Dto;
+using RhyoliteOrbit.Services.Payroll.TaxTables.Dto;
 using RhyoliteOrbit.Services.ProductionPlanning.RawMaterials.Dto;
 using RhyoliteOrbit.Services.SchoolManager.AcademicYears.Dto;
 using RhyoliteOrbit.Services.SchoolManager.BillSetups.Dto;
@@ -97,6 +100,16 @@ public class MapProfile: AutoMapper.Profile
         
         CreateMap<CreateLoanTypeInput, LoanType>();
         CreateMap<UpdateLoanTypeInput, LoanType>();
+        
+        CreateMap<CreateEmployeeRankInput, EmployeeRank>();
+        CreateMap<UpdateEmployeeRankInput, EmployeeRank>();
+        
+        CreateMap<CreateTaxReliefInput, TaxRelief>();
+        CreateMap<UpdateTaxReliefInput, TaxRelief>();
+        
+        CreateMap<CreateTaxTableInput, TaxTable>();
+        CreateMap<UpdateTaxTableInput, TaxTable>();
+        
         
         //gl
         CreateMap<CreateAccountHeadInput, AccountHead>();

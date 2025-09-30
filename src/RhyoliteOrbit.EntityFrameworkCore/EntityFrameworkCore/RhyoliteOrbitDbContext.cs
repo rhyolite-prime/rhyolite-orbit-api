@@ -20,7 +20,7 @@ public class RhyoliteOrbitDbContext : AbpZeroDbContext<Tenant, Role, User, Rhyol
         : base(options)
     {
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-        //MigrateDatabase();
+        MigrateDatabase();
     }
     
     public void MigrateDatabase()
@@ -37,8 +37,6 @@ public class RhyoliteOrbitDbContext : AbpZeroDbContext<Tenant, Role, User, Rhyol
     public DbSet<Department> Departments { get; set; }
     public DbSet<SystemSetting> SystemSetting { get; set; }
     public DbSet<PersonnelStatus> PersonnelStatuses { get; set; }
-    public DbSet<Relationship> Relationships { get; set; }
-    public DbSet<Religion> Religions { get; set; }
     public DbSet<ReportDownload> ReportDownloads { get; set; }  
     public DbSet<Supplier> Suppliers { get; set; }
     public DbSet<PartnerCategory> PartnerCategories { get; set; }
@@ -47,6 +45,7 @@ public class RhyoliteOrbitDbContext : AbpZeroDbContext<Tenant, Role, User, Rhyol
     public DbSet<Country> Countries { get; set; }
     public DbSet<BusinessDate> BusinessDates { get; set; }
     public DbSet<UnitOfMeasure> UnitOfMeasurements { get; set; }
+    public DbSet<Tag> Tags { get; set; }
     
     
     //school manager...
@@ -206,13 +205,13 @@ public class RhyoliteOrbitDbContext : AbpZeroDbContext<Tenant, Role, User, Rhyol
     public DbSet<MonthlyBonus> MonthlyBonuses { get; set; }
     public DbSet<MonthlyBonusHistory> MonthlyBonusHistory { get; set; }
     
-    //production planning and process control
+    //production planning and process control ...
+    
     public DbSet<Product> Products { get; set; }
     public DbSet<ProductionOrder> ProductionOrders { get; set; }
-    public DbSet<JobTicket> JobTickets { get; set; }
+    public DbSet<Operation> Operations { get; set; }
     public DbSet<ProcessFlow> ProcessFlows { get; set; }
     public DbSet<WorkCenter> WorkCenters { get; set; }
-    public DbSet<ProductionSchedule> ProductionSchedules { get; set; }
     public DbSet<FinishedGood> FinishedGoods { get; set; }
     public DbSet<FinishedGoodAllocation> FinishedGoodAllocation { get; set; }
     public DbSet<ScrapAndWaste> ScrapAndWastes { get; set; }
