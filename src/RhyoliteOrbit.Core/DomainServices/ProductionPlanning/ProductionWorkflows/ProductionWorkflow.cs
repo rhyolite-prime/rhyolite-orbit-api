@@ -8,18 +8,18 @@ using Abp.UI;
 using Microsoft.EntityFrameworkCore;
 using RhyoliteOrbit.Models.ProductionPlanning;
 
-namespace RhyoliteOrbit.DomainServices.ProductionPlanning.ProcessFlows;
+namespace RhyoliteOrbit.DomainServices.ProductionPlanning.ProductionWorkflows;
 
-public class ProcessFlowManager: DomainService, IProcessFlowManager
+public class ProductionWorkflow: DomainService, IProductionWorkflow
 {
-    private readonly IRepository<ProcessFlow, Guid> _repositoryProcessFlow;
+    private readonly IRepository<Models.ProductionPlanning.ProductionWorkflow, Guid> _repositoryProcessFlow;
         
-    public ProcessFlowManager(IRepository<ProcessFlow, Guid> repositoryProcessFlow)
+    public ProductionWorkflow(IRepository<Models.ProductionPlanning.ProductionWorkflow, Guid> repositoryProcessFlow)
     {
         _repositoryProcessFlow = repositoryProcessFlow;
     }
 
-    public async Task Create(ProcessFlow entity)
+    public async Task Create(Models.ProductionPlanning.ProductionWorkflow entity)
     {
         var datta = await _repositoryProcessFlow.FirstOrDefaultAsync(x => x.Name == entity.Name);
 
@@ -33,7 +33,7 @@ public class ProcessFlowManager: DomainService, IProcessFlowManager
          
     }
 
-    public async Task Update(ProcessFlow entity)
+    public async Task Update(Models.ProductionPlanning.ProductionWorkflow entity)
     {
         await _repositoryProcessFlow.UpdateAsync(entity);
     }
@@ -46,7 +46,7 @@ public class ProcessFlowManager: DomainService, IProcessFlowManager
     public async Task<object> ListAll(int pageNo, int pageSize, string query)
     {
         
-        var predicate = PredicateBuilder.New<ProcessFlow>();
+        var predicate = PredicateBuilder.New<Models.ProductionPlanning.ProductionWorkflow>();
 
         predicate.And(x => !x.IsDeleted);
             

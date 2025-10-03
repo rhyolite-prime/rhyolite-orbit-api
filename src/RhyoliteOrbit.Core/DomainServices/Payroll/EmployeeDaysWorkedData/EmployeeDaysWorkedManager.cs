@@ -107,7 +107,7 @@ public class EmployeeDaysWorkedManager: Abp.Domain.Services.DomainService, IEmpl
 
             int defaultDays = 0;
             
-            var payMonth = payYear?.PayCalendarDetails?.FirstOrDefault(x => x.Year == year && x.Month == month);
+            var payMonth = payYear?.Details?.FirstOrDefault(x => x.Year == year && x.Month == month);
             if (payMonth is { Days: > 0 })
             {
                 defaultDays = payMonth.Days;

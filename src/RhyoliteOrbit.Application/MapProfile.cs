@@ -13,8 +13,10 @@ using RhyoliteOrbit.Services.Payroll.DeductionTypes.Dto;
 using RhyoliteOrbit.Services.Payroll.EmployeeCategories.Dto;
 using RhyoliteOrbit.Services.Payroll.EmployeeRanks.Dto;
 using RhyoliteOrbit.Services.Payroll.FeesDescriptions.Dto;
+using RhyoliteOrbit.Services.Payroll.Gratuities.Dto;
 using RhyoliteOrbit.Services.Payroll.LoanTypes.Dto;
 using RhyoliteOrbit.Services.Payroll.OvertimeTypes.Dto;
+using RhyoliteOrbit.Services.Payroll.PayCalendars.Dto;
 using RhyoliteOrbit.Services.Payroll.TaxReliefs.Dto;
 using RhyoliteOrbit.Services.Payroll.TaxTables.Dto;
 using RhyoliteOrbit.Services.ProductionPlanning.RawMaterials.Dto;
@@ -109,6 +111,14 @@ public class MapProfile: AutoMapper.Profile
         
         CreateMap<CreateTaxTableInput, TaxTable>();
         CreateMap<UpdateTaxTableInput, TaxTable>();
+        
+        CreateMap<CreateGratuityInput, Gratuity>();
+        CreateMap<UpdateGratuityInput, Gratuity>();
+        
+        CreateMap<CreatePayCalendarInput, PayCalendar>();
+        CreateMap<UpdatePayCalendarInput, PayCalendar>();
+        
+        
         
         
         //gl

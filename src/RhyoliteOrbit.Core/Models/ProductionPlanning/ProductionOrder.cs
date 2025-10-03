@@ -9,6 +9,8 @@ public class ProductionOrder: Abp.Domain.Entities.Auditing.FullAuditedEntity<Gui
     public string Title { get; set; }
     [MaxLength(100)]
     public string Tag { get; set; }
+    public bool IsApproved { get; set; }    
+    public DateTime? ApprovalDate { get; set; }
     [MaxLength(20)]
     public string ProductionOrderIdentifier { get; set; }
     
@@ -36,6 +38,7 @@ public class ProductionOrder: Abp.Domain.Entities.Auditing.FullAuditedEntity<Gui
     [MaxLength(20)]
     public string ManagerPhone { get; set; }
     
-    
+    [MaxLength(150)]
+    public string Comments { get; set; }
     public int TenantId { get; set; }
 }

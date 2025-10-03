@@ -30,28 +30,28 @@ public class PayCalendarManager: Abp.Domain.Services.DomainService, IPayCalendar
         public async Task<object> CreatePayCalendarDetails(PayCalendarDetailDto dto)
         {
             var payCalendarData = await _repositoryPayCalendar.GetAsync(dto.PayCalendarId);
-            var calendarList = payCalendarData.PayCalendarDetails;
+            var calendarList = payCalendarData.Details;
             var calendarInfo = calendarList.FirstOrDefault(x => x.Id == dto.Id);
 
             if (calendarInfo == null)
             {
                 
                 var existingPayCalendarDetail =
-                    payCalendarData.PayCalendarDetails.FirstOrDefault(x => x.Month == dto.Month && x.PayCalendarId == dto.PayCalendarId);
+                    payCalendarData.Details.FirstOrDefault(x => x.Month == dto.Month && x.PayCalendarId == dto.PayCalendarId);
 
                 if (existingPayCalendarDetail != null)
                 {
                     throw new UserFriendlyException(
                         400,
                         "Duplicate records are not allowed.",
-                        "An entry for the same month already exists in the pay calendar."
+                        "An entry for the same pay month already exists in the pay calendar."
                     );
                     
                     
                 }
                 
                 
-                payCalendarData.PayCalendarDetails.Add(new PayCalendarDetail
+                payCalendarData.Details.Add(new PayCalendarDetail
                 {
                     Id = dto.Id,
                     PayCalendarId= dto.PayCalendarId,
@@ -87,7 +87,7 @@ public class PayCalendarManager: Abp.Domain.Services.DomainService, IPayCalendar
         public async Task UpdatePayCalendarDetails(PayCalendarDetailDto input)
         {
             var payCalendarData = await _repositoryPayCalendar.GetAsync(input.PayCalendarId);
-            var calendarList = payCalendarData.PayCalendarDetails;
+            var calendarList = payCalendarData.Details;
             var calendarInfo = calendarList.FirstOrDefault(x => x.Id == input.Id);
 
             calendarList.Remove(calendarInfo);
@@ -101,7 +101,7 @@ public class PayCalendarManager: Abp.Domain.Services.DomainService, IPayCalendar
                 calendarList.Add(calendarInfo);
             }
 
-            payCalendarData.PayCalendarDetails = calendarList;
+            payCalendarData.Details = calendarList;
 
             await _repositoryPayCalendar.UpdateAsync(payCalendarData);
         }
@@ -117,7 +117,7 @@ public class PayCalendarManager: Abp.Domain.Services.DomainService, IPayCalendar
 
                 if (currentPayMonth != null)
                 {
-                    return payCalendarHeader.PayCalendarDetails.FirstOrDefault(a =>
+                    return payCalendarHeader.Details.FirstOrDefault(a =>
                         a.Month == currentPayMonth.Month && a.Year == currentPayMonth.Year);
                 }
                 
@@ -148,7 +148,7 @@ public class PayCalendarManager: Abp.Domain.Services.DomainService, IPayCalendar
                 
                 await _repositoryPayCalendar.CountAsync(predicate);
             
-            var data = await (await _repositoryPayCalendar.GetAllAsync()).Where(predicate).Select(a=> new { a.Id, a.Year, a.PayCalendarDetails, }).Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
+            var data = await (await _repositoryPayCalendar.GetAllAsync()).Where(predicate).Select(a=> new { a.Id, a.Year, a.Details, }).Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
 
             var totalPages = totalCount > 0 ? Convert.ToInt32(Math.Ceiling(totalCount / (decimal)pageSize)) : 0;
 
@@ -178,12 +178,12 @@ public class PayCalendarManager: Abp.Domain.Services.DomainService, IPayCalendar
         public async Task DeletePayCalendarDetails(PayCalendarDetailDto dto)
         {
             var payCalendarData = await _repositoryPayCalendar.GetAsync(dto.PayCalendarId);
-            var calendarList = payCalendarData.PayCalendarDetails;
+            var calendarList = payCalendarData.Details;
             var calendarInfo = calendarList.FirstOrDefault(x => x.Id == dto.Id);
 
             calendarList.Remove(calendarInfo);
 
-            payCalendarData.PayCalendarDetails = calendarList;
+            payCalendarData.Details = calendarList;
 
             await _repositoryPayCalendar.UpdateAsync(payCalendarData);
 

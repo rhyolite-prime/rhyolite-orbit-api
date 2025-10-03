@@ -206,11 +206,11 @@ public class RhyoliteOrbitDbContext : AbpZeroDbContext<Tenant, Role, User, Rhyol
     public DbSet<MonthlyBonusHistory> MonthlyBonusHistory { get; set; }
     
     //production planning and process control ...
-    
+    public DbSet<UnitOfMeasure> UnitOfMeasures { get; set; }
     public DbSet<Product> Products { get; set; }
     public DbSet<ProductionOrder> ProductionOrders { get; set; }
     public DbSet<Operation> Operations { get; set; }
-    public DbSet<ProcessFlow> ProcessFlows { get; set; }
+    public DbSet<ProductionWorkflow> ProductionWorkflows { get; set; }
     public DbSet<WorkCenter> WorkCenters { get; set; }
     public DbSet<FinishedGood> FinishedGoods { get; set; }
     public DbSet<FinishedGoodAllocation> FinishedGoodAllocation { get; set; }

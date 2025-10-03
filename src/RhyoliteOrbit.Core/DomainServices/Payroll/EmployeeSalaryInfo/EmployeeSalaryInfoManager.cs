@@ -146,7 +146,7 @@ public class EmployeeSalaryInfoManager: Abp.Domain.Services.DomainService, IEmpl
                             {
                                 var payYear = await _repositoryPayCalendar.FirstOrDefaultAsync(x => x.Year == currentPayMonth.Year);
 
-                                var payMonth = payYear.PayCalendarDetails.FirstOrDefault(x => x.Year == currentPayMonth.Year && x.Month == currentPayMonth.Month);
+                                var payMonth = payYear.Details.FirstOrDefault(x => x.Year == currentPayMonth.Year && x.Month == currentPayMonth.Month);
                            
                                 if (payMonth is { Days: > 0 })
                                 {

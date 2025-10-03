@@ -23,7 +23,6 @@ public class FinishedGood: Abp.Domain.Entities.Auditing.FullAuditedEntity<Guid>,
     
     public int InventoryCategory { get; set; } // InventoryCategory enum
     
-    public DateTime ProductionDate { get; set; }
     public bool IsQaApproved { get; set; }
      
     public int TenantId { get; set; }

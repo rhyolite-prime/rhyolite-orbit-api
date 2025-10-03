@@ -22,9 +22,9 @@ public class PayCalendarAppService: RhyoliteOrbitAppServiceBase
     }
 
     [HttpGet]
-    public async Task<object> GetAll(int pageNo, int pageSize, string query)
+    public async Task<object> GetAll(int pageNo, int pageSize, int year)
     {
-        return await _payCalendarManager.ListAll();
+        return await _payCalendarManager.ListAll(pageNo, pageSize, year);
     }
 
     [HttpGet]

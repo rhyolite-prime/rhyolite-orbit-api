@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RhyoliteOrbit.Models.ProductionPlanning;
 
-public class ProcessFlow: Abp.Domain.Entities.Auditing.FullAuditedEntity<Guid>, Abp.Domain.Entities.IMustHaveTenant
+public class ProductionWorkflow: Abp.Domain.Entities.Auditing.FullAuditedEntity<Guid>, Abp.Domain.Entities.IMustHaveTenant
 {
     [MaxLength(100)]
     public string Name { get; set; }

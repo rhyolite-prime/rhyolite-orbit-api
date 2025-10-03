@@ -20,7 +20,6 @@ using RhyoliteOrbit.Identity;
 using RhyoliteOrbit.MultiTenancy;
 using RhyoliteOrbit.Sessions;
 using RhyoliteOrbit.Web.Models.Account;
-using RhyoliteOrbit.Web.Views.Shared.Components.TenantChange;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -386,19 +385,6 @@ public class AccountController : RhyoliteOrbitControllerBase
     public string GetAppHomeUrl()
     {
         return Url.Action("Index", "About");
-    }
-
-    #endregion
-
-    #region Change Tenant
-
-    public async Task<ActionResult> TenantChangeModal()
-    {
-        var loginInfo = await _sessionAppService.GetCurrentLoginInformations();
-        return View("/Views/Shared/Components/TenantChange/_ChangeModal.cshtml", new ChangeModalViewModel
-        {
-            TenancyName = loginInfo.Tenant?.TenancyName
-        });
     }
 
     #endregion

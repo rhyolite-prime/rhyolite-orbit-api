@@ -208,7 +208,7 @@ public class ProcessPayManager: Abp.Domain.Services.DomainService, IProcessPayMa
                     return new { code = 400, message = $"Pay calendar month and days not set up for {currentPayMonth.Year}" };
                 }
                 
-                var payCalendarDetails = payCalendarInfo.PayCalendarDetails;
+                var payCalendarDetails = payCalendarInfo.Details;
 
                 var daysInPayCalendar = payCalendarDetails.FirstOrDefault(a => a.Month == currentPayMonth.Month && a.Year == currentPayMonth.Year);
 

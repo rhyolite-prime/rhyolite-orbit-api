@@ -8,11 +8,11 @@ namespace RhyoliteOrbit.Services.Payroll.PayCalendars.Dto;
 public class CreatePayCalendarInput
 {
     public int Year { get; set; }
-    public List<PayCalendarDetail> PayCalendarDetails { get; set; }
+    public List<PayCalendarDetail> Details { get; set; }
 }
 
 public class UpdatePayCalendarInput:EntityDto<Guid>
 {
     public int Year { get; set; }
-    public List<PayCalendarDetail> PayCalendarDetails { get; set; }
+    public List<PayCalendarDetail> Details { get; set; }
 }

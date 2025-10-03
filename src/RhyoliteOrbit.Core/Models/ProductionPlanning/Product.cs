@@ -13,6 +13,7 @@ public class Product : Abp.Domain.Entities.Auditing.FullAuditedEntity<Guid>, Abp
     public string Category { get; set; }
     [MaxLength(100)]
     public string UnitOfMeasure { get; set; }
+    
     public Guid UnitOfMeasureId { get; set; }
     
     public int MinimumOrderQuantity { get; set; }

@@ -42,9 +42,8 @@ public class GratuityAppService: RhyoliteOrbitAppServiceBase
     }
 
     [HttpDelete]
-    public async Task Delete(Guid Id)
+    public async Task Delete(Guid id)
     {
-        await _gratuityManager.Delete(Id);
-
+        await _gratuityManager.Delete(id);
     }
 }
