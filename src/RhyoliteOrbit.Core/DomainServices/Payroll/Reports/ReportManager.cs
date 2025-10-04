@@ -16,7 +16,7 @@ namespace RhyoliteOrbit.DomainServices.Payroll.Reports;
 
 public class ReportManager: Abp.Domain.Services.DomainService, IReportManager
 {
-        private readonly IRepository<InitializePayMonth, Guid> _repositoryInitializePayMonth;
+        private readonly IRepository<PayrollPeriod, Guid> _repositoryPayrollPeriod;
         private readonly IRepository<CompanyProfile, Guid> _repositoryCompanyProfile;
         private readonly IRepository<EmployeeLoan, Guid> _repositoryEmployeeLoan;
         private readonly IRepository<EmployeeLoanRepaymentSchedule, Guid> _repositoryEmployeeLoanRepaymentSchedule;
@@ -48,9 +48,9 @@ public class ReportManager: Abp.Domain.Services.DomainService, IReportManager
         private readonly IRepository<MonthlyBonus, Guid> _repositoryMonthlyBonus;
         private readonly IActorRef _payslipDispatchActorProvider;
 
-        public ReportManager(IRepository<InitializePayMonth, Guid> repositoryInitializePayMonth, TopLevelActors.PayslipDispatchActorProvider payslipDispatchActorProvider, IRepository<CompanyProfile, Guid> repositoryCompanyProfile, IRepository<EmployeeLoan, Guid> repositoryEmployeeLoan, IRepository<LoanType, Guid> repositoryLoanType, IRepository<MonthlyLoanDeduction, Guid> repositoryMonthlyLoanDeduction, IRepository<EmployeeLoanRepaymentSchedule, Guid> repositoryEmployeeLoanRepaymentSchedule, IRepository<MonthlyAllowanceHistory, Guid> repositoryMonthlyAllowanceHist, IRepository<Paymaster, Guid> repositoryPaymaster, IRepository<MonthlySalaryAdvance, Guid> repositoryMonthlySalaryAdvance, IRepository<MonthlyCumulativeDeduction, Guid> repositoryMonthlyCumulativeDeduction, IRepository<MonthlyDeduction, Guid> repositoryMonthlyDeduction, IRepository<EmployeeDaysWorked, Guid> repositoryEmployeeDaysWorked, IRepository<EmployeeBioData, Guid> repositoryEmployeeBioData, IRepository<EmployeeSnit, Guid> repositoryEmployeeSnit, IRepository<MonthlyAllowance, Guid> repositoryMonthlyAllowance, IRepository<PaymasterHistory, Guid> repositoryPaymasterHist, IRepository<IrsSignature, Guid> repositoryIrsSignature, IRepository<SalaryGrade, Guid> repositorySalaryGrade, IRepository<MonthlyRelief, Guid> repositoryMonthlyRelief, IRepository<MonthlyBenefitsInKind, Guid> repositoryMonthlyBenefitsInKind, IRepository<MonthlyOvertime, Guid> repositoryMonthlyOvertime, IRepository<MonthlySalaryAdvanceHistory, Guid> repositoryMonthlySalaryAdvanceHist, IRepository<MonthlyLoanDeductionHistory, Guid> repositoryMonthlyLoanDeductionHist, IRepository<MonthlyDeductionHistory, Guid> repositoryMonthlyDeductionHist, IRepository<MonthlyReliefHistory, Guid> repositoryMonthlyReliefHist, IRepository<MonthlyBenefitsInKindHistory, Guid> repositoryMonthlyBenefitsInKindHist, IRepository<MonthlyOvertimeHistory, Guid> repositoryMonthlyOvertimeHist, IRepository<MonthlyCumulativeDeductionHistory, Guid> repositoryMonthlyCumulativeDeductionHist, IRepository<MonthlyBonus, Guid> repositoryMonthlyBonus, IRepository<EmployeeSalaryData, Guid> repositoryEmployeeSalaryData)
+        public ReportManager(IRepository<PayrollPeriod, Guid> repositoryPayrollPeriod, TopLevelActors.PayslipDispatchActorProvider payslipDispatchActorProvider, IRepository<CompanyProfile, Guid> repositoryCompanyProfile, IRepository<EmployeeLoan, Guid> repositoryEmployeeLoan, IRepository<LoanType, Guid> repositoryLoanType, IRepository<MonthlyLoanDeduction, Guid> repositoryMonthlyLoanDeduction, IRepository<EmployeeLoanRepaymentSchedule, Guid> repositoryEmployeeLoanRepaymentSchedule, IRepository<MonthlyAllowanceHistory, Guid> repositoryMonthlyAllowanceHist, IRepository<Paymaster, Guid> repositoryPaymaster, IRepository<MonthlySalaryAdvance, Guid> repositoryMonthlySalaryAdvance, IRepository<MonthlyCumulativeDeduction, Guid> repositoryMonthlyCumulativeDeduction, IRepository<MonthlyDeduction, Guid> repositoryMonthlyDeduction, IRepository<EmployeeDaysWorked, Guid> repositoryEmployeeDaysWorked, IRepository<EmployeeBioData, Guid> repositoryEmployeeBioData, IRepository<EmployeeSnit, Guid> repositoryEmployeeSnit, IRepository<MonthlyAllowance, Guid> repositoryMonthlyAllowance, IRepository<PaymasterHistory, Guid> repositoryPaymasterHist, IRepository<IrsSignature, Guid> repositoryIrsSignature, IRepository<SalaryGrade, Guid> repositorySalaryGrade, IRepository<MonthlyRelief, Guid> repositoryMonthlyRelief, IRepository<MonthlyBenefitsInKind, Guid> repositoryMonthlyBenefitsInKind, IRepository<MonthlyOvertime, Guid> repositoryMonthlyOvertime, IRepository<MonthlySalaryAdvanceHistory, Guid> repositoryMonthlySalaryAdvanceHist, IRepository<MonthlyLoanDeductionHistory, Guid> repositoryMonthlyLoanDeductionHist, IRepository<MonthlyDeductionHistory, Guid> repositoryMonthlyDeductionHist, IRepository<MonthlyReliefHistory, Guid> repositoryMonthlyReliefHist, IRepository<MonthlyBenefitsInKindHistory, Guid> repositoryMonthlyBenefitsInKindHist, IRepository<MonthlyOvertimeHistory, Guid> repositoryMonthlyOvertimeHist, IRepository<MonthlyCumulativeDeductionHistory, Guid> repositoryMonthlyCumulativeDeductionHist, IRepository<MonthlyBonus, Guid> repositoryMonthlyBonus, IRepository<EmployeeSalaryData, Guid> repositoryEmployeeSalaryData)
         {
-            _repositoryInitializePayMonth = repositoryInitializePayMonth;
+            _repositoryPayrollPeriod = repositoryPayrollPeriod;
             _repositoryCompanyProfile = repositoryCompanyProfile;
             _repositoryEmployeeLoan = repositoryEmployeeLoan;
             _repositoryLoanType = repositoryLoanType;
@@ -91,7 +91,7 @@ public class ReportManager: Abp.Domain.Services.DomainService, IReportManager
 
         public async Task<object> GetLoanDeductions()
         {
-            var currentPayMonth = await _repositoryInitializePayMonth.GetAll().FirstOrDefaultAsync();
+            var currentPayMonth = await _repositoryPayrollPeriod.GetAll().FirstOrDefaultAsync();
 
             var currentDate = new DateTime(currentPayMonth.Year, currentPayMonth.Month, 1).ToString("MMMM, yyyy");
 
@@ -127,7 +127,7 @@ public class ReportManager: Abp.Domain.Services.DomainService, IReportManager
 
         public async Task<object> GetLoanDeductions(Guid loanTypeId)
         {
-            var currentPayMonth = await _repositoryInitializePayMonth.GetAll().FirstOrDefaultAsync();
+            var currentPayMonth = await _repositoryPayrollPeriod.GetAll().FirstOrDefaultAsync();
 
             var currentDate = new DateTime(currentPayMonth.Year, currentPayMonth.Month, 1).ToString("MMMM, yyyy");
 
@@ -160,7 +160,7 @@ public class ReportManager: Abp.Domain.Services.DomainService, IReportManager
 
         public async Task<object> GetEmployeeLoans(DateTime startDate, DateTime endDate)
         {
-            var currentPayMonth = await _repositoryInitializePayMonth.GetAll().FirstOrDefaultAsync();
+            var currentPayMonth = await _repositoryPayrollPeriod.GetAll().FirstOrDefaultAsync();
 
             var currentDate = new DateTime(currentPayMonth.Year, currentPayMonth.Month, 1).ToString("MMMM, yyyy");
 
@@ -189,7 +189,7 @@ public class ReportManager: Abp.Domain.Services.DomainService, IReportManager
         
         public async Task<object> GetEmployeeLoans(Guid employeeId, DateTime startDate, DateTime endDate)
         {
-            var currentPayMonth = await _repositoryInitializePayMonth.GetAll().FirstOrDefaultAsync();
+            var currentPayMonth = await _repositoryPayrollPeriod.GetAll().FirstOrDefaultAsync();
 
        
             var currentDate = new DateTime(currentPayMonth.Year, currentPayMonth.Month, 1).ToString("MMMM, yyyy");
@@ -228,7 +228,7 @@ public class ReportManager: Abp.Domain.Services.DomainService, IReportManager
 
         public async Task<object> GetEmployeeLoans(DateTime startDate, DateTime endDate, Guid loanTypeId)
         {
-            var currentPayMonth = await _repositoryInitializePayMonth.GetAll().FirstOrDefaultAsync();
+            var currentPayMonth = await _repositoryPayrollPeriod.GetAll().FirstOrDefaultAsync();
 
        
             var currentDate = new DateTime(currentPayMonth.Year, currentPayMonth.Month, 1).ToString("MMMM, yyyy");
@@ -265,7 +265,7 @@ public class ReportManager: Abp.Domain.Services.DomainService, IReportManager
 
         public async Task<object> GetMonthlyLoanPayout(Guid loanTypeId)
         {
-            var currentPayMonth = await _repositoryInitializePayMonth.GetAll().FirstOrDefaultAsync();
+            var currentPayMonth = await _repositoryPayrollPeriod.GetAll().FirstOrDefaultAsync();
 
             var currentDate = new DateTime(currentPayMonth.Year, currentPayMonth.Month, 1).ToString("MMMM, yyyy");
 
@@ -280,7 +280,7 @@ public class ReportManager: Abp.Domain.Services.DomainService, IReportManager
 
         public async Task<object> GetOutstandingLoans()
         {
-            var currentPayMonth = await _repositoryInitializePayMonth.GetAll().FirstOrDefaultAsync();
+            var currentPayMonth = await _repositoryPayrollPeriod.GetAll().FirstOrDefaultAsync();
 
             var currentDate = new DateTime(currentPayMonth.Year, currentPayMonth.Month, 1).ToString("MMMM, yyyy");
 
@@ -316,7 +316,7 @@ public class ReportManager: Abp.Domain.Services.DomainService, IReportManager
 
         public async Task<object> GetOutstandingLoans(Guid employeeId, Guid loanTypeId)
         {
-            var currentPayMonth = await _repositoryInitializePayMonth.GetAll().FirstOrDefaultAsync();
+            var currentPayMonth = await _repositoryPayrollPeriod.GetAll().FirstOrDefaultAsync();
 
             var currentDate = new DateTime(currentPayMonth.Year, currentPayMonth.Month, 1).ToString("MMMM, yyyy");
 
@@ -366,7 +366,7 @@ public class ReportManager: Abp.Domain.Services.DomainService, IReportManager
 
         public async Task<object> GetAllowances()
         {
-            var currentPayMonth = await _repositoryInitializePayMonth.GetAll().FirstOrDefaultAsync();
+            var currentPayMonth = await _repositoryPayrollPeriod.GetAll().FirstOrDefaultAsync();
 
             var currentDate = new DateTime(currentPayMonth.Year, currentPayMonth.Month, 1).ToString("MMMM, yyyy");
 
@@ -398,7 +398,7 @@ public class ReportManager: Abp.Domain.Services.DomainService, IReportManager
 
         public async Task<object> GetAllowances(Guid allowanceTypeId)
         {
-            var currentPayMonth = await (await _repositoryInitializePayMonth.GetAllAsync()).FirstOrDefaultAsync();
+            var currentPayMonth = await (await _repositoryPayrollPeriod.GetAllAsync()).FirstOrDefaultAsync();
 
             var currentDate = new DateTime(currentPayMonth.Year, currentPayMonth.Month, 1).ToString("MMMM, yyyy");
 
@@ -431,7 +431,7 @@ public class ReportManager: Abp.Domain.Services.DomainService, IReportManager
         public async Task<object> GetPayRegister()
         {
 
-            var currentPayMonth = await _repositoryInitializePayMonth.GetAll().FirstOrDefaultAsync();
+            var currentPayMonth = await _repositoryPayrollPeriod.GetAll().FirstOrDefaultAsync();
 
             var currentDate = new DateTime(currentPayMonth.Year, currentPayMonth.Month, 1).ToString("MMMM, yyyy");
 
@@ -468,7 +468,7 @@ public class ReportManager: Abp.Domain.Services.DomainService, IReportManager
 
         public async Task<object> GetSalaryAdvance()
         {
-            var currentPayMonth = await (await _repositoryInitializePayMonth.GetAllAsync()).FirstOrDefaultAsync();
+            var currentPayMonth = await (await _repositoryPayrollPeriod.GetAllAsync()).FirstOrDefaultAsync();
 
             var currentDate = new DateTime(currentPayMonth.Year, currentPayMonth.Month, 1).ToString("MMMM, yyyy");
 
@@ -504,7 +504,7 @@ public class ReportManager: Abp.Domain.Services.DomainService, IReportManager
 
             var employeeAllowances = new object();
 
-            var currentPayMonth = await _repositoryInitializePayMonth.GetAll().FirstOrDefaultAsync();
+            var currentPayMonth = await _repositoryPayrollPeriod.GetAll().FirstOrDefaultAsync();
 
             var currentDate = new DateTime(currentPayMonth.Year, currentPayMonth.Month, 1).ToString("MMMM, yyyy");
 
@@ -669,7 +669,7 @@ public class ReportManager: Abp.Domain.Services.DomainService, IReportManager
            
             var grossPay = 0M;
 
-            var currentPayMonth = await (await _repositoryInitializePayMonth.GetAllAsync()).FirstOrDefaultAsync();
+            var currentPayMonth = await (await _repositoryPayrollPeriod.GetAllAsync()).FirstOrDefaultAsync();
 
             var currentDate = new DateTime(currentPayMonth.Year, currentPayMonth.Month, 1).ToString("MMMM, yyyy");
            
@@ -800,7 +800,7 @@ public class ReportManager: Abp.Domain.Services.DomainService, IReportManager
         
         public async Task<object> GetDeductions()
         {
-            var currentPayMonth = await _repositoryInitializePayMonth.GetAll().FirstOrDefaultAsync();
+            var currentPayMonth = await _repositoryPayrollPeriod.GetAll().FirstOrDefaultAsync();
 
             var currentDate = new DateTime(currentPayMonth.Year, currentPayMonth.Month, 1).ToString("MMMM, yyyy");
 
@@ -819,7 +819,7 @@ public class ReportManager: Abp.Domain.Services.DomainService, IReportManager
 
         public async Task<object> GetDeductions(Guid deductionTypeId)
         {
-            var currentPayMonth = await _repositoryInitializePayMonth.GetAll().FirstOrDefaultAsync();
+            var currentPayMonth = await _repositoryPayrollPeriod.GetAll().FirstOrDefaultAsync();
 
             var currentDate = new DateTime(currentPayMonth.Year, currentPayMonth.Month, 1).ToString("MMMM, yyyy");
 
@@ -834,7 +834,7 @@ public class ReportManager: Abp.Domain.Services.DomainService, IReportManager
 
         public async Task<object> GetDaysWorked()
         {
-            var currentPayMonth = await _repositoryInitializePayMonth.GetAll().FirstOrDefaultAsync();
+            var currentPayMonth = await _repositoryPayrollPeriod.GetAll().FirstOrDefaultAsync();
 
             var currentDate = new DateTime(currentPayMonth.Year, currentPayMonth.Month, 1).ToString("MMMM, yyyy");
 
@@ -850,7 +850,7 @@ public class ReportManager: Abp.Domain.Services.DomainService, IReportManager
         public async Task<object> GetEmployeeList()
         {
 
-            var currentPayMonth = await _repositoryInitializePayMonth.GetAll().FirstOrDefaultAsync();
+            var currentPayMonth = await _repositoryPayrollPeriod.GetAll().FirstOrDefaultAsync();
 
             var currentDate = new DateTime(currentPayMonth.Year, currentPayMonth.Month, 1).ToString("MMMM, yyyy");
 
@@ -866,7 +866,7 @@ public class ReportManager: Abp.Domain.Services.DomainService, IReportManager
 
         public async Task<object> GetEmployeeSalaryInfo()
         {
-            var currentPayMonth = await (await _repositoryInitializePayMonth.GetAllAsync()).FirstOrDefaultAsync();
+            var currentPayMonth = await (await _repositoryPayrollPeriod.GetAllAsync()).FirstOrDefaultAsync();
 
             var currentDate = new DateTime(currentPayMonth.Year, currentPayMonth.Month, 1).ToString("MMMM, yyyy");
 
@@ -882,7 +882,7 @@ public class ReportManager: Abp.Domain.Services.DomainService, IReportManager
         //tier-i, tier-ii
         public async Task<object> GetPensionScheme(string schemeType)
         {
-            var currentPayMonth = await (await _repositoryInitializePayMonth.GetAllAsync()).FirstOrDefaultAsync();
+            var currentPayMonth = await (await _repositoryPayrollPeriod.GetAllAsync()).FirstOrDefaultAsync();
 
             var companyProfile = await (await _repositoryCompanyProfile.GetAllAsync()).FirstOrDefaultAsync();
 
@@ -922,7 +922,7 @@ public class ReportManager: Abp.Domain.Services.DomainService, IReportManager
 
         public async Task<object> GetBankPayments()
         {
-            var currentPayMonth = await (await _repositoryInitializePayMonth.GetAllAsync()).FirstOrDefaultAsync();
+            var currentPayMonth = await (await _repositoryPayrollPeriod.GetAllAsync()).FirstOrDefaultAsync();
 
             var companyProfile = await (await _repositoryCompanyProfile.GetAllAsync()).FirstOrDefaultAsync();
 
@@ -958,7 +958,7 @@ public class ReportManager: Abp.Domain.Services.DomainService, IReportManager
 
         public async Task<object> GetBankPayments(Guid bankId)
         {
-            var currentPayMonth = await (await _repositoryInitializePayMonth.GetAllAsync()).FirstOrDefaultAsync();
+            var currentPayMonth = await (await _repositoryPayrollPeriod.GetAllAsync()).FirstOrDefaultAsync();
 
             var companyProfile = await (await _repositoryCompanyProfile.GetAllAsync()).FirstOrDefaultAsync();
 
@@ -993,7 +993,7 @@ public class ReportManager: Abp.Domain.Services.DomainService, IReportManager
         }
         public async Task<object> GetCashPayments()
         {
-            var currentPayMonth = await (await _repositoryInitializePayMonth.GetAllAsync()).FirstOrDefaultAsync();
+            var currentPayMonth = await (await _repositoryPayrollPeriod.GetAllAsync()).FirstOrDefaultAsync();
 
             var companyProfile = await (await _repositoryCompanyProfile.GetAllAsync()).FirstOrDefaultAsync();
 
@@ -1027,7 +1027,7 @@ public class ReportManager: Abp.Domain.Services.DomainService, IReportManager
         public async Task<object> GetTaxReliefs()
         {
 
-            var currentPayMonth = await (await _repositoryInitializePayMonth.GetAllAsync()).FirstOrDefaultAsync();
+            var currentPayMonth = await (await _repositoryPayrollPeriod.GetAllAsync()).FirstOrDefaultAsync();
 
             var currentDate = new DateTime(currentPayMonth.Year, currentPayMonth.Month, 1).ToString("MMMM, yyyy");
 
@@ -1056,7 +1056,7 @@ public class ReportManager: Abp.Domain.Services.DomainService, IReportManager
 
         public async Task<object> GetPayeeReturns()
         {
-            var currentPayMonth = await (await _repositoryInitializePayMonth.GetAllAsync()).FirstOrDefaultAsync();
+            var currentPayMonth = await (await _repositoryPayrollPeriod.GetAllAsync()).FirstOrDefaultAsync();
 
             var companyProfile = await (await _repositoryCompanyProfile.GetAllAsync()).FirstOrDefaultAsync();
 
@@ -1110,7 +1110,7 @@ public class ReportManager: Abp.Domain.Services.DomainService, IReportManager
 
         public async Task<object> GetPensionSchemeDeductions()
         {
-            var currentPayMonth = await (await _repositoryInitializePayMonth.GetAllAsync()).FirstOrDefaultAsync();
+            var currentPayMonth = await (await _repositoryPayrollPeriod.GetAllAsync()).FirstOrDefaultAsync();
 
             var companyProfile = await (await _repositoryCompanyProfile.GetAllAsync()).FirstOrDefaultAsync();
 
@@ -1151,7 +1151,7 @@ public class ReportManager: Abp.Domain.Services.DomainService, IReportManager
 
         public async Task<object> GetProvidentFundContributions()
         {
-            var currentPayMonth = await (await _repositoryInitializePayMonth.GetAllAsync()).FirstOrDefaultAsync();
+            var currentPayMonth = await (await _repositoryPayrollPeriod.GetAllAsync()).FirstOrDefaultAsync();
 
             var companyProfile = await (await _repositoryCompanyProfile.GetAllAsync()).FirstOrDefaultAsync();
 
@@ -1187,7 +1187,7 @@ public class ReportManager: Abp.Domain.Services.DomainService, IReportManager
 
         public async Task<object> GetSecondProvidentFundContributions()
         {
-            var currentPayMonth = await (await _repositoryInitializePayMonth.GetAllAsync()).FirstOrDefaultAsync();
+            var currentPayMonth = await (await _repositoryPayrollPeriod.GetAllAsync()).FirstOrDefaultAsync();
 
             var companyProfile = await (await _repositoryCompanyProfile.GetAllAsync()).FirstOrDefaultAsync();
 
@@ -1288,7 +1288,7 @@ public class ReportManager: Abp.Domain.Services.DomainService, IReportManager
 
         public async Task<object> GetEmployeeLoans(int month, int year, DateTime startDate, DateTime endDate)
         {
-            var currentPayMonth = await (await _repositoryInitializePayMonth.GetAllAsync()).FirstOrDefaultAsync();
+            var currentPayMonth = await (await _repositoryPayrollPeriod.GetAllAsync()).FirstOrDefaultAsync();
 
             var currentDate = new DateTime(year, month, 1).ToString("MMMM, yyyy");
 
@@ -2016,7 +2016,7 @@ public class ReportManager: Abp.Domain.Services.DomainService, IReportManager
 
         public async Task<object> GetPayeeReturns(int month, int year)
         {
-            var currentPayMonth = await _repositoryInitializePayMonth.GetAll().FirstOrDefaultAsync();
+            var currentPayMonth = await _repositoryPayrollPeriod.GetAll().FirstOrDefaultAsync();
 
             var companyProfile = await _repositoryCompanyProfile.GetAll().FirstOrDefaultAsync();
 

@@ -171,7 +171,7 @@ public class RhyoliteOrbitDbContext : AbpZeroDbContext<Tenant, Role, User, Rhyol
     public DbSet<OvertimeTimeSheet> OvertimeTimeSheets { get; set; }
     public DbSet<EmployeeLoan> EmployeeLoans { get; set; }
     public DbSet<LoanAmortizationHistory> LoanAmortizationHistory { get; set; }
-    public DbSet<InitializePayMonth> InitializePayMonths { get; set; }
+    public DbSet<PayrollPeriod> PayrollPeriods { get; set; }
     public DbSet<EmployeeLoanRepaymentSchedule> EmployeeLoanRepaymentSchedules { get; set; }
     public DbSet<MonthlyAllowance> MonthlyAllowances { get; set; }
     public DbSet<MonthlyDeduction> MonthlyDeductions { get; set; }

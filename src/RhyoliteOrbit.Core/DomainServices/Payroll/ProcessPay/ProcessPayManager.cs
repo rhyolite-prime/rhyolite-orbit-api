@@ -51,7 +51,7 @@ public class ProcessPayManager: Abp.Domain.Services.DomainService, IProcessPayMa
         private readonly IRepository<MonthlySecPfDeduction, Guid> _repositoryMonthlySecPfDeduction;
         private readonly IRepository<Paymaster, Guid> _repositoryPaymaster;
         private readonly IRepository<MonthlyOvertime, Guid> _repositoryMonthlyOvertime;
-        private readonly IRepository<InitializePayMonth, Guid> _repositoryInitializePayMonth;
+        private readonly IRepository<PayrollPeriod, Guid> _repositoryPayrollPeriod;
         private readonly IRepository<DeductionType, Guid> _repositoryDeductionType;
         private readonly IRepository<Currency, Guid> _repositoryCurrency;
         private readonly IRepository<BikType, Guid> _repositoryBikType;
@@ -78,7 +78,7 @@ public class ProcessPayManager: Abp.Domain.Services.DomainService, IProcessPayMa
         private readonly IReportManager _reportManager;
 
 
-        public ProcessPayManager(IRepository<TaxTable, Guid> repositoryTaxTable, IRepository<EmployeeBioData, Guid> repositoryEmployeeBioData, IRepository<EmployeeSalaryData, Guid> repositoryEmployeeSalaryData, IRepository<EmployeeSnit, Guid> repositoryEmployeeSnit, IRepository<EmployeeLoan, Guid> repositoryEmployeeLoan, IRepository<EmployeeLoanRepaymentSchedule, Guid> repositoryEmployeeLoanRepaymentSchedule, IRepository<EmployeeSalaryAdvance, Guid> repositoryEmployeeSalaryAdvance, IRepository<BonusAndOnetimeAllowance, Guid> repositoryBonusAndOnetimeAllowance, IRepository<EmployeeOnetimeDeduction, Guid> repositoryEmployeeOnetimeDeduction, IRepository<EmployeeAllowance, Guid> repositoryEmployeeAllowance, IRepository<EmployeeDeduction, Guid> repositoryEmployeeDeduction, IRepository<EmployeeBenefitInKind, Guid> repositoryEmployeeBenefitInKind, IRepository<EmployeeRelief, Guid> repositoryEmployeeRelief, IRepository<LoanType, Guid> repositoryLoanType, IRepository<OvertimeTimeSheet, Guid> repositoryOvertimeTimeSheet, IRepository<EmployeeDaysWorked, Guid> repositoryEmployeeDaysWorked, IRepository<AllowanceType, Guid> repositoryAllowanceType, IRepository<MonthlyAllowance, Guid> repositoryMonthlyAllowance, IRepository<MonthlyDeduction, Guid> repositoryMonthlyDeduction, IRepository<MonthlyBenefitsInKind, Guid> repositoryMonthlyBenefitsInKind, IRepository<MonthlyRelief, Guid> repositoryMonthlyRelief, IRepository<MonthlySalaryAdvance, Guid> repositoryMonthlySalaryAdvance, IRepository<MonthlyBonus, Guid> repositoryMonthlyBonus, IRepository<MonthlyCumulativeDeduction, Guid> repositoryMonthlyCumulativeDeduction, IRepository<MonthlySsnitDeduction, Guid> repositoryMonthlySsnitDeduction, IRepository<MonthlyOnetimeDeduction, Guid> repositoryMonthlyOnetimeDeduction, IRepository<MonthlyPfDeduction, Guid> repositoryMonthlyPfDeduction, IRepository<MonthlyLoanDeduction, Guid> repositoryMonthlyLoanDeduction, IRepository<MonthlyIrsTax, Guid> repositoryMonthlyIrsTax, IRepository<MonthlySecPfDeduction, Guid> repositoryMonthlySecPfDeduction, IRepository<Paymaster, Guid> repositoryPaymaster, IRepository<MonthlyOvertime, Guid> repositoryMonthlyOvertime, IRepository<InitializePayMonth, Guid> repositoryInitializePayMonth, IRepository<DeductionType, Guid> repositoryDeductionType, IRepository<Currency, Guid> repositoryCurrency, IRepository<BikType, Guid> repositoryBikType, IRepository<PayCalendar, Guid> repositoryPayCalendar, IRepository<OvertimeType, Guid> repositoryOverTimeType, IRepository<PaymasterHistory, Guid> repositoryPaymasterHist, IRepository<MonthlyReliefHistory, Guid> repositoryMonthlyReliefHist, IRepository<MonthlyAllowanceHistory, Guid> repositoryMonthlyAllowanceHist, IRepository<MonthlyDeductionHistory, Guid> repositoryMonthlyDeductionHist, IRepository<MonthlyBenefitsInKindHistory, Guid> repositoryMonthlyBenefitsInKindHist, IRepository<MonthlyIrsTaxHistory, Guid> repositoryMonthlyIrsTaxHist, IRepository<MonthlySsnitDeductionHistory, Guid> repositoryMonthlySsnitDeductionHist, IRepository<MonthlyCumulativeDeductionHistory, Guid> repositoryMonthlyCumulativeDeductionHist, IRepository<MonthlyPfDeductionHistory, Guid> repositoryMonthlyPfDeductionHist, IRepository<MonthlyLoanDeductionHistory, Guid> repositoryMonthlyLoanDeductionHist, IRepository<MonthlySecPfDeductionHistory, Guid> repositoryMonthlySecPfDeductionHist, IRepository<MonthlySalaryAdvanceHistory, Guid> repositoryMonthlySalaryAdvanceHist, IRepository<MonthlyOvertimeHistory, Guid> repositoryMonthlyOvertimeHist, IRepository<MonthlyOnetimeDeductionHistory, Guid> repositoryMonthlyOnetimeDeductionHist, IRepository<MonthlyBonusHistory, Guid> repositoryMonthlyBonusHistory, IReportManager reportManager)
+        public ProcessPayManager(IRepository<TaxTable, Guid> repositoryTaxTable, IRepository<EmployeeBioData, Guid> repositoryEmployeeBioData, IRepository<EmployeeSalaryData, Guid> repositoryEmployeeSalaryData, IRepository<EmployeeSnit, Guid> repositoryEmployeeSnit, IRepository<EmployeeLoan, Guid> repositoryEmployeeLoan, IRepository<EmployeeLoanRepaymentSchedule, Guid> repositoryEmployeeLoanRepaymentSchedule, IRepository<EmployeeSalaryAdvance, Guid> repositoryEmployeeSalaryAdvance, IRepository<BonusAndOnetimeAllowance, Guid> repositoryBonusAndOnetimeAllowance, IRepository<EmployeeOnetimeDeduction, Guid> repositoryEmployeeOnetimeDeduction, IRepository<EmployeeAllowance, Guid> repositoryEmployeeAllowance, IRepository<EmployeeDeduction, Guid> repositoryEmployeeDeduction, IRepository<EmployeeBenefitInKind, Guid> repositoryEmployeeBenefitInKind, IRepository<EmployeeRelief, Guid> repositoryEmployeeRelief, IRepository<LoanType, Guid> repositoryLoanType, IRepository<OvertimeTimeSheet, Guid> repositoryOvertimeTimeSheet, IRepository<EmployeeDaysWorked, Guid> repositoryEmployeeDaysWorked, IRepository<AllowanceType, Guid> repositoryAllowanceType, IRepository<MonthlyAllowance, Guid> repositoryMonthlyAllowance, IRepository<MonthlyDeduction, Guid> repositoryMonthlyDeduction, IRepository<MonthlyBenefitsInKind, Guid> repositoryMonthlyBenefitsInKind, IRepository<MonthlyRelief, Guid> repositoryMonthlyRelief, IRepository<MonthlySalaryAdvance, Guid> repositoryMonthlySalaryAdvance, IRepository<MonthlyBonus, Guid> repositoryMonthlyBonus, IRepository<MonthlyCumulativeDeduction, Guid> repositoryMonthlyCumulativeDeduction, IRepository<MonthlySsnitDeduction, Guid> repositoryMonthlySsnitDeduction, IRepository<MonthlyOnetimeDeduction, Guid> repositoryMonthlyOnetimeDeduction, IRepository<MonthlyPfDeduction, Guid> repositoryMonthlyPfDeduction, IRepository<MonthlyLoanDeduction, Guid> repositoryMonthlyLoanDeduction, IRepository<MonthlyIrsTax, Guid> repositoryMonthlyIrsTax, IRepository<MonthlySecPfDeduction, Guid> repositoryMonthlySecPfDeduction, IRepository<Paymaster, Guid> repositoryPaymaster, IRepository<MonthlyOvertime, Guid> repositoryMonthlyOvertime, IRepository<PayrollPeriod, Guid> repositoryPayrollPeriod, IRepository<DeductionType, Guid> repositoryDeductionType, IRepository<Currency, Guid> repositoryCurrency, IRepository<BikType, Guid> repositoryBikType, IRepository<PayCalendar, Guid> repositoryPayCalendar, IRepository<OvertimeType, Guid> repositoryOverTimeType, IRepository<PaymasterHistory, Guid> repositoryPaymasterHist, IRepository<MonthlyReliefHistory, Guid> repositoryMonthlyReliefHist, IRepository<MonthlyAllowanceHistory, Guid> repositoryMonthlyAllowanceHist, IRepository<MonthlyDeductionHistory, Guid> repositoryMonthlyDeductionHist, IRepository<MonthlyBenefitsInKindHistory, Guid> repositoryMonthlyBenefitsInKindHist, IRepository<MonthlyIrsTaxHistory, Guid> repositoryMonthlyIrsTaxHist, IRepository<MonthlySsnitDeductionHistory, Guid> repositoryMonthlySsnitDeductionHist, IRepository<MonthlyCumulativeDeductionHistory, Guid> repositoryMonthlyCumulativeDeductionHist, IRepository<MonthlyPfDeductionHistory, Guid> repositoryMonthlyPfDeductionHist, IRepository<MonthlyLoanDeductionHistory, Guid> repositoryMonthlyLoanDeductionHist, IRepository<MonthlySecPfDeductionHistory, Guid> repositoryMonthlySecPfDeductionHist, IRepository<MonthlySalaryAdvanceHistory, Guid> repositoryMonthlySalaryAdvanceHist, IRepository<MonthlyOvertimeHistory, Guid> repositoryMonthlyOvertimeHist, IRepository<MonthlyOnetimeDeductionHistory, Guid> repositoryMonthlyOnetimeDeductionHist, IRepository<MonthlyBonusHistory, Guid> repositoryMonthlyBonusHistory, IReportManager reportManager)
         {
             _repositoryTaxTable = repositoryTaxTable;
             _repositoryEmployeeBioData = repositoryEmployeeBioData;
@@ -112,7 +112,7 @@ public class ProcessPayManager: Abp.Domain.Services.DomainService, IProcessPayMa
             _repositoryMonthlySecPfDeduction = repositoryMonthlySecPfDeduction;
             _repositoryPaymaster = repositoryPaymaster;
             _repositoryMonthlyOvertime = repositoryMonthlyOvertime;
-            _repositoryInitializePayMonth = repositoryInitializePayMonth;
+            _repositoryPayrollPeriod = repositoryPayrollPeriod;
             _repositoryDeductionType = repositoryDeductionType;
             _repositoryCurrency = repositoryCurrency;
             _repositoryBikType = repositoryBikType;
@@ -141,7 +141,7 @@ public class ProcessPayManager: Abp.Domain.Services.DomainService, IProcessPayMa
         public async Task<object> ProcessPayroll(Guid defaultStatusId)
         {
 
-            var currentPayMonth = await (await _repositoryInitializePayMonth.GetAllAsync()).FirstOrDefaultAsync();
+            var currentPayMonth = await (await _repositoryPayrollPeriod.GetAllAsync()).FirstOrDefaultAsync();
 
             if (currentPayMonth == null)
             {
@@ -2879,7 +2879,7 @@ public class ProcessPayManager: Abp.Domain.Services.DomainService, IProcessPayMa
             }
 
             //=>re initialize payrol month and year.
-            var currentPayMonthYr = _repositoryInitializePayMonth.GetAll().FirstOrDefault();
+            var currentPayMonthYr = _repositoryPayrollPeriod.GetAll().FirstOrDefault();
             int currentMonth = 0; 
             int currentYear = 0;
 
@@ -2899,7 +2899,7 @@ public class ProcessPayManager: Abp.Domain.Services.DomainService, IProcessPayMa
                     currentYear = currentPayMonthYr.Year;
                 }
             }
-            await _repositoryInitializePayMonth.UpdateAsync(currentPayMonthYr);
+            await _repositoryPayrollPeriod.UpdateAsync(currentPayMonthYr);
 
         }
 

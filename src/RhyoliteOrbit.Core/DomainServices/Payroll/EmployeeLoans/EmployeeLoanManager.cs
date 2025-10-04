@@ -15,18 +15,18 @@ public class EmployeeLoanManager: Abp.Domain.Services.DomainService, IEmployeeLo
         private readonly IRepository<EmployeeLoan, Guid> _repositoryEmployeeLoan;
         private readonly IRepository<LoanAmortizationHistory, Guid> _repositoryLoanAmortizationHistory;
         private readonly IRepository<EmployeeBioData, Guid> _repositoryEmployeeBioData;
-        private readonly IRepository<InitializePayMonth, Guid> _repositoryInitializePayMonth;
+        private readonly IRepository<PayrollPeriod, Guid> _repositoryPayrollPeriod;
 
         private readonly IRepository<EmployeeLoanRepaymentSchedule, Guid> _repositoryEmployeeLoanRepaymentSchedule;
         private decimal _totalBalance = 0;
         private DateTime _currentDate = DateTime.Today;
-        public EmployeeLoanManager(IRepository<EmployeeLoan, Guid> repositoryEmployeeLoan, IRepository<EmployeeLoanRepaymentSchedule, Guid> repositoryEmployeeLoanRepaymentSchedule, IRepository<EmployeeBioData, Guid> repositoryEmployeeBioData, IRepository<LoanAmortizationHistory, Guid> repositoryLoanAmortizationHistory, IRepository<InitializePayMonth, Guid> repositoryInitializePayMonth)
+        public EmployeeLoanManager(IRepository<EmployeeLoan, Guid> repositoryEmployeeLoan, IRepository<EmployeeLoanRepaymentSchedule, Guid> repositoryEmployeeLoanRepaymentSchedule, IRepository<EmployeeBioData, Guid> repositoryEmployeeBioData, IRepository<LoanAmortizationHistory, Guid> repositoryLoanAmortizationHistory, IRepository<PayrollPeriod, Guid> repositoryPayrollPeriod)
         {
             _repositoryEmployeeLoan = repositoryEmployeeLoan;
             _repositoryEmployeeLoanRepaymentSchedule = repositoryEmployeeLoanRepaymentSchedule;
             _repositoryEmployeeBioData = repositoryEmployeeBioData;
             _repositoryLoanAmortizationHistory = repositoryLoanAmortizationHistory;
-            _repositoryInitializePayMonth = repositoryInitializePayMonth;
+            _repositoryPayrollPeriod = repositoryPayrollPeriod;
         }
 
         public async Task Create(EmployeeLoan entity)
@@ -326,7 +326,7 @@ public class EmployeeLoanManager: Abp.Domain.Services.DomainService, IEmployeeLo
         //if deduction date is behind current pay month, calculate next deduction and balance
         private async Task CalculateNextDeductionAndBalance(EmployeeLoan input)
         {
-            var currentPayMonth = await _repositoryInitializePayMonth.GetAll().FirstOrDefaultAsync();
+            var currentPayMonth = await _repositoryPayrollPeriod.GetAll().FirstOrDefaultAsync();
            
             if (input.DeductionStarts.Year < currentPayMonth.Year ||
                 (input.DeductionStarts.Year == currentPayMonth.Year && input.DeductionStarts.Month < currentPayMonth.Month))

@@ -13,16 +13,17 @@ namespace RhyoliteOrbit.DomainServices.Payroll.PayCalendars;
 public class PayCalendarManager: Abp.Domain.Services.DomainService, IPayCalendarManager
 {
         private readonly IRepository<PayCalendar, Guid> _repositoryPayCalendar;
-        private readonly IRepository<InitializePayMonth, Guid> _repositoryInitializePayMonth;
+        private readonly IRepository<PayrollPeriod, Guid> _repositoryPayrollPeriod;
 
-        public PayCalendarManager(IRepository<PayCalendar, Guid> repositoryPayCalendar, IRepository<InitializePayMonth, Guid> repositoryInitializePayMonth)
+        public PayCalendarManager(IRepository<PayCalendar, Guid> repositoryPayCalendar, IRepository<PayrollPeriod, Guid> repositoryPayrollPeriod)
         {
             _repositoryPayCalendar = repositoryPayCalendar;
-            _repositoryInitializePayMonth = repositoryInitializePayMonth;
+            _repositoryPayrollPeriod = repositoryPayrollPeriod;
         }
 
         public async Task Create(PayCalendar entity)
         {
+             
             await _repositoryPayCalendar.InsertAsync(entity);
 
         }
@@ -46,7 +47,6 @@ public class PayCalendarManager: Abp.Domain.Services.DomainService, IPayCalendar
                         "Duplicate records are not allowed.",
                         "An entry for the same pay month already exists in the pay calendar."
                     );
-                    
                     
                 }
                 
@@ -109,7 +109,7 @@ public class PayCalendarManager: Abp.Domain.Services.DomainService, IPayCalendar
 
         public async Task<object> GetDefaultAllowanceDays()
         {
-            var currentPayMonth =  await (await _repositoryInitializePayMonth.GetAllAsync()).FirstOrDefaultAsync();
+            var currentPayMonth =  await (await _repositoryPayrollPeriod.GetAllAsync()).FirstOrDefaultAsync();
 
             if (currentPayMonth != null)
             {

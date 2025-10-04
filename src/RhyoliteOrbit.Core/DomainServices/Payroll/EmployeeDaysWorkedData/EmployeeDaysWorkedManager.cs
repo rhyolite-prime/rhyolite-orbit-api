@@ -14,15 +14,15 @@ public class EmployeeDaysWorkedManager: Abp.Domain.Services.DomainService, IEmpl
         private readonly IRepository<EmployeeBioData, Guid> _repositoryEmployeeBioData;
         private readonly IRepository<EmployeeSalaryData, Guid> _repositoryEmployeeSalaryData;
         private readonly IRepository<PayCalendar, Guid> _repositoryPayCalendar;
-        private readonly IRepository<InitializePayMonth, Guid> _repositoryInitializePayMonth;
+        private readonly IRepository<PayrollPeriod, Guid> _repositoryPayrollPeriod;
 
-        public EmployeeDaysWorkedManager(IRepository<EmployeeDaysWorked, Guid> repositoryEmployeeDaysWorked, IRepository<EmployeeBioData, Guid> repositoryEmployeeBioData, IRepository<EmployeeSalaryData, Guid> repositoryEmployeeSalaryData, IRepository<PayCalendar, Guid> repositoryPayCalendar, IRepository<InitializePayMonth, Guid> repositoryInitializePayMonth)
+        public EmployeeDaysWorkedManager(IRepository<EmployeeDaysWorked, Guid> repositoryEmployeeDaysWorked, IRepository<EmployeeBioData, Guid> repositoryEmployeeBioData, IRepository<EmployeeSalaryData, Guid> repositoryEmployeeSalaryData, IRepository<PayCalendar, Guid> repositoryPayCalendar, IRepository<PayrollPeriod, Guid> repositoryPayrollPeriod)
         {
             _repositoryEmployeeDaysWorked = repositoryEmployeeDaysWorked;
             _repositoryEmployeeBioData = repositoryEmployeeBioData;
             _repositoryEmployeeSalaryData = repositoryEmployeeSalaryData;
             _repositoryPayCalendar = repositoryPayCalendar;
-            _repositoryInitializePayMonth = repositoryInitializePayMonth;
+            _repositoryPayrollPeriod = repositoryPayrollPeriod;
         }
 
         public async Task Create(EmployeeDaysWorked entity)

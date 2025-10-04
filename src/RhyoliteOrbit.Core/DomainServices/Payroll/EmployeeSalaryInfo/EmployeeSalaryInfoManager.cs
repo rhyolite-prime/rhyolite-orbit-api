@@ -16,19 +16,19 @@ public class EmployeeSalaryInfoManager: Abp.Domain.Services.DomainService, IEmpl
 {
         private readonly IRepository<EmployeeSalaryData, Guid> _repositoryEmployeeSalaryData;
         private readonly IRepository<Bank, Guid> _repositoryBank;
-        private readonly IRepository<InitializePayMonth, Guid> _repositoryInitializePayMonth;
+        private readonly IRepository<PayrollPeriod, Guid> _repositoryPayrollPeriod;
         private readonly IRepository<PayCalendar, Guid> _repositoryPayCalendar;
         private readonly IRepository<EmployeeDaysWorked, Guid> _repositoryEmployeeDaysWorked;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
         
         private readonly IRepository<SalaryIncrementHistory, Guid> _repositorySalaryIncrementHistory;
 
-        public EmployeeSalaryInfoManager(IRepository<EmployeeSalaryData, Guid> repositoryEmployeeSalaryData, IRepository<SalaryIncrementHistory, Guid> repositorySalaryIncrementHistory, IRepository<Bank, Guid> repositoryBank, IRepository<InitializePayMonth, Guid> repositoryInitializePayMonth, IRepository<PayCalendar, Guid> repositoryPayCalendar, IRepository<EmployeeDaysWorked, Guid> repositoryEmployeeDaysWorked, IUnitOfWorkManager unitOfWorkManager)
+        public EmployeeSalaryInfoManager(IRepository<EmployeeSalaryData, Guid> repositoryEmployeeSalaryData, IRepository<SalaryIncrementHistory, Guid> repositorySalaryIncrementHistory, IRepository<Bank, Guid> repositoryBank, IRepository<PayrollPeriod, Guid> repositoryPayrollPeriod, IRepository<PayCalendar, Guid> repositoryPayCalendar, IRepository<EmployeeDaysWorked, Guid> repositoryEmployeeDaysWorked, IUnitOfWorkManager unitOfWorkManager)
         {
             _repositoryEmployeeSalaryData = repositoryEmployeeSalaryData;
             _repositorySalaryIncrementHistory = repositorySalaryIncrementHistory;
             _repositoryBank = repositoryBank;
-            _repositoryInitializePayMonth = repositoryInitializePayMonth;
+            _repositoryPayrollPeriod = repositoryPayrollPeriod;
             _repositoryPayCalendar = repositoryPayCalendar;
             _repositoryEmployeeDaysWorked = repositoryEmployeeDaysWorked;
             _unitOfWorkManager = unitOfWorkManager;
@@ -115,7 +115,7 @@ public class EmployeeSalaryInfoManager: Abp.Domain.Services.DomainService, IEmpl
             decimal vacationDaysPaid = 0M;
             string vacationDaySource = string.Empty;
 
-            var currentPayMonth = await (await _repositoryInitializePayMonth.GetAllAsync()).FirstOrDefaultAsync();
+            var currentPayMonth = await (await _repositoryPayrollPeriod.GetAllAsync()).FirstOrDefaultAsync();
  
 
             if (employeeId != Guid.Empty)
