@@ -23,7 +23,7 @@ public class EmployeeBioData: Abp.Domain.Entities.Auditing.FullAuditedEntity<Gui
         public string Title { get; set; }
         [MaxLength(10)]
         public string Gender { get; set; }
-        public int Status { get; set; }
+        public int Status { get; set; } // EmployeeStatus enum
         [MaxLength(100)]
         public string CityOrLocation { get; set; }
         [MaxLength(150)]

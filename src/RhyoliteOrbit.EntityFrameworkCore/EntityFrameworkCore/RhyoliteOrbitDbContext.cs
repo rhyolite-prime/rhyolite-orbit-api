@@ -36,7 +36,6 @@ public class RhyoliteOrbitDbContext : AbpZeroDbContext<Tenant, Role, User, Rhyol
     public DbSet<Customer> Customers { get; set; }
     public DbSet<Department> Departments { get; set; }
     public DbSet<SystemSetting> SystemSetting { get; set; }
-    public DbSet<PersonnelStatus> PersonnelStatuses { get; set; }
     public DbSet<ReportDownload> ReportDownloads { get; set; }  
     public DbSet<Supplier> Suppliers { get; set; }
     public DbSet<PartnerCategory> PartnerCategories { get; set; }

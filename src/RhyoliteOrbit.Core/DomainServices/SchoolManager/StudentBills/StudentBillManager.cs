@@ -5,9 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Akka.Actor;
 using AutoMapper;
 using HashidsNet;
 using Microsoft.EntityFrameworkCore;
+using RhyoliteOrbit.Actors;
+using RhyoliteOrbit.Actors.MessageModels;
 using RhyoliteOrbit.DomainServices.SchoolManager.StudentBills.Dto;
 using RhyoliteOrbit.DomainServices.Shared.MetaData;
 using RhyoliteOrbit.DomainServices.Shared.SystemSettings;
@@ -31,11 +34,12 @@ public class StudentBillManager: Abp.Domain.Services.DomainService, IStudentBill
         private readonly IUnitOfWorkManager _unitOfWorkManager;
         private readonly IAcademicPeriodMetaDataManager _academicPeriodMetaDataManager;
         private readonly ISystemSettingManager _systemSettingManager;
+        private readonly IActorRef _studentBillActorProvider;
         private readonly IHashids _hashids;
         private readonly IMapper _mapper;
         
 
-        public StudentBillManager(IRepository<StudentBill, Guid> repositoryStudentBill, IRepository<StudentStatement, Guid> repositoryStudentStatement, IRepository<Currency, Guid> repositoryCurrency, IRepository<SystemSetting, Guid> repositorySystemSetting, IRepository<BillSetup, Guid> repositoryBillSetup, IAcademicPeriodMetaDataManager academicPeriodMetaDataManager, IRepository<BillType, Guid> repositoryBillType, IRepository<CancelledBill, Guid> repositoryCancelledBill, IMapper mapper, IRepository<Student, Guid> repositoryStudent, IUnitOfWorkManager unitOfWorkManager, IRepository<Parent, Guid> repositoryParent, IRepository<StudentParent, Guid> repositoryStudentParent, ISystemSettingManager systemSettingManager, IHashids hashids)
+        public StudentBillManager(IRepository<StudentBill, Guid> repositoryStudentBill, TopLevelActors.StudentBillActorProvider studentBillActorProvider, IRepository<StudentStatement, Guid> repositoryStudentStatement, IRepository<Currency, Guid> repositoryCurrency, IRepository<SystemSetting, Guid> repositorySystemSetting, IRepository<BillSetup, Guid> repositoryBillSetup, IAcademicPeriodMetaDataManager academicPeriodMetaDataManager, IRepository<BillType, Guid> repositoryBillType, IRepository<CancelledBill, Guid> repositoryCancelledBill, IMapper mapper, IRepository<Student, Guid> repositoryStudent, IUnitOfWorkManager unitOfWorkManager, IRepository<Parent, Guid> repositoryParent, IRepository<StudentParent, Guid> repositoryStudentParent, ISystemSettingManager systemSettingManager, IHashids hashids)
         {
             _repositoryStudentBill = repositoryStudentBill;
             _repositoryStudentStatement = repositoryStudentStatement;
@@ -52,6 +56,7 @@ public class StudentBillManager: Abp.Domain.Services.DomainService, IStudentBill
             _systemSettingManager = systemSettingManager;
             _hashids = hashids;
             _academicPeriodMetaDataManager = academicPeriodMetaDataManager;
+            _studentBillActorProvider = studentBillActorProvider();
         }
 
         public async Task Delete(Guid id)
@@ -150,7 +155,7 @@ public class StudentBillManager: Abp.Domain.Services.DomainService, IStudentBill
                     BillAmount = billDetails.Sum(x => x.FeeAmount),  // sum fees
                     BillBalance = billDetails.Sum(x => x.FeeAmount),
                     Details = billDetails,
-                    CurrencyName = currency?.Name ?? "GHS",
+                    CurrencyName = currency?.Name ?? "Ghana Cedi",
                     CurrencyCode = currency?.Code ?? "GHS",
                     MinorName = currency?.MinorName,
                     BuyRate = currency?.BuyRate ?? 1,
@@ -175,6 +180,7 @@ public class StudentBillManager: Abp.Domain.Services.DomainService, IStudentBill
                 {
                     new Statement
                     {
+                        Id = Guid.NewGuid(),
                         ActivityDate = studentBillEntity.BillDate.ToString("dd-MMM-yyyy"),
                         ReferenceNo = studentBillEntity.BillNo,
                         Description = studentBillEntity.Description,
@@ -203,6 +209,15 @@ public class StudentBillManager: Abp.Domain.Services.DomainService, IStudentBill
                     });
                 }
             }
+            
+            //produce to actor to prepare reports
+            
+            // 2 types of actors here:
+            // 1st actor to prepare individual reports to update the document url: [{"billId": "", "documentUrl":"" }]
+            // 2nd actor to combine the all bill reports for the whole class and store: { academicYearId, termId, classId, studentId }
+            _studentBillActorProvider.Tell(new StudentBillDto { });
+            // find a way to update each bill record with the generated bill document url via the actor
+            
         }
         
         

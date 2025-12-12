@@ -9,7 +9,6 @@ using RhyoliteOrbit.DomainServices.Payroll.EmployeeCategories;
 using RhyoliteOrbit.DomainServices.Payroll.SalaryGrades;
 using RhyoliteOrbit.DomainServices.Shared.Countries;
 using RhyoliteOrbit.DomainServices.Shared.Departments;
-using RhyoliteOrbit.DomainServices.Shared.PersonnelStatuses;
 using RhyoliteOrbit.Models.Payroll;
 using RhyoliteOrbit.Services.Payroll.EmployeeBioDataRecords.Dto;
 
@@ -21,17 +20,15 @@ public class EmployeeBioDataAppService: RhyoliteOrbitAppServiceBase
         private readonly IEmployeeCategoryManager _employeeCategoryManager;
         private readonly IDepartmentManager _departmentManager;
         private readonly ISalaryGradeManager _salaryGradeManager;
-        private readonly IPersonnelStatusManager _personnelStatusManager;
         private readonly ICountryManager _countryManager;
         private readonly IMapper _mapper;
 
-        public EmployeeBioDataAppService(IEmployeeBioDataManager employeeBioDataManager, IMapper mapper, IEmployeeCategoryManager employeeCategoryManager, IDepartmentManager departmentManager, IPersonnelStatusManager personnelStatusManager, ICountryManager countryManager, ISalaryGradeManager salaryGradeManager)
+        public EmployeeBioDataAppService(IEmployeeBioDataManager employeeBioDataManager, IMapper mapper, IEmployeeCategoryManager employeeCategoryManager, IDepartmentManager departmentManager, ICountryManager countryManager, ISalaryGradeManager salaryGradeManager)
         {
             _employeeBioDataManager = employeeBioDataManager;
             _mapper = mapper;
             _employeeCategoryManager = employeeCategoryManager;
             _departmentManager = departmentManager;
-            _personnelStatusManager = personnelStatusManager;
             _countryManager = countryManager;
             _salaryGradeManager = salaryGradeManager;
         }
@@ -70,7 +67,6 @@ public class EmployeeBioDataAppService: RhyoliteOrbitAppServiceBase
                 var categoryInfo = await _employeeCategoryManager.GetAsync(input.CategoryName);
                 var departmentInfo = await _departmentManager.GetAsync(input.DepartmentName);
                 var salaryGradeInfo = await _salaryGradeManager.GetAsync(input.SalaryGradeName);
-                var statusInfo = await _personnelStatusManager.GetAsync(input.StatusName);
                 var nationalityInfo = await _countryManager.GetNationality(input.NationalityName);
 
                 var salaryNotchId = Guid.Empty;
@@ -111,7 +107,7 @@ public class EmployeeBioDataAppService: RhyoliteOrbitAppServiceBase
                      ResidenceAddress = input.ResidenceAddress, 
                      NationalHealthInsuranceNo = input.NationalID,
                      NationalityId = nationalityInfo?.Id ?? Guid.Empty,
-                     StatusId = statusInfo?.Id ?? Guid.Empty,
+                     Status = 0,
                      StatusName= input.StatusName,
                      Hometown = input.Hometown,
                      TaxIdentificationNo = input.TaxIdentificationNo, 

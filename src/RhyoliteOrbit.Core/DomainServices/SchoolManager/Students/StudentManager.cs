@@ -20,15 +20,13 @@ public class StudentManager: Abp.Domain.Services.DomainService, IStudentManager
         private readonly IRepository<SchClass, Guid> _repositorySchClass;
         private readonly IRepository<Country, Guid> _repositoryCountry;
         private readonly IRepository<AcademicYear, Guid> _repositoryAcademicYear;
-        private readonly IRepository<PersonnelStatus, Guid> _repositoryPersonnelStatus;
         private readonly IRepository<SchoolProfile, Guid> _repositorySchoolProfile;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
         private readonly IHashids _hashids;
 
-        public StudentManager(IRepository<Student, Guid> repositoryStudent, IRepository<PersonnelStatus, Guid> repositoryPersonnelStatus, IRepository<SchClass, Guid> repositorySchClass, IRepository<Country, Guid> repositoryCountry, IRepository<PromotionHistory, Guid> repositoryPromotionHistory, IRepository<AcademicYear, Guid> repositoryAcademicYear, IRepository<SchoolProfile, Guid> repositorySchoolProfile, IUnitOfWorkManager unitOfWorkManager, IHashids hashids)
+        public StudentManager(IRepository<Student, Guid> repositoryStudent, IRepository<SchClass, Guid> repositorySchClass, IRepository<Country, Guid> repositoryCountry, IRepository<PromotionHistory, Guid> repositoryPromotionHistory, IRepository<AcademicYear, Guid> repositoryAcademicYear, IRepository<SchoolProfile, Guid> repositorySchoolProfile, IUnitOfWorkManager unitOfWorkManager, IHashids hashids)
         {
             _repositoryStudent = repositoryStudent;
-            _repositoryPersonnelStatus = repositoryPersonnelStatus;
             _repositorySchClass = repositorySchClass;
             _repositoryCountry = repositoryCountry;
             _repositoryPromotionHistory = repositoryPromotionHistory;

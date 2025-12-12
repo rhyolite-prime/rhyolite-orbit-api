@@ -13,7 +13,7 @@ public class CreateEmployeeBioDataInput
         public string EmployeePhoto { get; set; }
         public string TitleName { get; set; }
         public string Gender { get; set; }
-        public Guid StatusId { get; set; }
+        public int Status { get; set; }
         public string StatusName { get; set; }
         public string CityOrLocation { get; set; }
         public string ResidenceAddress { get; set; }

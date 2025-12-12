@@ -41,5 +41,8 @@ public class BillPayment: Abp.Domain.Entities.Auditing.FullAuditedEntity<Guid>, 
     public string PaymentDescription { get; set; }
     public bool IsCreditMemo { get; set; }
     public bool IsPosted { get; set; }
+    
+    [MaxLength(350)]
+    public string DocumentUrl { get; set; }
     public int TenantId { get; set; }
 }
