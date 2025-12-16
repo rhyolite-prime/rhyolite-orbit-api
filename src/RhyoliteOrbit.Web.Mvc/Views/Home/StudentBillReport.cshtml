@@ -1,21 +1,16 @@
-﻿@using RhyoliteOrbit.Actors.MessageModels
+﻿@model RhyoliteOrbit.Actors.MessageModels.StudentBillDto
 
 @{
     Layout = null;
-    string paymentInfo = string.Empty;
-    StudentBillDto studentBillResult = new StudentBillDto();
-    studentBillResult = Model.StudentBillResult;
 }
-
 
 <!doctype html>
 <html class="no-js" lang="zxx">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title> @studentBillResult.ReportHeader.SchoolName | Student Billing </title>
+    <title>@Model.ReportHeader.SchoolName | Student Billing</title>
     <meta name="author" content="rhyoliteprime">
-    
     <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
     <link rel="apple-touch-icon" sizes="57x57" href="https://res.cloudinary.com/rhyoliteprime/raw/upload/v1673229020/report-assistant/erp-assets/favicons/apple-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="60x60" href="https://res.cloudinary.com/rhyoliteprime/raw/upload/v1673229020/report-assistant/erp-assets/favicons/apple-icon-60x60.png">
@@ -39,15 +34,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://res.cloudinary.com/rhyoliteprime/raw/upload/v1673229020/report-assistant/erp-assets/css/app.min.css">
     <link rel="stylesheet" href="https://res.cloudinary.com/rhyoliteprime/raw/upload/v1673229020/report-assistant/erp-assets/css/style.css">
-
     <style>
         du {
-          text-decoration-line: underline;
-          text-decoration-style: double;
+            text-decoration-line: underline;
+            text-decoration-style: double;
         }
-        
     </style>
-    </head>
+</head>
 <body>
     <div class="invoice-container-wrap">
         <div class="invoice-container">
@@ -57,54 +50,56 @@
                         <header class="as-header header-layout7">
                             <div class="row align-items-center justify-content-between">
                                 <div class="col-auto">
-                                    
-                                    @if (!string.IsNullOrEmpty(studentBillResult.ReportHeader.LogoUrl))
+                                    @if (!string.IsNullOrEmpty(Model.ReportHeader.LogoUrl))
                                     {
-                                        <div class="header-logo"><a href="#"><img src="@studentBillResult.ReportHeader.LogoUrl" alt="@studentBillResult.ReportHeader.SchoolName" width="80" height="80"></a></div>
-                                
+                                        <div class="header-logo">
+                                            <a href="#"><img src="@Model.ReportHeader.LogoUrl" alt="@Model.ReportHeader.SchoolName" width="80" height="80"></a>
+                                        </div>
                                     }
-                                   
-                                 </div>
+                                </div>
                                 <div class="col-auto">
                                     <h1 class="big-title">Student Bill</h1>
-                                    <span><b>Bill No: </b># @studentBillResult.StudentBill.BillNo </span> <span><b>Date: </b> @studentBillResult.StudentBill.BillDate.ToString("dd-MMM-yyyy") </span>
+                                    <span><b>Bill No: </b># @Model.StudentBill.BillNo </span>
+                                    <span><b>Date: </b> @Model.StudentBill.BillDate.ToString("dd-MMM-yyyy") </span>
                                 </div>
                             </div>
                         </header>
                         <div class="row justify-content-between my-4">
                             <div class="col-auto">
                                 <div class="invoice-left">
-                                   @* <b>Must Read:</b>
-                                    <address>Intrinsicly expedite enterprise-wide leadership skills<br>through bleeding-edge deliverables. Rapidiously<br>revolutionize corporate manufactured products.</address>*@
+                                    @* Add informational notes here if required *@
                                 </div>
                             </div>
                             <div class="col-auto">
                                 <div class="invoice-right">
-                                    <b> @studentBillResult.ReportHeader.SchoolName </b>
-                                    <address>@studentBillResult.ReportHeader.SchAddress <br>@studentBillResult.ReportHeader.PrimaryPhoneNo<br>@studentBillResult.ReportHeader.Email</address>
+                                    <b>@Model.ReportHeader.SchoolName</b>
+                                    <address>
+                                        @Model.ReportHeader.SchAddress <br>
+                                        @Model.ReportHeader.PrimaryPhoneNo <br>
+                                        @Model.ReportHeader.Email
+                                    </address>
                                 </div>
                             </div>
                         </div>
                         <table class="invoice-table table-style3">
                             <tbody>
                                 <tr>
-                                    <th> Student ID: </th>
-                                    <td> @studentBillResult.StudentInfo.StudentIdentifier </td>
-                                    <th> Period: </th>
-                                    <td> @studentBillResult.StudentBill.Period </td>
+                                    <th>Student ID:</th>
+                                    <td>@Model.StudentInfo.StudentIdentifier</td>
+                                    <th>Period:</th>
+                                    <td>@Model.StudentBill.Period</td>
                                 </tr>
                                 <tr>
-                                    <th> Student Name:</th>
-                                    <td> @studentBillResult.StudentInfo.FullName </td>
-                                    <th> Currency:</th>
-                                    <td> @studentBillResult.StudentBill.CurrencyName </td>
+                                    <th>Student Name:</th>
+                                    <td>@Model.StudentInfo.FullName</td>
+                                    <th>Currency:</th>
+                                    <td>@Model.StudentBill.CurrencyName</td>
                                 </tr>
                                 <tr>
-                                    <th> Class:</th>
-                                    <td> @studentBillResult.StudentInfo.ClassName</td>
-                                    <th> Bill No: </th>
-                                    <td>@studentBillResult.StudentBill.BillNo</td>
-                                  
+                                    <th>Class:</th>
+                                    <td>@Model.StudentInfo.ClassName</td>
+                                    <th>Bill No:</th>
+                                    <td>@Model.StudentBill.BillNo</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -116,48 +111,45 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var bill in studentBillResult.StudentBill.Details)
+                                @foreach (var bill in Model.StudentBill.Details)
                                 {
                                     <tr>
-                                        <td> @bill.FeeName</td>
-                                        <td style="text-align:right;"> @studentBillResult.StudentBill.CurrencyCode @bill.FeeAmount.ToString("N2")</td>
+                                        <td>@bill.FeeName</td>
+                                        <td style="text-align:right;">@Model.StudentBill.CurrencyCode @bill.FeeAmount.ToString("N2")</td>
                                     </tr>
                                 }
-                               
                             </tbody>
                             <tfoot>
                                 <tr>
                                     <td colspan="1"><b>Total Amount:</b></td>
-                                    <td> <strong> @studentBillResult.StudentBill.CurrencyCode @studentBillResult.StudentBill.BillAmount.ToString("N2") </strong>  </td>
+                                    <td><strong>@Model.StudentBill.CurrencyCode @Model.StudentBill.BillAmount.ToString("N2")</strong></td>
                                 </tr>
                             </tfoot>
                         </table>
                         <div class="row justify-content-between">
-                             
-                           
                             <div class="col-auto">
                                 <table class="total-table2">
                                     <tr>
-                                        <th> Balance BF :</th>
-                                        <td> @studentBillResult.StudentBill.CurrencyCode @studentBillResult.StudentBill.BalanceBF.ToString("N2") </td>
+                                        <th>Balance BF :</th>
+                                        <td>@Model.StudentBill.CurrencyCode @Model.StudentBill.BalanceBF.ToString("N2")</td>
                                     </tr>
                                     <tr>
-                                        <th> Please Pay :</th>
+                                        <th>Please Pay :</th>
                                         @{
-                                            var amountToPay = studentBillResult.StudentBill.BalanceBF + studentBillResult.StudentBill.BillBalance;
+                                            var amountToPay = Model.StudentBill.BalanceBF + Model.StudentBill.BillBalance;
                                         }
-                                        
-                                        <td>  <strong> <du>  @studentBillResult.StudentBill.CurrencyCode @amountToPay.ToString("N2") </du> </strong>   </td>
-                                        
+                                        <td>
+                                            <strong>
+                                                <du>@Model.StudentBill.CurrencyCode @amountToPay.ToString("N2")</du>
+                                            </strong>
+                                        </td>
                                     </tr>
                                 </table>
                             </div>
                         </div>
-                         
                         <div class="body-shape9"></div>
                         <div class="body-shape1"></div>
                     </div>
-                     
                 </div>
             </main>
         </div>

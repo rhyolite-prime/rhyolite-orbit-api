@@ -58,9 +58,8 @@ public class EmployeeBioData: Abp.Domain.Entities.Auditing.FullAuditedEntity<Gui
         
         [MaxLength(100)]
         public string Religion { get; set; }
-        public Guid NationalityId { get; set; }
         [MaxLength(100)]
-        public string NationalityName { get; set; }
+        public string Nationality { get; set; }
         [MaxLength(100)]
         public string Hometown { get; set; }
         // contact info

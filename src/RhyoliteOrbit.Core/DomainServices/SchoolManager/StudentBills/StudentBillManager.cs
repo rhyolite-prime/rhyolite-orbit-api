@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -99,6 +100,8 @@ public class StudentBillManager: Abp.Domain.Services.DomainService, IStudentBill
 
         public async Task CreateBatchBills(StudentBillBatchDto dto)
         {
+            List<StudentBillDto> billReports = new List<StudentBillDto>();
+            
             Currency currency = null;
             
             var systemSetting = await (await _repositorySystemSetting.GetAllAsync()).FirstOrDefaultAsync();
@@ -208,15 +211,76 @@ public class StudentBillManager: Abp.Domain.Services.DomainService, IStudentBill
                         TenantId = student.TenantId
                     });
                 }
+                
+                // compute balance brought forward
+                var pastBills = await _repositoryStudentBill.GetAllListAsync(x=> x.StudentId == student.Id && x.BillDate < DateTime.UtcNow && x.BillBalance > 0);
+
+                //prepare actor messages.
+                
+                var studentBill = new StudentBillDto
+                {
+                    ReportHeader = new BillReportHeader
+                    {
+                        SchoolName = "Christ Royal International School",
+                        PrimaryPhoneNo = "0548043779",
+                        SchAddress = "",
+                        LogoUrl = "https://res.cloudinary.com/rhyoliteprime/image/upload/v1673255393/school_manager_repository/cris-logo.jpg",
+                        Email = "Kwabenaf29@gmail.com"
+                    },
+                    BillMetaData = new BillMetaData
+                    {
+                        AcademicYearId = dto.AcademicYearId,
+                        TermId = dto.TermId,
+                        ClassId = dto.ClassId,
+                        BillTypeId = dto.BillTypeId, 
+                        BillDate = dto.BillDate, 
+                        BillNo = dto.BillNo, 
+                        BillSetupId = dto.BillSetupId
+                    },
+                    StudentInfo = new StudentInfo
+                    {
+                        FullName = $"{student.FirstName} {student.LastName} {student.MiddleName}",
+                        EnrollmentDate = student.EnrollmentDate.ToString(CultureInfo.InvariantCulture),
+                        StudentIdentifier = student.StudentIdentifier,
+                        Gender = student.Gender,
+                        ClassName = student.ClassName,
+                        DateOfBirth = student.DateOfBirth.ToString(CultureInfo.InvariantCulture),
+                        Id = student.Id
+                    },
+                    StudentBill = new StudentBillDetail
+                    {
+                        BillNo = dto.BillNo,
+                        BillDate = dto.BillDate,
+                        Period = "1st Term, 2025/2026",
+                        CurrencyName = "Ghana Cedi",
+                        CurrencyCode = "GHS",
+                        BillAmount = billDetails.Sum(x => x.FeeAmount),
+                        BillBalance = billDetails.Sum(x => x.FeeAmount),
+                        BalanceBF = pastBills.Sum(a=> a.BillBalance),
+                        PaymentChannels = ["Bank", "USSD"],
+                        Details = billDetails.Select(x => new BillItem
+                        {
+                            Id = x.Id,
+                            FeeId = x.FeeId,
+                            FeeName = x.FeeName,
+                            BillTypeId = x.BillTypeId,
+                            BillTypeName = x.BillTypeName,
+                            FeeAmount = x.FeeAmount
+                        }).ToList()
+
+                    }
+                };
+            
+                billReports.Add(studentBill);
+                
+            }
+
+            if (billReports.Any())
+            {
+                _studentBillActorProvider.Tell(billReports);
             }
             
-            //produce to actor to prepare reports
             
-            // 2 types of actors here:
-            // 1st actor to prepare individual reports to update the document url: [{"billId": "", "documentUrl":"" }]
-            // 2nd actor to combine the all bill reports for the whole class and store: { academicYearId, termId, classId, studentId }
-            _studentBillActorProvider.Tell(new StudentBillDto { });
-            // find a way to update each bill record with the generated bill document url via the actor
             
         }
         
@@ -406,6 +470,8 @@ public class StudentBillManager: Abp.Domain.Services.DomainService, IStudentBill
             return await _repositoryStudentBill.GetAllListAsync(x => x.AcademicYearId == academicYearId && x.TermId == termId && x.ClassId == classId && x.BillBalance > 0);
 
         }
+        
+        // bill report updates
         
         //for student self service
         public async Task<object> GetStudentBillSummary(string studentId, string pin, int tenantId)

@@ -34,13 +34,12 @@ public class Staff: Abp.Domain.Entities.Auditing.FullAuditedEntity<Guid>, Abp.Do
     public string SecondaryPhone { get; set; }
     [MaxLength(20)]
     public string EmailAddress { get; set; }
-    [MaxLength(20)]
+    [MaxLength(100)]
     public string EmergencyContactPerson { get; set; }
     [MaxLength(20)]
     public string EmergencyContactPhone { get; set; }
-    public Guid NationalityId { get; set; }
     [MaxLength(100)]
-    public string NationalityName { get; set; }
+    public string Nationality { get; set; }
     [MaxLength(100)]
     public string Religion { get; set; }
     public int Status { get; set; } //EmployeeStatus enum

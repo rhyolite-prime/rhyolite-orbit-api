@@ -23,9 +23,8 @@ public class CreateStaffInput
     public string EmailAddress { get; set; }
     public string EmergencyContactPerson { get; set; }
     public string EmergencyContactPhone { get; set; }
-    public Guid NationalityId { get; set; } =  Guid.Empty;
-    public string NationalityName { get; set; }
-    public int Status { get; set; } = (int)RhyoliteOrbitConsts.EmployeeStatus.Active;
+    public string Nationality { get; set; }
+    public RhyoliteOrbitConsts.EmployeeStatus Status { get; set; } = (int)RhyoliteOrbitConsts.EmployeeStatus.Active;
 }
 
 public class UpdateStaffInput: EntityDto<Guid>
@@ -48,7 +47,6 @@ public class UpdateStaffInput: EntityDto<Guid>
     public string EmailAddress { get; set; }
     public string EmergencyContactPerson { get; set; }
     public string EmergencyContactPhone { get; set; }
-    public Guid NationalityId { get; set; }
-    public string NationalityName { get; set; }
-    public int Status { get; set; }
+    public string Nationality { get; set; }
+    public RhyoliteOrbitConsts.EmployeeStatus Status { get; set; }
 }

@@ -13,7 +13,7 @@ public class EmailActor: ReceiveActor
     private readonly IRabbitMqClient _rabbitMqClient;
     private readonly string _emailNotificationQueue;
     private readonly string _topicExchangeType;
-    public EmailActor(IServiceProvider serviceProvider, IConfiguration configuration)
+    public EmailActor(IServiceProvider serviceProvider, IConfiguration configuration)   
     {
         _rabbitMqClient = serviceProvider.GetRequiredService<IRabbitMqClient>();
         _emailNotificationQueue = configuration["RabbitMqBroker:EmailNotificationQueue"];

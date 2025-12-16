@@ -200,8 +200,7 @@ public class StudentManager: Abp.Domain.Services.DomainService, IStudentManager
                 await _repositoryPromotionHistory.InsertAsync(history);
             }
         }
-
-
+        
         public async Task PromoteAlumni(AlumniStudentPromotion studentPromotion, DateTime completionDate)
         {
 

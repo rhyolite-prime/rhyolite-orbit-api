@@ -15,13 +15,11 @@ public class StaffManager: Abp.Domain.Services.DomainService, IStaffManager
 {
         private readonly IRepository<Staff, Guid> _repositoryStaff;
         private readonly IRepository<EmployeeBioData, Guid> _repositoryEmployeeBioData;
-        private readonly IRepository<Country, Guid> _repositoryCountry;
         private readonly IRepository<SystemNumber, Guid> _repositorySystemNumber;
-        public StaffManager(IRepository<Staff, Guid> repositoryStaff, IRepository<EmployeeBioData, Guid> repositoryEmployeeBioData, IRepository<Country, Guid> repositoryCountry, IRepository<SystemNumber, Guid> repositorySystemNumber)
+        public StaffManager(IRepository<Staff, Guid> repositoryStaff, IRepository<EmployeeBioData, Guid> repositoryEmployeeBioData,IRepository<SystemNumber, Guid> repositorySystemNumber)
         {
             _repositoryStaff = repositoryStaff;
             _repositoryEmployeeBioData = repositoryEmployeeBioData;
-            _repositoryCountry = repositoryCountry;
             _repositorySystemNumber = repositorySystemNumber;
         }
 
@@ -32,12 +30,6 @@ public class StaffManager: Abp.Domain.Services.DomainService, IStaffManager
             
             if (datta == null)
             {
-                var countryInfo = await _repositoryCountry.FirstOrDefaultAsync(x=>x.Id == entity.NationalityId);
-
-                if (countryInfo != null)
-                {
-                    entity.NationalityName = countryInfo.Nationality;
-                }
 
                 var staffEntryResult = await _repositoryStaff.InsertAsync(entity);
 
@@ -62,7 +54,7 @@ public class StaffManager: Abp.Domain.Services.DomainService, IStaffManager
                     PersonalEmail = entity.EmailAddress,
                     MaritalStatus = entity.MaritalStatus,
                     Religion = entity.Religion,
-                    NationalityId = entity.NationalityId,
+                    Nationality = entity.Nationality,
                     Hometown = "",
                     PrimaryPhoneNumber = entity.PrimaryPhone,
                     SecondaryPhoneNumber = entity.SecondaryPhone,
@@ -143,7 +135,7 @@ public class StaffManager: Abp.Domain.Services.DomainService, IStaffManager
                 PersonalEmail = entity.EmailAddress,
                 MaritalStatus = entity.MaritalStatus,
                 Religion = entity.Religion,
-                NationalityId = entity.NationalityId,
+                Nationality = entity.Nationality,
                 Hometown = "",
                 PrimaryPhoneNumber = entity.PrimaryPhone,
                 SecondaryPhoneNumber = entity.SecondaryPhone,
@@ -188,7 +180,7 @@ public class StaffManager: Abp.Domain.Services.DomainService, IStaffManager
                 
                 await _repositoryStaff.CountAsync(predicate);
             
-            var data = await (await _repositoryStaff.GetAllAsync()).Where(predicate).Select(a=> new { a.Id, a.LastName, a.FirstName, a.OtherName, a.DateEmployed, a.EmailAddress, a.PrimaryPhone, a.EmergencyContactPerson, a.EmergencyContactPhone, a.CreationTime, }).Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
+            var data = await (await _repositoryStaff.GetAllAsync()).Where(predicate).Select(a=> new { a.Id, a.LastName, a.FirstName, a.OtherName, a.StaffIdentifier, a.Gender, a.DateEmployed, a.EmailAddress, a.PrimaryPhone, a.EmergencyContactPerson, a.EmergencyContactPhone, a.CreationTime, }).Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
 
             var totalPages = totalCount > 0 ? Convert.ToInt32(Math.Ceiling(totalCount / (decimal)pageSize)) : 0;
 
@@ -226,18 +218,12 @@ public class StaffManager: Abp.Domain.Services.DomainService, IStaffManager
         public async Task Update(Staff entity)
         {
 
-            var countryInfo = await _repositoryCountry.FirstOrDefaultAsync(x => x.Id == entity.NationalityId);
-            
-            if (countryInfo != null)
-            {
-                entity.NationalityName = countryInfo.Nationality;
-            }
 
             await _repositoryStaff.UpdateAsync(entity);
 
             // update as employee in Payroll
             var payrollEmployee = await _repositoryEmployeeBioData.FirstOrDefaultAsync(x => x.EmployeeIdentifier == entity.StaffIdentifier);
-            payrollEmployee.NationalityName = entity.NationalityName;
+            payrollEmployee.Nationality = entity.Nationality;
             payrollEmployee.FirstName = entity.FirstName;
             payrollEmployee.OtherName = entity.OtherName;
             payrollEmployee.LastName = entity.LastName;

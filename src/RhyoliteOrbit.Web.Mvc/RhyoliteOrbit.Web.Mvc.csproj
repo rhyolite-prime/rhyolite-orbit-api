@@ -45,6 +45,7 @@
   <ItemGroup>
     <Folder Include="App_Data\Logs\" />
     <Folder Include="wwwroot\PdfEngine\linux\" />
+    <Folder Include="wwwroot\PdfEngine\mac\" />
   </ItemGroup>
   <ItemGroup>
     <_ContentIncludedByDefault Remove="wwwroot\dist\fonts\fa-brands-400.eot" />

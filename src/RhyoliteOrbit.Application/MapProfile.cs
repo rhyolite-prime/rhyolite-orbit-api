@@ -27,6 +27,7 @@ using RhyoliteOrbit.Services.SchoolManager.ClassStreams.Dto;
 using RhyoliteOrbit.Services.SchoolManager.Levels.Dto;
 using RhyoliteOrbit.Services.SchoolManager.ResultTypes.Dto;
 using RhyoliteOrbit.Services.SchoolManager.SchClasses.Dto;
+using RhyoliteOrbit.Services.SchoolManager.Staffs.Dto;
 using RhyoliteOrbit.Services.SchoolManager.Students.Dto;
 using RhyoliteOrbit.Services.SchoolManager.SubjectCategories.Dto;
 using RhyoliteOrbit.Services.SchoolManager.Subjects.Dto;
@@ -82,6 +83,9 @@ public class MapProfile: AutoMapper.Profile
         
         CreateMap<CreateStudentInput, Student>();
         CreateMap<UpdateStudentInput, Student>();
+        
+        CreateMap<CreateStaffInput, Staff>();
+        CreateMap<UpdateStaffInput, Staff>();
         
         
         //payroll

@@ -99,7 +99,7 @@ public class Startup
         {
             var actorSystem = provider.GetService<ActorSystem>();
             var configuration = provider.GetService<IConfiguration>();
-            var studentBillActor = actorSystem.ActorOf(Props.Create(() => new StudentBillActor()).WithRouter(new RoundRobinPool(2)));
+            var studentBillActor = actorSystem.ActorOf(Props.Create(() => new StudentBillActor(provider)).WithRouter(new RoundRobinPool(2)));
             return () => studentBillActor;
         });
         
