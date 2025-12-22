@@ -6,7 +6,7 @@ namespace RhyoliteOrbit.DomainServices.Shared.MessageTemplates;
 
 public interface IMessageTemplateManager : Abp.Domain.Services.IDomainService
 {
-    Task<object> ListAll(int tenantId, int creationTime, string name);
+    Task<object> ListAll(int pageNo, int pageSize, string query);
 
      Task Create(MessageTemplate input);
     

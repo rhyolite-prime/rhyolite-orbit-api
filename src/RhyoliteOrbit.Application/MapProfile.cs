@@ -33,6 +33,7 @@ using RhyoliteOrbit.Services.SchoolManager.Students.Dto;
 using RhyoliteOrbit.Services.SchoolManager.SubjectCategories.Dto;
 using RhyoliteOrbit.Services.SchoolManager.Subjects.Dto;
 using RhyoliteOrbit.Services.Shared.Currencies.Dto;
+using RhyoliteOrbit.Services.Shared.MessageTemplates.Dto;
 using RhyoliteOrbit.Services.Shared.UnitOfMeasurements.Dto;
 
 namespace RhyoliteOrbit;
@@ -45,6 +46,9 @@ public class MapProfile: AutoMapper.Profile
         //shared
         CreateMap<CreateCurrencyInput, Currency>();
         CreateMap<UpdateCurrencyInput, Currency>();
+        
+        CreateMap<CreateMessageTemplateInput, MessageTemplate>();
+        CreateMap<UpdateMessageTemplateInput, MessageTemplate>();
         
         //school manager
         CreateMap<CreateAcademicYearInput, AcademicYear>();
