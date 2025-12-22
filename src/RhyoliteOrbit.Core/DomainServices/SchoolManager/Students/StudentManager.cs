@@ -131,7 +131,7 @@ public class StudentManager: Abp.Domain.Services.DomainService, IStudentManager
                 a.Religion,
                 a.NationalityId,
                 a.ClassId,
-                Pin = _hashids.Decode(a.Pin).Length > 0 ? _hashids.Decode(a.Pin)[0].ToString("D4") : null,
+                //Pin = _hashids.Decode(a.Pin).Length > 0 ? _hashids.Decode(a.Pin)[0].ToString("D4") : null,
                 a.EnrollmentDate
             }).Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
 

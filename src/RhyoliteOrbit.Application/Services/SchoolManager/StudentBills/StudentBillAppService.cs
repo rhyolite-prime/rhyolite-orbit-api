@@ -24,11 +24,27 @@ public class StudentBillAppService: RhyoliteOrbitAppServiceBase
         await _studentBillManager.CreateBatchBills(dto);
     }
     
+    [HttpPost]
+    public async Task UpdateBillWithDocumentUrl(StudentBillReportUpdateDto dto)
+    {
+        await _studentBillManager.UpdateBillWithDocumentUrl(dto);
+    }
+    
+    
+    
     [HttpGet]
     public async Task<object> GetPaidUpStudents(Guid academicYearId, Guid termId, Guid classId)
     {
         return await _studentBillManager.GetPaidUpStudents(academicYearId, termId, classId);
     }
+    
+    [HttpGet]
+    public async Task<object> GetBillHistory(int pageNo, int pageSize, string query, Guid classId)
+    {
+        return await _studentBillManager.ListBillHistory(pageNo, pageSize, query, classId);
+    }
+    
+    
     
     [HttpGet]
     public async Task<object> GetStudentDebtors(Guid academicYearId, Guid termId, Guid classId)
@@ -56,6 +72,8 @@ public class StudentBillAppService: RhyoliteOrbitAppServiceBase
     { 
         await _studentBillManager.Delete(id);
     }
+    
+    
     
     
     

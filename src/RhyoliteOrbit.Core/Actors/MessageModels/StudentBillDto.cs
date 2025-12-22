@@ -9,6 +9,8 @@ public class StudentBillDto
     public StudentBillDetail StudentBill { get; set; }
     public StudentInfo StudentInfo { get; set; }
     public BillMetaData BillMetaData { get; set; }
+    
+    public int TenantId { get; set; }
 }
 
 public class BillMetaData
@@ -30,6 +32,8 @@ public class BillReportHeader
     public string ReportTitle { get; set; } = "https://res.cloudinary.com/rhyoliteprime/image/upload/v1673255393/school_manager_repository/cris-logo.jpg";
     public string LogoUrl { get; set; }
     public string Email { get; set; }
+
+    public bool IsBalanceBfHandledManually { get; set; } = true;
 
 }
 

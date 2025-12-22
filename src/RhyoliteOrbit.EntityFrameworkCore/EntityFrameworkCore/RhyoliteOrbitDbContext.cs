@@ -55,6 +55,7 @@ public class RhyoliteOrbitDbContext : AbpZeroDbContext<Tenant, Role, User, Rhyol
     public DbSet<StudentAttendance> StudentAttendances { get; set; }
     public DbSet<StudentBillReceipt> StudentBillReceipts { get; set; }
     public DbSet<StudentBill> StudentBills { get; set; }
+    public DbSet<StudentBillReportHistory> StudentBillReportHistory { get; set; }
     public DbSet<BillPayment> BillPayments { get; set; }
     public DbSet<BillSetup> BillSetups { get; set; }
     public DbSet<BillType> BillTypes { get; set; }

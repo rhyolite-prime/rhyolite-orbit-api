@@ -131,7 +131,15 @@
                                 <table class="total-table2">
                                     <tr>
                                         <th>Balance BF :</th>
-                                        <td>@Model.StudentBill.CurrencyCode @Model.StudentBill.BalanceBF.ToString("N2")</td>
+                                        @if (Model.ReportHeader.IsBalanceBfHandledManually)
+                                        {
+                                            <td>__________________</td>
+                                        }
+                                        else
+                                        {
+                                            <td>@Model.StudentBill.CurrencyCode @Model.StudentBill.BalanceBF.ToString("N2")</td>
+                                        }
+                                       
                                     </tr>
                                     <tr>
                                         <th>Please Pay :</th>

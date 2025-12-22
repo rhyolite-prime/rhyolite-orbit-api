@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using Newtonsoft.Json;
 using RhyoliteOrbit.Actors.MessageModels;
 using RhyoliteOrbit.CloudinaryApi;
 using RhyoliteOrbit.RabbitMq;
@@ -148,11 +149,15 @@ public class StudentBillActor: ReceiveActor
                 var billReportUpdates = new
                 {
                     studentBillReportList,
-                    msgList[0].BillMetaData
+                    msgList[0].BillMetaData,
+                    BatchDocumentUrl = combinedUploadedFileUrl,
+                    msgList[0].TenantId,
                 };
                 
+                //log the payload here
+                _logger.LogInformation($"billReportUpdates_payload => {JsonConvert.SerializeObject(billReportUpdates)}");
                 //produce to rabbit mq
-                rabbitMqClient.Produce(topicExchangeType, studentBillReportUpdatesQueue, billReportUpdates);
+               rabbitMqClient.Produce(topicExchangeType, studentBillReportUpdatesQueue, billReportUpdates);
             }
             catch (Exception ex)
             {

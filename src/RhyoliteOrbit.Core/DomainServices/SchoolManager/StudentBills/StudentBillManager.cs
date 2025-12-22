@@ -2,10 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Text;
 using System.Threading.Tasks;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.Linq.Expressions;
 using Akka.Actor;
 using AutoMapper;
 using HashidsNet;
@@ -27,6 +29,7 @@ public class StudentBillManager: Abp.Domain.Services.DomainService, IStudentBill
         private readonly IRepository<BillSetup, Guid> _repositoryBillSetup;
         private readonly IRepository<BillType, Guid> _repositoryBillType;
         private readonly IRepository<StudentStatement, Guid> _repositoryStudentStatement;
+        private readonly IRepository<StudentBillReportHistory, Guid> _repositoryStudentBillReportHistory;
         private readonly IRepository<Currency, Guid> _repositoryCurrency;
         private readonly IRepository<Student, Guid> _repositoryStudent;
         private readonly IRepository<Parent, Guid> _repositoryParent;
@@ -40,7 +43,7 @@ public class StudentBillManager: Abp.Domain.Services.DomainService, IStudentBill
         private readonly IMapper _mapper;
         
 
-        public StudentBillManager(IRepository<StudentBill, Guid> repositoryStudentBill, TopLevelActors.StudentBillActorProvider studentBillActorProvider, IRepository<StudentStatement, Guid> repositoryStudentStatement, IRepository<Currency, Guid> repositoryCurrency, IRepository<SystemSetting, Guid> repositorySystemSetting, IRepository<BillSetup, Guid> repositoryBillSetup, IAcademicPeriodMetaDataManager academicPeriodMetaDataManager, IRepository<BillType, Guid> repositoryBillType, IRepository<CancelledBill, Guid> repositoryCancelledBill, IMapper mapper, IRepository<Student, Guid> repositoryStudent, IUnitOfWorkManager unitOfWorkManager, IRepository<Parent, Guid> repositoryParent, IRepository<StudentParent, Guid> repositoryStudentParent, ISystemSettingManager systemSettingManager, IHashids hashids)
+        public StudentBillManager(IRepository<StudentBill, Guid> repositoryStudentBill, TopLevelActors.StudentBillActorProvider studentBillActorProvider, IRepository<StudentStatement, Guid> repositoryStudentStatement, IRepository<Currency, Guid> repositoryCurrency, IRepository<SystemSetting, Guid> repositorySystemSetting, IRepository<BillSetup, Guid> repositoryBillSetup, IAcademicPeriodMetaDataManager academicPeriodMetaDataManager, IRepository<BillType, Guid> repositoryBillType, IRepository<CancelledBill, Guid> repositoryCancelledBill, IMapper mapper, IRepository<Student, Guid> repositoryStudent, IUnitOfWorkManager unitOfWorkManager, IRepository<Parent, Guid> repositoryParent, IRepository<StudentParent, Guid> repositoryStudentParent, ISystemSettingManager systemSettingManager, IHashids hashids, IRepository<StudentBillReportHistory, Guid> repositoryStudentBillReportHistory)
         {
             _repositoryStudentBill = repositoryStudentBill;
             _repositoryStudentStatement = repositoryStudentStatement;
@@ -56,6 +59,7 @@ public class StudentBillManager: Abp.Domain.Services.DomainService, IStudentBill
             _repositoryStudentParent = repositoryStudentParent;
             _systemSettingManager = systemSettingManager;
             _hashids = hashids;
+            _repositoryStudentBillReportHistory = repositoryStudentBillReportHistory;
             _academicPeriodMetaDataManager = academicPeriodMetaDataManager;
             _studentBillActorProvider = studentBillActorProvider();
         }
@@ -80,6 +84,46 @@ public class StudentBillManager: Abp.Domain.Services.DomainService, IStudentBill
         public async Task<object> ListAll(Guid academicYearId, Guid termId, Guid classId, Guid billTypeId)
         {
             return await _repositoryStudentBill.GetAllListAsync(x=>x.AcademicYearId == academicYearId && x.TermId == termId && x.ClassId == classId && x.BillTypeId == billTypeId);
+        }
+        
+        public async Task<object> ListBillHistory(int pageNo, int pageSize, string query, Guid classId)
+        {
+            var predicate = PredicateBuilder.New<StudentBillReportHistory>();
+
+            predicate.And(x => !x.IsDeleted);
+            
+            if (!string.IsNullOrEmpty(query))
+            {
+                predicate.And(x => x.BillNo.ToLower().Contains(query.ToLower()));
+            }
+            
+            if (classId != Guid.Empty)
+            {
+                predicate.And(x => x.ClassId  == classId);
+            }
+            
+            var totalCount =
+                
+                await _repositoryStudentBillReportHistory.CountAsync(predicate);
+            
+            var data = await (await _repositoryStudentBillReportHistory.GetAllAsync()).Where(predicate).Select(a=> new { a.Id, a.AcademicYearId, a.BillDate, a.BillNo, a.BillSetupId, a.BillTypeId, a.AcademicYearName, a.TermId, a.ClassId, a.TermName, a.ClassName, a.DocumentUrl, a.CreationTime, }).Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
+ 
+            var totalPages = totalCount > 0 ? Convert.ToInt32(Math.Ceiling(totalCount / (decimal)pageSize)) : 0;
+
+            var paginatedResult = new
+            {
+                pageNo,
+                pageSize,
+                totalCount,
+                totalPages,
+                data,
+                lowerBound = pageSize * (pageNo - 1) + 1,
+                upperBound = totalPages == pageNo ? totalCount : pageNo * pageSize,
+            };
+
+            return paginatedResult;
+            
+            
         }
 
         public async Task<object> ListBillsToCancel(Guid academicYearId, Guid termId, Guid classId, Guid billTypeId)
@@ -225,7 +269,8 @@ public class StudentBillManager: Abp.Domain.Services.DomainService, IStudentBill
                         PrimaryPhoneNo = "0548043779",
                         SchAddress = "",
                         LogoUrl = "https://res.cloudinary.com/rhyoliteprime/image/upload/v1673255393/school_manager_repository/cris-logo.jpg",
-                        Email = "Kwabenaf29@gmail.com"
+                        Email = "Christ.royal.sch@gmail.com",
+                        IsBalanceBfHandledManually = dto.IsBalanceBfHandledManually,
                     },
                     BillMetaData = new BillMetaData
                     {
@@ -251,7 +296,7 @@ public class StudentBillManager: Abp.Domain.Services.DomainService, IStudentBill
                     {
                         BillNo = dto.BillNo,
                         BillDate = dto.BillDate,
-                        Period = "1st Term, 2025/2026",
+                        Period = "2nd Term, 2025/2026",
                         CurrencyName = "Ghana Cedi",
                         CurrencyCode = "GHS",
                         BillAmount = billDetails.Sum(x => x.FeeAmount),
@@ -268,7 +313,8 @@ public class StudentBillManager: Abp.Domain.Services.DomainService, IStudentBill
                             FeeAmount = x.FeeAmount
                         }).ToList()
 
-                    }
+                    },
+                    TenantId = billSetUp.TenantId
                 };
             
                 billReports.Add(studentBill);
@@ -472,6 +518,71 @@ public class StudentBillManager: Abp.Domain.Services.DomainService, IStudentBill
         }
         
         // bill report updates
+
+        
+        public async Task UpdateBillWithDocumentUrl(StudentBillReportUpdateDto dto)
+        {
+            using (_unitOfWorkManager.Current.SetTenantId(dto.TenantId))
+            {
+                foreach (var record in dto.StudentBillReportList)
+                {
+                    var studentBillRecord = await _repositoryStudentBill.FirstOrDefaultAsync(a =>
+                        a.StudentId == record.StudentId &&
+                        a.AcademicYearId == dto.BillMetaData.AcademicYearId &&
+                        a.TermId == dto.BillMetaData.TermId &&
+                        a.ClassId == dto.BillMetaData.ClassId &&
+                        a.BillNo == dto.BillMetaData.BillNo);
+
+                    if (studentBillRecord != null)
+                    {
+                        studentBillRecord.DocumentUrl = record.BillReportUrl;
+                        await _repositoryStudentBill.UpdateAsync(studentBillRecord);
+                    }
+                    
+                }
+                
+                var metaData = await _academicPeriodMetaDataManager.GetAcademicPeriodMeta(dto.BillMetaData.AcademicYearId, dto.BillMetaData.TermId, dto.BillMetaData.ClassId);
+
+                
+                // Check if the StudentBillReportHistory already exists
+                var existingReportHistory = await _repositoryStudentBillReportHistory.FirstOrDefaultAsync(x =>
+                    x.AcademicYearId == dto.BillMetaData.AcademicYearId &&
+                    x.TermId == dto.BillMetaData.TermId &&
+                    x.ClassId == dto.BillMetaData.ClassId &&
+                    x.BillTypeId == dto.BillMetaData.BillTypeId &&
+                    x.BillNo == dto.BillMetaData.BillNo &&
+                    x.TenantId == dto.TenantId);
+
+                if (existingReportHistory != null)
+                {
+                    // Only update the DocumentUrl
+                    existingReportHistory.DocumentUrl = dto.BatchDocumentUrl;
+                    
+                    await _repositoryStudentBillReportHistory.UpdateAsync(existingReportHistory);
+                }
+                else
+                {
+                    // Create new record if it doesn't exist
+                    var studentBillReportHistory = new StudentBillReportHistory
+                    {
+                        AcademicYearId = dto.BillMetaData.AcademicYearId,
+                        AcademicYearName = metaData.AcademicYearName,
+                        TermId = dto.BillMetaData.TermId,
+                        TermName = metaData.TermName,
+                        ClassId = dto.BillMetaData.ClassId,
+                        ClassName = metaData.ClassName,
+                        BillTypeId = dto.BillMetaData.BillTypeId,
+                        BillSetupId = dto.BillMetaData.BillSetupId,
+                        BillDate = dto.BillMetaData.BillDate,
+                        BillNo = dto.BillMetaData.BillNo,
+                        DocumentUrl = dto.BatchDocumentUrl,
+                        TenantId = dto.TenantId
+                    };
+                    await _repositoryStudentBillReportHistory.InsertAsync(studentBillReportHistory);
+                }
+            }
+        }
+        
         
         //for student self service
         public async Task<object> GetStudentBillSummary(string studentId, string pin, int tenantId)

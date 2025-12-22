@@ -94,7 +94,7 @@ public class ParentManager: Abp.Domain.Services.DomainService, IParentManager
                 
                 await _repositoryParent.CountAsync(predicate);
             
-            var data = await (await _repositoryParent.GetAllAsync()).Where(predicate).Select(a=> new { a.Id,a.FirstGuardianName, a.FirstGuardianEmail, a.FirstGuardianPhoneNo, a.SecondGuardianName, a.SecondGuardianEmail, a.SecondGuardianPhoneNo,  }).Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
+            var data = await (await _repositoryParent.GetAllAsync()).Where(predicate).Select(a=> new { a.Id,a.FirstGuardianName, a.FirstGuardianEmail, a.FirstGuardianProfession, a.SecondGuardianProfession, a.FirstGuardianRelationship, a.SecondGuardianRelationship, a.FirstGuardianPhoneNo, a.SecondGuardianName, a.SecondGuardianEmail, a.SecondGuardianPhoneNo,  }).Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
 
             var totalPages = totalCount > 0 ? Convert.ToInt32(Math.Ceiling(totalCount / (decimal)pageSize)) : 0;
 
