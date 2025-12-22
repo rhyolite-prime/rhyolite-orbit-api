@@ -7,7 +7,7 @@ namespace RhyoliteOrbit.DomainServices.Payroll.PayCalendars;
 
 public interface IPayCalendarManager: Abp.Domain.Services.IDomainService
 {
-    Task<object> ListAll();
+    Task<object> ListAll(int pageNo, int pageSize, int year);
     Task Create(PayCalendar input);
     Task Update(PayCalendar input);
     Task Delete(Guid id);

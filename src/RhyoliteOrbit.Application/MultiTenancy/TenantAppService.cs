@@ -16,10 +16,13 @@ using Microsoft.AspNetCore.Identity;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace RhyoliteOrbit.MultiTenancy;
 
-[AbpAuthorize(PermissionNames.Pages_Tenants)]
+//  [AbpAuthorize(PermissionNames.Pages_Tenants)]
+[AllowAnonymous]
+
 public class TenantAppService : AsyncCrudAppService<Tenant, TenantDto, int, PagedTenantResultRequestDto, CreateTenantDto, TenantDto>, ITenantAppService
 {
     private readonly TenantManager _tenantManager;
@@ -44,12 +47,19 @@ public class TenantAppService : AsyncCrudAppService<Tenant, TenantDto, int, Page
         _abpZeroDbMigrator = abpZeroDbMigrator;
     }
 
+    
+    public async Task<TenantDto> PrivateCreate(CreateTenantDto input)
+    {
+        // Reuse the existing logic for tenant creation
+        return await CreateAsync(input);
+    }
     public override async Task<TenantDto> CreateAsync(CreateTenantDto input)
     {
         CheckCreatePermission();
 
         // Create tenant
         var tenant = ObjectMapper.Map<Tenant>(input);
+        tenant.IsActive = true; //Enable the tenant upon creation
         tenant.ConnectionString = input.ConnectionString.IsNullOrEmpty()
             ? null
             : SimpleStringCipher.Instance.Encrypt(input.ConnectionString);

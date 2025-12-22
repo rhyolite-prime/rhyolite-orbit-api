@@ -8,6 +8,8 @@ public class BillSetupDetail
     public Guid FeeId { get; set; }
     public string FeeName { get; set; }
     public Guid BillTypeId { get; set; }
+    
+    public string Gender { get; set; } // Male, Female
     public string BillTypeName { get; set; }
     public decimal FeeAmount { get; set; }
 }

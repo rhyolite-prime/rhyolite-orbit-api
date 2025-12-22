@@ -22,9 +22,9 @@ public class PayCalendarAppService: RhyoliteOrbitAppServiceBase
     }
 
     [HttpGet]
-    public async Task<object> GetAll(int pageNo, int pageSize, string query)
+    public async Task<object> GetAll(int pageNo, int pageSize, int year)
     {
-        return await _payCalendarManager.ListAll();
+        return await _payCalendarManager.ListAll(pageNo, pageSize, year);
     }
 
     [HttpGet]
@@ -50,6 +50,8 @@ public class PayCalendarAppService: RhyoliteOrbitAppServiceBase
     public async Task Update(UpdatePayCalendarInput input)
     {
         var obj = _mapper.Map<PayCalendar>(input);
+        var tenantInfo = await GetCurrentTenantAsync();
+        obj.TenantId = tenantInfo.Id;
         await _payCalendarManager.Update(obj);
     }
 

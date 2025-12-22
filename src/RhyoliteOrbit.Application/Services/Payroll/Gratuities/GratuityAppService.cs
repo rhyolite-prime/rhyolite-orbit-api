@@ -36,13 +36,14 @@ public class GratuityAppService: RhyoliteOrbitAppServiceBase
     public async Task Update(UpdateGratuityInput input)
     {
         var obj = _mapper.Map<Gratuity>(input);
+        var tenantInfo = await GetCurrentTenantAsync();
+        obj.TenantId = tenantInfo.Id;
         await _gratuityManager.Update(obj);
     }
 
     [HttpDelete]
-    public async Task Delete(Guid Id)
+    public async Task Delete(Guid id)
     {
-        await _gratuityManager.Delete(Id);
-
+        await _gratuityManager.Delete(id);
     }
 }

@@ -5,13 +5,10 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using RhyoliteOrbit.DomainServices.Payroll.EmployeeBio;
-using RhyoliteOrbit.DomainServices.Payroll.EmployeeBio.Dto;
 using RhyoliteOrbit.DomainServices.Payroll.EmployeeCategories;
 using RhyoliteOrbit.DomainServices.Payroll.SalaryGrades;
 using RhyoliteOrbit.DomainServices.Shared.Countries;
 using RhyoliteOrbit.DomainServices.Shared.Departments;
-using RhyoliteOrbit.DomainServices.Shared.PersonnelStatuses;
-using RhyoliteOrbit.DomainServices.Shared.Religions;
 using RhyoliteOrbit.Models.Payroll;
 using RhyoliteOrbit.Services.Payroll.EmployeeBioDataRecords.Dto;
 
@@ -22,20 +19,16 @@ public class EmployeeBioDataAppService: RhyoliteOrbitAppServiceBase
         private readonly IEmployeeBioDataManager _employeeBioDataManager;
         private readonly IEmployeeCategoryManager _employeeCategoryManager;
         private readonly IDepartmentManager _departmentManager;
-        private readonly IReligionManager _religionManager;
         private readonly ISalaryGradeManager _salaryGradeManager;
-        private readonly IPersonnelStatusManager _personnelStatusManager;
         private readonly ICountryManager _countryManager;
         private readonly IMapper _mapper;
 
-        public EmployeeBioDataAppService(IEmployeeBioDataManager employeeBioDataManager, IMapper mapper, IEmployeeCategoryManager employeeCategoryManager, IDepartmentManager departmentManager, IReligionManager religionManager, IPersonnelStatusManager personnelStatusManager, ICountryManager countryManager, ISalaryGradeManager salaryGradeManager)
+        public EmployeeBioDataAppService(IEmployeeBioDataManager employeeBioDataManager, IMapper mapper, IEmployeeCategoryManager employeeCategoryManager, IDepartmentManager departmentManager, ICountryManager countryManager, ISalaryGradeManager salaryGradeManager)
         {
             _employeeBioDataManager = employeeBioDataManager;
             _mapper = mapper;
             _employeeCategoryManager = employeeCategoryManager;
             _departmentManager = departmentManager;
-            _religionManager = religionManager;
-            _personnelStatusManager = personnelStatusManager;
             _countryManager = countryManager;
             _salaryGradeManager = salaryGradeManager;
         }
@@ -56,10 +49,10 @@ public class EmployeeBioDataAppService: RhyoliteOrbitAppServiceBase
         /// <param name="input"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<object> Create(CreateEmployeeBioDataInput input)
+        public async Task Create(CreateEmployeeBioDataInput input)
         {
             var obj = _mapper.Map<EmployeeBioData>(input);
-            return await _employeeBioDataManager.Create(obj);
+            await _employeeBioDataManager.Create(obj);
         }
 
         /// <summary>
@@ -73,9 +66,7 @@ public class EmployeeBioDataAppService: RhyoliteOrbitAppServiceBase
             {
                 var categoryInfo = await _employeeCategoryManager.GetAsync(input.CategoryName);
                 var departmentInfo = await _departmentManager.GetAsync(input.DepartmentName);
-                var religionInfo = await _religionManager.GetAsync(input.ReligionName);
                 var salaryGradeInfo = await _salaryGradeManager.GetAsync(input.SalaryGradeName);
-                var statusInfo = await _personnelStatusManager.GetAsync(input.StatusName);
                 var nationalityInfo = await _countryManager.GetNationality(input.NationalityName);
 
                 var salaryNotchId = Guid.Empty;
@@ -100,8 +91,7 @@ public class EmployeeBioDataAppService: RhyoliteOrbitAppServiceBase
                      CityOrLocation = input.CityOrLocation,
                      DepartmentId = departmentInfo?.Id ?? Guid.Empty,
                      DepartmentName= input.DepartmentName,
-                     ReligionId = religionInfo?.Id ?? Guid.Empty,
-                     ReligionName = input.ReligionName,
+                     Religion = input.Religion,
                      CompanyEmail= input.CompanyEmail,
                      DateAppointed= input.DateAppointed,
                      DateOfBirth= input.DateOfBirth,
@@ -117,7 +107,7 @@ public class EmployeeBioDataAppService: RhyoliteOrbitAppServiceBase
                      ResidenceAddress = input.ResidenceAddress, 
                      NationalHealthInsuranceNo = input.NationalID,
                      NationalityId = nationalityInfo?.Id ?? Guid.Empty,
-                     StatusId = statusInfo?.Id ?? Guid.Empty,
+                     Status = 0,
                      StatusName= input.StatusName,
                      Hometown = input.Hometown,
                      TaxIdentificationNo = input.TaxIdentificationNo, 
@@ -157,7 +147,6 @@ public class EmployeeBioDataAppService: RhyoliteOrbitAppServiceBase
         public async Task Delete(Guid id)
         {
             await _employeeBioDataManager.Delete(id);
-
         }
 
         /// <summary>
@@ -166,9 +155,9 @@ public class EmployeeBioDataAppService: RhyoliteOrbitAppServiceBase
         /// <param name="employeeId"></param>
         /// <param name="statusId"></param>
         [HttpGet]
-        public async Task UpdateStatus(Guid employeeId, Guid statusId)
+        public async Task UpdateStatus(Guid employeeId, RhyoliteOrbitConsts.EmployeeStatus status)
         {
-            await _employeeBioDataManager.UpdateStatus(employeeId, statusId);
+            await _employeeBioDataManager.UpdateStatus(employeeId, status);
         }
 
         // export ...

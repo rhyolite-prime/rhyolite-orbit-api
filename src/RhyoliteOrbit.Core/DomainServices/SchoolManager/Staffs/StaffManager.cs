@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Abp.Domain.Repositories;
+using Abp.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 using RhyoliteOrbit.Models.Payroll;
 using RhyoliteOrbit.Models.SchoolManager;
 using RhyoliteOrbit.Models.Shared;
@@ -12,35 +15,21 @@ public class StaffManager: Abp.Domain.Services.DomainService, IStaffManager
 {
         private readonly IRepository<Staff, Guid> _repositoryStaff;
         private readonly IRepository<EmployeeBioData, Guid> _repositoryEmployeeBioData;
-        private readonly IRepository<Country, Guid> _repositoryCountry;
-        private readonly IRepository<PersonnelStatus, Guid> _repositoryPersonnelStatus;
-        public StaffManager(IRepository<Staff, Guid> repositoryStaff, IRepository<EmployeeBioData, Guid> repositoryEmployeeBioData, IRepository<Country, Guid> repositoryCountry, IRepository<PersonnelStatus, Guid> repositoryPersonnelStatus)
+        private readonly IRepository<SystemNumber, Guid> _repositorySystemNumber;
+        public StaffManager(IRepository<Staff, Guid> repositoryStaff, IRepository<EmployeeBioData, Guid> repositoryEmployeeBioData,IRepository<SystemNumber, Guid> repositorySystemNumber)
         {
             _repositoryStaff = repositoryStaff;
             _repositoryEmployeeBioData = repositoryEmployeeBioData;
-            _repositoryCountry = repositoryCountry;
-            _repositoryPersonnelStatus = repositoryPersonnelStatus;
+            _repositorySystemNumber = repositorySystemNumber;
         }
 
 
-        public async Task<object> Create(Staff entity)
+        public async Task Create(Staff entity)
         {
             var datta = await _repositoryStaff.FirstOrDefaultAsync(x => x.StaffIdentifier == entity.StaffIdentifier);
             
             if (datta == null)
             {
-                var countryInfo = await _repositoryCountry.FirstOrDefaultAsync(x=>x.Id == entity.NationalityId);
-                var statusInfo = await _repositoryPersonnelStatus.FirstOrDefaultAsync(entity.StaffStatusId);
-
-                if (countryInfo != null)
-                {
-                    entity.NationalityName = countryInfo.Nationality;
-                }
-
-                if (statusInfo != null)
-                {
-                    entity.StaffStatusName = statusInfo.Name;
-                }
 
                 var staffEntryResult = await _repositoryStaff.InsertAsync(entity);
 
@@ -53,8 +42,7 @@ public class StaffManager: Abp.Domain.Services.DomainService, IStaffManager
                     LastName = entity.LastName,
                     EmployeePhoto = entity.ImageUrl,
                     Gender = entity.Gender,
-                    StatusId = statusInfo == null ? Guid.Empty : entity.StaffStatusId,
-                    StatusName = statusInfo == null ? "Active" : entity.StaffStatusName,
+                    Status = entity.Status,
                     CityOrLocation = entity.CityOrLocation,
                     DepartmentId = Guid.Empty,
                     CategoryId = Guid.Empty,
@@ -65,8 +53,8 @@ public class StaffManager: Abp.Domain.Services.DomainService, IStaffManager
                     DateOfBirth = entity.DateOfBirth,
                     PersonalEmail = entity.EmailAddress,
                     MaritalStatus = entity.MaritalStatus,
-                    ReligionId = Guid.Empty,
-                    NationalityId = entity.NationalityId,
+                    Religion = entity.Religion,
+                    Nationality = entity.Nationality,
                     Hometown = "",
                     PrimaryPhoneNumber = entity.PrimaryPhone,
                     SecondaryPhoneNumber = entity.SecondaryPhone,
@@ -75,12 +63,9 @@ public class StaffManager: Abp.Domain.Services.DomainService, IStaffManager
                     TenantId = entity.TenantId,
                     NationalIdentificationNo = "",
                     NationalHealthInsuranceNo = "",
-                    PassportNo = null,
-                    PassportIssueDate = null,
-                    LicenseIssueDate = null,
-                    PassportExpiryDate = null,
+                    DriverLicenseIssueDate = null,
                     DriverLicenseNo = null,
-                    LicenseExpiryDate = null,
+                    DriverLicenseExpiryDate = null,
                     IdentityNo = string.Empty,
                     IdentityType = string.Empty,
                     Height = 0,
@@ -95,11 +80,7 @@ public class StaffManager: Abp.Domain.Services.DomainService, IStaffManager
                 };
                 await _repositoryEmployeeBioData.InsertAsync(employee);
 
-                return new
-                {
-                    code = 200,
-                    message = "successful"
-                };
+                return;
             }
 
             throw new Abp.UI.UserFriendlyException(400, "Duplicate Staff ID's are not allowed.");
@@ -107,6 +88,116 @@ public class StaffManager: Abp.Domain.Services.DomainService, IStaffManager
         }
 
 
+        public async Task RegisterViaSelfService(Staff entity)
+        {
+            var employeeId = Guid.NewGuid();
+            
+            //generate staff Id
+            var systemNumber = await _repositorySystemNumber.FirstOrDefaultAsync(x => x.Module == (int)RhyoliteOrbitConsts.ErpModule.SchoolInformationSystem && x.ItemName == "StaffID");
+        
+            // Increment the last number
+            systemNumber.LastNo++;
+            
+            entity.Id = employeeId;
+            
+            //assign the staff identifier using the specified format from the configured system number...
+            
+            // Use FormatPattern if defined, otherwise default to [Prefix]-[Number]-[Suffix]
+            var format = string.IsNullOrWhiteSpace(systemNumber.FormatPattern)
+                ? "{prefix}-{number}-{suffix}"
+                : systemNumber.FormatPattern;
+            
+            entity.StaffIdentifier = format
+                .Replace("{prefix}", systemNumber.Prefix ?? string.Empty)
+                .Replace("{number}", systemNumber.LastNo.ToString("D4")) // padded number e.g. 0001
+                .Replace("{suffix}", systemNumber.Suffix ?? string.Empty);
+            
+            await _repositoryStaff.InsertAsync(entity);
+
+            // create as employee in Payroll.
+            var employee = new EmployeeBioData
+            {
+                EmployeeIdentifier = entity.StaffIdentifier,
+                FirstName = entity.FirstName,
+                OtherName = entity.OtherName,
+                LastName = entity.LastName,
+                EmployeePhoto = entity.ImageUrl,
+                Gender = entity.Gender,
+                Status = entity.Status,
+                CityOrLocation = entity.CityOrLocation,
+                DepartmentId = Guid.Empty,
+                CategoryId = Guid.Empty,
+                DateAppointed = entity.DateEmployed,
+                SalaryGradeId = Guid.Empty,
+                SalaryNotchId = Guid.Empty,
+                TaxIdentificationNo = "",
+                DateOfBirth = entity.DateOfBirth,
+                PersonalEmail = entity.EmailAddress,
+                MaritalStatus = entity.MaritalStatus,
+                Religion = entity.Religion,
+                Nationality = entity.Nationality,
+                Hometown = "",
+                PrimaryPhoneNumber = entity.PrimaryPhone,
+                SecondaryPhoneNumber = entity.SecondaryPhone,
+                CompanyEmail = entity.EmailAddress,
+                ResidenceAddress = entity.HomeAddress,
+                TenantId = entity.TenantId,
+                NationalIdentificationNo = "",
+                NationalHealthInsuranceNo = "",
+                DriverLicenseIssueDate = null,
+                DriverLicenseNo = null,
+                DriverLicenseExpiryDate = null,
+                IdentityNo = string.Empty,
+                IdentityType = string.Empty,
+                Height = 0,
+                Weight = 0,
+                Languages = null,
+                Interests = null,
+                HealthIssues = null,
+                LeaveDaysEntitled = 15,
+                MedicalExpensesLimit = 0,
+                UserId = 0,
+                Id = employeeId
+            };
+            await _repositoryEmployeeBioData.InsertAsync(employee);
+            
+            // Save updated last number
+            await _repositorySystemNumber.UpdateAsync(systemNumber);
+            
+        }
+        public async Task<object> ListAll(int pageNo, int pageSize, string query)
+        {
+            var predicate = PredicateBuilder.New<Staff>();
+
+            predicate.And(x => !x.IsDeleted);
+            
+            if (!string.IsNullOrEmpty(query))
+            {
+                predicate.And(x => x.LastName.ToLower().Contains(query.ToLower()));
+            }
+            
+            var totalCount =
+                
+                await _repositoryStaff.CountAsync(predicate);
+            
+            var data = await (await _repositoryStaff.GetAllAsync()).Where(predicate).Select(a=> new { a.Id, a.LastName, a.FirstName, a.OtherName, a.StaffIdentifier, a.Gender, a.DateEmployed, a.EmailAddress, a.PrimaryPhone, a.EmergencyContactPerson, a.EmergencyContactPhone, a.CreationTime, }).Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            var totalPages = totalCount > 0 ? Convert.ToInt32(Math.Ceiling(totalCount / (decimal)pageSize)) : 0;
+
+            var paginatedResult = new
+            {
+                pageNo,
+                pageSize,
+                totalCount,
+                totalPages,
+                data,
+                lowerBound = pageSize * (pageNo - 1) + 1,
+                upperBound = totalPages == pageNo ? totalCount : pageNo * pageSize,
+            };
+
+            return paginatedResult;
+        }
+        
         public async Task<object> ListAll(bool isTeachingStaff)
         {
             return await _repositoryStaff.GetAllListAsync(x=>x.IsTeachingStaff == isTeachingStaff);
@@ -126,73 +217,17 @@ public class StaffManager: Abp.Domain.Services.DomainService, IStaffManager
 
         public async Task Update(Staff entity)
         {
-            var statusInfo = await _repositoryPersonnelStatus.FirstOrDefaultAsync(entity.StaffStatusId);
 
-            var countryInfo = await _repositoryCountry.FirstOrDefaultAsync(x => x.Id == entity.NationalityId);
-            
-            if (countryInfo != null)
-            {
-                entity.NationalityName = countryInfo.Nationality;
-            }
 
-            if (statusInfo != null)
-            {
-                entity.StaffStatusName = statusInfo.Name;
-
-            }
             await _repositoryStaff.UpdateAsync(entity);
 
             // update as employee in Payroll
-
-            var employee = new EmployeeBioData
-            {
-                EmployeeIdentifier = entity.StaffIdentifier,
-                FirstName = entity.FirstName,
-                OtherName = entity.OtherName,
-                LastName = entity.LastName,
-                EmployeePhoto = entity.ImageUrl,
-                Gender = entity.Gender,
-                CityOrLocation = entity.CityOrLocation,
-                DepartmentId = Guid.Empty,
-                CategoryId = Guid.Empty,
-                DateAppointed = entity.DateEmployed,
-                SalaryGradeId = Guid.Empty,
-                SalaryNotchId = Guid.Empty,
-                TaxIdentificationNo = "",
-                DateOfBirth = entity.DateOfBirth,
-                StatusId = statusInfo == null ? Guid.Empty : entity.StaffStatusId,
-                StatusName = statusInfo == null ? "Active" : entity.StaffStatusName,
-                PersonalEmail = entity.EmailAddress,
-                MaritalStatus = entity.MaritalStatus,
-                ReligionId = Guid.Empty,
-                NationalityId = entity.NationalityId,
-                Hometown = "",
-                PrimaryPhoneNumber = entity.PrimaryPhone,
-                SecondaryPhoneNumber = entity.SecondaryPhone,
-                CompanyEmail = entity.EmailAddress,
-                ResidenceAddress = entity.HomeAddress,
-                TenantId = entity.TenantId,
-                NationalIdentificationNo = "",
-                NationalHealthInsuranceNo = "",
-                PassportNo = null,
-                PassportIssueDate = null,
-                LicenseIssueDate = null,
-                PassportExpiryDate = null,
-                DriverLicenseNo = null,
-                LicenseExpiryDate = null,
-                IdentityNo = string.Empty,
-                IdentityType = string.Empty,
-                Height = 0,
-                Weight = 0,
-                Languages = null,
-                Interests = null,
-                HealthIssues = null,
-                LeaveDaysEntitled = 15,
-                MedicalExpensesLimit = 0,
-                UserId = 0,
-                Id = entity.Id
-            };
-            await _repositoryEmployeeBioData.UpdateAsync(employee);
+            var payrollEmployee = await _repositoryEmployeeBioData.FirstOrDefaultAsync(x => x.EmployeeIdentifier == entity.StaffIdentifier);
+            payrollEmployee.Nationality = entity.Nationality;
+            payrollEmployee.FirstName = entity.FirstName;
+            payrollEmployee.OtherName = entity.OtherName;
+            payrollEmployee.LastName = entity.LastName;
+            await _repositoryEmployeeBioData.UpdateAsync(payrollEmployee);
 
 
         }

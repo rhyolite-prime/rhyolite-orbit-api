@@ -6,7 +6,8 @@ namespace RhyoliteOrbit.DomainServices.SchoolManager.BillSetups;
 
 public interface IBillSetupManager: Abp.Domain.Services.IDomainService
 {
-    Task<object> ListAll(Guid academicYearId, Guid termId, Guid classId, Guid billTypeId);
+    Task<object> ListAll(int pageNo, int pageSize, string query, Guid academicYearId, Guid termId, Guid classId,
+        Guid billTypeId);
     Task<object> GetAsync(Guid academicYearId, Guid termId, Guid classId, Guid billTypeId);
     Task<object> Create(BillSetup entity);
     Task DeleteDetail(Guid id, Guid headerId);

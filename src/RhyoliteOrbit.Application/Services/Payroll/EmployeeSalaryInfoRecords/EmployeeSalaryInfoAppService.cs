@@ -24,13 +24,14 @@ public class EmployeeSalaryInfoAppService: RhyoliteOrbitAppServiceBase
         private readonly ICurrencyManager _currencyManager;
         private readonly IMapper _mapper;
 
-        public EmployeeSalaryInfoAppService(IEmployeeSalaryInfoManager employeeSalaryInfoManager, IMapper mapper, IEmployeeBioDataManager employeeBioDataManager, IBankManager bankManager, ICurrencyManager currencyManager)
+        public EmployeeSalaryInfoAppService(IEmployeeSalaryInfoManager employeeSalaryInfoManager, IMapper mapper, IEmployeeBioDataManager employeeBioDataManager, IBankManager bankManager, ICurrencyManager currencyManager, ISalaryGradeManager salaryGradeManager)
         {
             _employeeSalaryInfoManager = employeeSalaryInfoManager;
             _mapper = mapper;
             _employeeBioDataManager = employeeBioDataManager;
             _bankManager = bankManager;
             _currencyManager = currencyManager;
+            _salaryGradeManager = salaryGradeManager;
         }
 
         [HttpGet]

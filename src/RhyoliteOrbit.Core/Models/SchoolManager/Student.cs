@@ -21,12 +21,12 @@ public class Student: Abp.Domain.Entities.Auditing.FullAuditedEntity<Guid>, Abp.
     public string FirstName { get; set; }
     [MaxLength(10)]
     public string Gender { get; set; }
-    public Guid ReligionId { get; set; }
     [MaxLength(100)]
-    public string ReligionName { get; set; }
+    public string Religion { get; set; }
     public Guid ClassId { get; set; }
     [MaxLength(100)]
     public string ClassName { get; set; }
+    public int Status { get; set; }
     public Guid AcademicYearId { get; set; }
     [MaxLength(100)]
     public string AcademicYearName { get; set; }
@@ -36,13 +36,12 @@ public class Student: Abp.Domain.Entities.Auditing.FullAuditedEntity<Guid>, Abp.
     public string CityOrLocation { get; set; }
     [MaxLength(350)]
     public string ImageUrl { get; set; }
-    public Guid StudentStatusId { get; set; }
-    [MaxLength(350)]
-    public string StudentStatusName { get; set; }
     [MaxLength(50)]
     public string EnrollmentType { get; set; }
     [MaxLength(100)]
     public string BiometricIdentifier { get; set; }
+    [MaxLength(15)]
+    public string Pin { get; set; }
     public bool IsAlumni { get; set; }
     public DateTime CompletionDate { get; set; }
     public int TenantId { get; set; }

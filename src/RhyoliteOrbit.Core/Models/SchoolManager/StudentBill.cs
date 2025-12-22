@@ -37,12 +37,15 @@ public class StudentBill: Abp.Domain.Entities.Auditing.FullAuditedEntity<Guid>, 
     public int BillStatus { get; set; } 
     [MaxLength(100)]
     public string Description { get; set; }
-    public Guid BillTypeId { get; set; }  //empty guid for credit memo
+    public Guid BillTypeId { get; set; }
     [MaxLength(50)]
-    public string BillTypeName { get; set; }  
-    public Guid BillSetupId { get; set; } //empty guid for credit memo
-    [Column(TypeName = "jsonb")] public BillSetupInfo BillSetupInfo { get; set; }  
-    [Column(TypeName = "jsonb")] public List<BillDetail> Details { get; set; }  
+    public string BillTypeName { get; set; }
+    public Guid BillSetupId { get; set; }
+    [Column(TypeName = "jsonb")] public BillSetupInfo BillSetupInfo { get; set; } 
+    [Column(TypeName = "jsonb")] public List<BillDetail> Details { get; set; }
+    
+    [MaxLength(350)]
+    public string DocumentUrl { get; set; }
     public int TenantId { get; set; }
     
 }

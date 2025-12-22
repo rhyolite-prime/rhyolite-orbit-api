@@ -1,14 +1,23 @@
-﻿using Abp.AspNetCore.Mvc.Authorization;
+﻿using System;
+using System.Collections.Generic;
+using System.Dynamic;
+using System.Threading.Tasks;
 using RhyoliteOrbit.Controllers;
 using Microsoft.AspNetCore.Mvc;
+using RhyoliteOrbit.Actors.MessageModels;
 
 namespace RhyoliteOrbit.Web.Controllers;
 
-[AbpMvcAuthorize]
 public class HomeController : RhyoliteOrbitControllerBase
 {
-    public ActionResult Index()
+    public async Task<ActionResult> StudentBillReport(StudentBillDto dto)
     {
-        return View();
+        await Task.Delay(1);
+       
+        dynamic viewmodel = new ExpandoObject();
+
+        viewmodel.StudentBillDto = dto;
+
+        return View(viewmodel);
     }
 }

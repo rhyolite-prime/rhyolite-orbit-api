@@ -53,7 +53,7 @@ public class TaxTableManager: Abp.Domain.Services.DomainService, ITaxTableManage
             pageNo,
             totalCount,
             totalPages,
-            data,
+            data = data.OrderBy(a=> a.Rate).ToList(),
             lowerBound = pageSize * (pageNo - 1) + 1,
             upperBound = totalPages == pageNo ? totalCount : pageNo * pageSize,
         };

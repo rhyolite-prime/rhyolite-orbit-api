@@ -36,6 +36,8 @@ public class TaxTableAppService: RhyoliteOrbitAppServiceBase
     public async Task Update(UpdateTaxTableInput input)
     {
         var obj = _mapper.Map<TaxTable>(input);
+        var tenantInfo = await GetCurrentTenantAsync();
+        obj.TenantId = tenantInfo.Id;
         await _taxTableManager.Update(obj);
     }
 

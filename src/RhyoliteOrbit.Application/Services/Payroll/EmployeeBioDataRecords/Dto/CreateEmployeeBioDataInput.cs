@@ -11,10 +11,9 @@ public class CreateEmployeeBioDataInput
         public string OtherName { get; set; }
         public string LastName { get; set; }
         public string EmployeePhoto { get; set; }
-        
         public string TitleName { get; set; }
         public string Gender { get; set; }
-        public Guid StatusId { get; set; }
+        public int Status { get; set; }
         public string StatusName { get; set; }
         public string CityOrLocation { get; set; }
         public string ResidenceAddress { get; set; }
@@ -29,6 +28,7 @@ public class CreateEmployeeBioDataInput
         public string SalaryNotchName { get; set; }
         
         public Guid RankId { get; set; }
+        
         public string RankName { get; set; }
         public string TaxIdentificationNo { get; set; }
 
@@ -36,8 +36,8 @@ public class CreateEmployeeBioDataInput
         public DateTime DateOfBirth { get; set; }
         public string PersonalEmail { get; set; }
         public string MaritalStatus { get; set; }
-        public Guid ReligionId { get; set; }
-        public string ReligionName { get; set; }
+         
+        public string Religion { get; set; }
         public Guid NationalityId { get; set; }
         public string NationalityName { get; set; }
         public string Hometown { get; set; }
@@ -49,6 +49,7 @@ public class CreateEmployeeBioDataInput
         //HR related...
         public string NationalIdentificationNo { get; set; }
         public string NationalHealthInsuranceNo { get; set; }
+        
         public string PassportNo { get; set; }
         public string PassportIssueDate { get; set; }
         public string PassportExpiryDate { get; set; }
@@ -157,7 +158,7 @@ public class ImportEmployeeBioDataInput
     public string NationalityName { get; set; }
     public string MaritalStatus { get; set; }
     public string NationalID { get; set; }
-    public string ReligionName { get; set; }
+    public string Religion { get; set; }
     public string ResidenceAddress { get; set; }
     public string SalaryGradeName { get; set; }
     public string SalaryNotchName { get; set; }

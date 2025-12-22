@@ -36,6 +36,8 @@ public class TaxReliefAppService:RhyoliteOrbitAppServiceBase
     public async Task Update(UpdateTaxReliefInput input)
     {
         var obj = _mapper.Map<TaxRelief>(input);
+        var tenantInfo = await GetCurrentTenantAsync();
+        obj.TenantId = tenantInfo.Id;
         await _taxReliefManager.Update(obj);
     }
 

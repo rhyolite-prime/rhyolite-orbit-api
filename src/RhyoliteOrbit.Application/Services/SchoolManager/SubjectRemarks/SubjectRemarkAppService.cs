@@ -36,6 +36,8 @@ namespace RhyoliteOrbit.Application.Services.SchoolManager.SubjectRemarks
         public async Task Update(UpdateSubjectRemarkInput input)
         {
             var obj = _mapper.Map<SubjectRemark>(input);
+            var tenantInfo = await GetCurrentTenantAsync();
+            obj.TenantId = tenantInfo.Id;
             await _subjectRemarkManager.Update(obj);
         }
 

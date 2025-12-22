@@ -37,6 +37,8 @@ public class LoanTypeAppService: RhyoliteOrbitAppServiceBase
     public async Task Update(UpdateLoanTypeInput input)
     {
         var obj = _mapper.Map<LoanType>(input);
+        var tenantInfo = await GetCurrentTenantAsync();
+        obj.TenantId = tenantInfo.Id;
         await _loanTypeManager.Update(obj);
     }
 

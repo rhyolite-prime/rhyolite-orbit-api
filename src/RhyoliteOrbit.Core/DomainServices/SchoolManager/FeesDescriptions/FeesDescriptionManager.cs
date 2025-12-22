@@ -26,7 +26,7 @@ public class FeesDescriptionManager: Abp.Domain.Services.DomainService, IFeesDes
             var datta = await _repositoryFeesDescription.FirstOrDefaultAsync(x => x.Description == entity.Description && x.BillTypeId == entity.BillTypeId);
             if (datta == null)
             {
-                var billTypeInfo = await _repositoryBillType.FirstOrDefaultAsync(x=>x.Id == entity.BillTypeId);
+                var billTypeInfo = await _repositoryBillType.FirstOrDefaultAsync(x=> x.Id == entity.BillTypeId);
 
                 if (billTypeInfo != null)
                 {
@@ -46,7 +46,7 @@ public class FeesDescriptionManager: Abp.Domain.Services.DomainService, IFeesDes
             
         }
 
-        public async Task<object> ListAll(int pageNo, int pageSize, string query)
+        public async Task<object> ListAll(int pageNo, int pageSize, string query, Guid billTypeId)
         {
             var predicate = PredicateBuilder.New<FeesDescription>();
 
@@ -56,10 +56,15 @@ public class FeesDescriptionManager: Abp.Domain.Services.DomainService, IFeesDes
             {
                 predicate.And(x => x.Description.Contains(query));
             }
+
+            if (billTypeId != Guid.Empty)
+            {
+                predicate.And(x => x.BillTypeId == billTypeId);
+            }
             
             var totalCount =  await _repositoryFeesDescription.CountAsync(predicate);
             
-            var data = await (await _repositoryFeesDescription.GetAllAsync()).Where(predicate).Select(a=> new { a.Id, a.Description, a.BillTypeName, a.ReceivableAccountName, a.BillTypeId, a.ReceivableAccountId }).Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
+            var data = await (await _repositoryFeesDescription.GetAllAsync()).Where(predicate).Select(a=> new { a.Id, a.Description, a.BillTypeName, a.ReceivableAccountName, a.BillTypeId, a.Unit, a.Quantity, a.ReceivableAccountId }).Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
 
             var totalPages = totalCount > 0 ? Convert.ToInt32(Math.Ceiling(totalCount / (decimal)pageSize)) : 0;
 
@@ -87,6 +92,13 @@ public class FeesDescriptionManager: Abp.Domain.Services.DomainService, IFeesDes
 
         public async Task Update(FeesDescription entity)
         {
+            var billTypeInfo = await _repositoryBillType.FirstOrDefaultAsync(x=>x.Id == entity.BillTypeId);
+
+            if (billTypeInfo != null)
+            {
+                entity.BillTypeName = billTypeInfo.Name;
+            }
+
             await _repositoryFeesDescription.UpdateAsync(entity);
         }
 }

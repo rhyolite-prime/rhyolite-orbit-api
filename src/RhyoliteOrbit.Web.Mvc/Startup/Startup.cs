@@ -91,10 +91,19 @@ public class Startup
         {
             var actorSystem = provider.GetService<ActorSystem>();
             var configuration = provider.GetService<IConfiguration>();
-            var emailActor = actorSystem.ActorOf(Props.Create(() => new EmailActor(provider, configuration)).WithRouter(new RoundRobinPool(3)));
+            var emailActor = actorSystem.ActorOf(Props.Create(() => new EmailActor(provider, configuration)).WithRouter(new RoundRobinPool(1)));
             return () => emailActor;
         });
-
+        
+        services.AddSingleton<TopLevelActors.StudentBillActorProvider>(provider =>
+        {
+            var actorSystem = provider.GetService<ActorSystem>();
+            var configuration = provider.GetService<IConfiguration>();
+            var studentBillActor = actorSystem.ActorOf(Props.Create(() => new StudentBillActor(provider)).WithRouter(new RoundRobinPool(2)));
+            return () => studentBillActor;
+        });
+        
+        
         // Configure Abp and Dependency Injection
         services.AddAbpWithoutCreatingServiceProvider<RhyoliteOrbitWebMvcModule>(
             // Configure Log4Net logging

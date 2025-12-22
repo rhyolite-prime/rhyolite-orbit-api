@@ -8,22 +8,22 @@ namespace RhyoliteOrbit.DomainServices.SchoolManager.Students;
 
 public interface IStudentManager: Abp.Domain.Services.IDomainService
 {
-    Task<IEnumerable<object>> ListAll();
+    Task<object> GetAll(int pageNo, int pageSize, string query, Guid classId);
     Task<object> GetAsync(Guid id);
-    Task<IEnumerable<object>> ListAllByClass(Guid InputQuery);
-    Task<IEnumerable<object>> ListStudsByClass(Guid InputQuery);
+    Task<object> ListAllByClass(Guid id);
+    Task<IEnumerable<object>> ListStudsByClass(Guid id);
     Task<object> Create(Student entity);
     Task<object> Update(Student entity);
     Task Promote(StudentPromotion studentPromotion);
     Task PromoteAlumni(AlumniStudentPromotion studentPromotion, DateTime completionDate);
     Task Delete(Guid id);
     Task<Guid> GetStudentId(string studentId);
-    Task<IEnumerable<object>> ListStudentsForPromotion(Guid classId);
+    Task<object> ListStudentsForPromotion(Guid classId);
 
     //Enquiry
-    Task<IEnumerable<object>> EnqStudsByClass(Guid classId);
-    Task<IEnumerable<object>> EnqStudsByNationality(Guid nationalityId);
-    Task<IEnumerable<object>> EnqStudsByReligion(Guid religionId);
+    Task<object> EnqStudsByClass(Guid classId);
+    Task<object> EnqStudsByNationality(Guid nationalityId);
+    Task<object> EnqStudsByReligion(string religion);
 
     //exports
     Task<IEnumerable<object>> AttitudeExcelExport(Guid classId);
@@ -33,6 +33,7 @@ public interface IStudentManager: Abp.Domain.Services.IDomainService
     Task<IEnumerable<object>> OpeningBalanceExcelExport(Guid classId);
         
     //external api
+    Task AssignPinsToAllStudents();
     Task<object> GetStudentInfo(string studentId, string pin, int tenantId);
     Task BiometricEnrollment(int tenantId, int biometricId, string studentId);
 }

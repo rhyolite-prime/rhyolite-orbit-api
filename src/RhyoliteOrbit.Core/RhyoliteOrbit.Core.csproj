@@ -19,6 +19,7 @@
     <PackageReference Include="Abp.ZeroCore.EntityFrameworkCore" Version="10.0.0" />
     <PackageReference Include="Castle.Windsor.MsDependencyInjection" Version="4.1.0" />
     <PackageReference Include="RabbitMQ.Client" Version="6.4.0" />
+    <PackageReference Include="CloudinaryDotNet" Version="1.22.0" />
     <PackageReference Include="StackExchange.Redis" Version="2.6.90" />
     <PackageReference Include="Hashids.net" Version="1.6.1" />
     <PackageReference Include="Npgsql" Version="8.0.3" />
@@ -29,18 +30,16 @@
   <ItemGroup>
     <Folder Include="DomainServices\AccountsPayable\" />
     <Folder Include="DomainServices\AccountsReceivable\" />
-    <Folder Include="DomainServices\GeneralLedger\" />
+    <Folder Include="DomainServices\GeneralLedger\Budgets\" />
+    <Folder Include="DomainServices\GeneralLedger\Journals\" />
     <Folder Include="DomainServices\Hr\" />
     <Folder Include="DomainServices\Inventory\" />
     <Folder Include="DomainServices\Payroll\Dashboard\" />
-    <Folder Include="DomainServices\ProductionPlanning\" />
     <Folder Include="DomainServices\SchoolManager\StudentBillReceipts\" />
     <Folder Include="DomainServices\SupplyChain\" />
     <Folder Include="Models\AccountsPayable\" />
     <Folder Include="Models\AccountsReceivable\" />
-    <Folder Include="Models\GeneralLedger\" />
     <Folder Include="Models\Inventory\" />
-    <Folder Include="Models\ProductionPlanning\" />
     <Folder Include="Models\SupplyChain\" />
     <Folder Include="Pdf\ApInvoice\" />
     <Folder Include="Pdf\ArInvoice\" />

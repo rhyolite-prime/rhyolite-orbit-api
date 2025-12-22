@@ -42,6 +42,8 @@ public class EmployeeReliefAppService: RhyoliteOrbitAppServiceBase
     public async Task Update(UpdateEmployeeReliefInput input)
     {
         var obj = _mapper.Map<EmployeeRelief>(input);
+        var tenantInfo = await GetCurrentTenantAsync();
+        obj.TenantId = tenantInfo.Id;
         await _employeeReliefManager.Update(obj);
     }
 

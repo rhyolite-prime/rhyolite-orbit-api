@@ -36,6 +36,8 @@ public class EmployeeRankAppService:RhyoliteOrbitAppServiceBase
     public async Task Update(UpdateEmployeeRankInput input)
     {
         var obj = _mapper.Map<EmployeeRank>(input);
+        var tenantInfo = await GetCurrentTenantAsync();
+        obj.TenantId = tenantInfo.Id;
         await _employeeRankManager.Update(obj);
     }
 
