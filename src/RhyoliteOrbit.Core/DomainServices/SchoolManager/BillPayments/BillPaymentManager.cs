@@ -27,7 +27,6 @@ public class BillPaymentManager: Abp.Domain.Services.DomainService, IBillPayment
         private readonly IRepository<Currency, Guid> _repositoryCurrency;
         private readonly IRepository<StudentStatement, Guid> _repositoryStudentStatement;
         private readonly IRepository<StudentBillReceipt, Guid> _repositoryStudentBillReceipt;
-        private readonly IRepository<StudentParent, Guid> _repositoryStudentParent;
         private readonly IRepository<SystemSetting, Guid> _repositorySystemSetting;
         private readonly IAcademicPeriodMetaDataManager _academicPeriodMetaDataManager;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
@@ -37,7 +36,7 @@ public class BillPaymentManager: Abp.Domain.Services.DomainService, IBillPayment
         private readonly int _paymentReceiptDatabaseId;
 
 
-        public BillPaymentManager(IRepository<BillPayment, Guid> repositoryBillPayment, IConfiguration configuration, IRepository<Student, Guid> repositoryStudent, IRepository<StudentBill, Guid> repositoryStudentBill, IRepository<Currency, Guid> repositoryCurrency, IRepository<StudentStatement, Guid> repositoryStudentStatement, IAcademicPeriodMetaDataManager academicPeriodMetaDataManager, IRepository<StudentBillReceipt, Guid> repositoryStudentBillReceipt, IRepository<StudentParent, Guid> repositoryStudentParent, IRepository<SystemSetting, Guid> repositorySystemSetting, IRepository<CancelledPayment, Guid> repositoryCancelledPayment, IRepository<SchoolProfile, Guid> repositorySchoolProfile, IRedisCacheManager redisCacheManager, IHashids hashids, IUnitOfWorkManager unitOfWorkManager)
+        public BillPaymentManager(IRepository<BillPayment, Guid> repositoryBillPayment, IConfiguration configuration, IRepository<Student, Guid> repositoryStudent, IRepository<StudentBill, Guid> repositoryStudentBill, IRepository<Currency, Guid> repositoryCurrency, IRepository<StudentStatement, Guid> repositoryStudentStatement, IAcademicPeriodMetaDataManager academicPeriodMetaDataManager, IRepository<StudentBillReceipt, Guid> repositoryStudentBillReceipt, IRepository<SystemSetting, Guid> repositorySystemSetting, IRepository<CancelledPayment, Guid> repositoryCancelledPayment, IRepository<SchoolProfile, Guid> repositorySchoolProfile, IRedisCacheManager redisCacheManager, IHashids hashids, IUnitOfWorkManager unitOfWorkManager)
         {
             _repositoryBillPayment = repositoryBillPayment;
             _repositoryStudent = repositoryStudent;
@@ -46,7 +45,6 @@ public class BillPaymentManager: Abp.Domain.Services.DomainService, IBillPayment
             _repositoryStudentStatement = repositoryStudentStatement;
             _academicPeriodMetaDataManager = academicPeriodMetaDataManager;
             _repositoryStudentBillReceipt = repositoryStudentBillReceipt;
-            _repositoryStudentParent = repositoryStudentParent;
             _repositorySystemSetting = repositorySystemSetting;
             _repositoryCancelledPayment = repositoryCancelledPayment;
             _repositorySchoolProfile = repositorySchoolProfile;
@@ -172,12 +170,11 @@ public class BillPaymentManager: Abp.Domain.Services.DomainService, IBillPayment
                 bill.BillStatus = 401;
                 await _repositoryStudentBill.UpdateAsync(bill);
 
-                var studParent =
-                    await _repositoryStudentParent.FirstOrDefaultAsync(x => x.StudentId == entity.StudentId);
-                if (studParent != null && systemSetting is { SendBillPaymentEmailNotification: true })
+                //send notification to parent.
+                if (systemSetting is { SendBillPaymentEmailNotification: true })
                 {
-                    var parent = await _repositoryStudent.FirstOrDefaultAsync(x => x.Id == studParent.ParentId);
-                    kv.Add("recipient", parent);
+                    //var parent = await _repositoryStudent.FirstOrDefaultAsync(x => x.Id == studParent.ParentId);
+                    //kv.Add("recipient", parent);
                     
                     // produce to RabbitMQ consumer ... 
                     
@@ -349,13 +346,12 @@ public class BillPaymentManager: Abp.Domain.Services.DomainService, IBillPayment
 
             }
 
-            var studParent =
-                await _repositoryStudentParent.FirstOrDefaultAsync(x => x.StudentId == entity.StudentId);
-
-            if (studParent != null && systemSetting.SendBillPaymentEmailNotification)
+            
+            // send notification to parent
+            if (systemSetting.SendBillPaymentEmailNotification)
             {
-                var parent = await _repositoryStudent.FirstOrDefaultAsync(x => x.Id == studParent.ParentId);
-                kv.Add("recipient", parent);
+                //var parent = await _repositoryStudent.FirstOrDefaultAsync(x => x.Id == studParent.ParentId);
+                //kv.Add("recipient", parent);
 
                 // produce to RabbitMQ consumer via an actor
             }

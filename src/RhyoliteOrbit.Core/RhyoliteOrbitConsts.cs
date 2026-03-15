@@ -149,7 +149,31 @@ public class RhyoliteOrbitConsts
        SupplyChain = 10,
        Manufacturing = 11,
        PropertyOrAssetRental = 12,
-       
+    }
+    
+    public enum PaymentStatus
+    {
+        Pending = 0,
+        Processing = 1,
+        Completed = 2,
+        Failed = 3,
+        Cancelled = 4,
+        Refunded = 5,
+        PartiallyRefunded = 6,
+        OnHold = 7,
+        Overdue = 8
+    }
+    
+    public enum SubscriptionRenewalStatus
+    {
+        Pending = 0,     // renewal scheduled/queued but not attempted yet
+        Processing = 1,  // currently attempting payment/renewal
+        Renewed = 2,     // renewal succeeded
+        Failed = 3,      // renewal attempt failed
+        Cancelled = 4,   // cancelled by user/system before completion
+        Skipped = 5,     // intentionally not renewed (e.g., opted out, not due)
+        Expired = 6,     // subscription expired without successful renewal
+        Refunded = 7     // renewal was reversed after success
     }
     
     public enum BillOfMaterialType

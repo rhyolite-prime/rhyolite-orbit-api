@@ -29,11 +29,11 @@ public class MfaManager: DomainService, IMfaManager
         _unitOfWorkManager = unitOfWorkManager;
         _redisCacheManager = redisCacheManager;
         _emailActorProvider = emailActorProvider();
-        _mailHostName = configuration["SmtpCredentials:MailHost"];
-        _portNumber = int.Parse(configuration["SmtpCredentials:PortNumber"]);
-        _password = configuration["SmtpCredentials:Password"];
-        _emailAddress = configuration["SmtpCredentials:EmailAddress"];
-        _defaultDisplayName = configuration["SmtpCredentials:DefaultDisplayName"];
+        _mailHostName = configuration["AuthSmtpCredentials:MailHost"];
+        _portNumber = int.Parse(configuration["AuthSmtpCredentials:PortNumber"]);
+        _password = configuration["AuthSmtpCredentials:Password"];
+        _emailAddress = configuration["AuthSmtpCredentials:EmailAddress"];
+        _defaultDisplayName = configuration["AuthSmtpCredentials:DefaultDisplayName"];
     }
 
     public async Task<object> SendEmailOtp(string email, string subject, int tenantId)

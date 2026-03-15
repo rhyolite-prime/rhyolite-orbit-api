@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RhyoliteOrbit.Models.SchoolManager;
 
@@ -42,6 +44,8 @@ public class Student: Abp.Domain.Entities.Auditing.FullAuditedEntity<Guid>, Abp.
     public string BiometricIdentifier { get; set; }
     [MaxLength(15)]
     public string Pin { get; set; }
+    
+    [Column(TypeName = "jsonb")]public List<Guardian> GuardianList { get; set; }
     public bool IsAlumni { get; set; }
     public DateTime CompletionDate { get; set; }
     public int TenantId { get; set; }

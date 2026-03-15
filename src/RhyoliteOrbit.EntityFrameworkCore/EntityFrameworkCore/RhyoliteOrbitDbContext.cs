@@ -65,7 +65,6 @@ public class RhyoliteOrbitDbContext : AbpZeroDbContext<Tenant, Role, User, Rhyol
     public DbSet<FeesDescription> FeesDescriptions { get; set; }
     public DbSet<GradingScheme> GradingSchemes { get; set; }
     public DbSet<Level> Levels { get; set; }
-    public DbSet<Parent> Parents { get; set; }
     public DbSet<PaymentType> PaymentTypes { get; set; }
     public DbSet<PastQuestion> PastQuestions { get; set; }
     public DbSet<PromotionHistory> PromotionHistory { get; set; }
@@ -76,7 +75,6 @@ public class RhyoliteOrbitDbContext : AbpZeroDbContext<Tenant, Role, User, Rhyol
     public DbSet<Sibling> Siblings { get; set; }
     public DbSet<Staff> Staffs { get; set; }
     public DbSet<Student> Students { get; set; }
-    public DbSet<StudentParent> StudentParents { get; set; }
     public DbSet<StudentStatement> StudentStatements { get; set; }
     public DbSet<Subject> Subjects { get; set; }
     public DbSet<SubjectRemark> SubjectRemarks { get; set; }
@@ -221,8 +219,10 @@ public class RhyoliteOrbitDbContext : AbpZeroDbContext<Tenant, Role, User, Rhyol
     public DbSet<QcChecklist> QcChecklists { get; set; }
     public DbSet<InProcessInspection> InProcessInspections { get; set; }
     public DbSet<FinalProductTest> FinalProductTests { get; set; }
-    public DbSet<NonConformance> NonConformance { get; set; }
-    //public DbSet<DemandForecast> DemandForecasts { get; set; }
+    public DbSet<NonConformance> NonConformance { get; set; }   
+    //licensing
+    public DbSet<SubscriptionPayment> SubscriptionPayments { get; set; }
+    public DbSet<SubscriptionRenewalHistory> SubscriptionRenewalHistory { get; set; }
     
     
    

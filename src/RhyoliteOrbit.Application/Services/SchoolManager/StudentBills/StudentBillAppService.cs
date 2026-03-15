@@ -38,6 +38,13 @@ public class StudentBillAppService: RhyoliteOrbitAppServiceBase
         return await _studentBillManager.GetPaidUpStudents(academicYearId, termId, classId);
     }
     
+    
+    [HttpGet]
+    public async Task<object> GetStudentBills(Guid studentId)
+    {
+        return await _studentBillManager.ListStudentBills(studentId);
+    }
+    
     [HttpGet]
     public async Task<object> GetBillHistory(int pageNo, int pageSize, string query, Guid classId)
     {

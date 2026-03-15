@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Linq.Dynamic.Core;
 using System.Text;
 using System.Threading.Tasks;
 using Abp.Domain.Repositories;
@@ -32,8 +31,6 @@ public class StudentBillManager: Abp.Domain.Services.DomainService, IStudentBill
         private readonly IRepository<StudentBillReportHistory, Guid> _repositoryStudentBillReportHistory;
         private readonly IRepository<Currency, Guid> _repositoryCurrency;
         private readonly IRepository<Student, Guid> _repositoryStudent;
-        private readonly IRepository<Parent, Guid> _repositoryParent;
-        private readonly IRepository<StudentParent, Guid> _repositoryStudentParent;
         private readonly IRepository<SystemSetting, Guid> _repositorySystemSetting;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
         private readonly IAcademicPeriodMetaDataManager _academicPeriodMetaDataManager;
@@ -43,7 +40,7 @@ public class StudentBillManager: Abp.Domain.Services.DomainService, IStudentBill
         private readonly IMapper _mapper;
         
 
-        public StudentBillManager(IRepository<StudentBill, Guid> repositoryStudentBill, TopLevelActors.StudentBillActorProvider studentBillActorProvider, IRepository<StudentStatement, Guid> repositoryStudentStatement, IRepository<Currency, Guid> repositoryCurrency, IRepository<SystemSetting, Guid> repositorySystemSetting, IRepository<BillSetup, Guid> repositoryBillSetup, IAcademicPeriodMetaDataManager academicPeriodMetaDataManager, IRepository<BillType, Guid> repositoryBillType, IRepository<CancelledBill, Guid> repositoryCancelledBill, IMapper mapper, IRepository<Student, Guid> repositoryStudent, IUnitOfWorkManager unitOfWorkManager, IRepository<Parent, Guid> repositoryParent, IRepository<StudentParent, Guid> repositoryStudentParent, ISystemSettingManager systemSettingManager, IHashids hashids, IRepository<StudentBillReportHistory, Guid> repositoryStudentBillReportHistory)
+        public StudentBillManager(IRepository<StudentBill, Guid> repositoryStudentBill, TopLevelActors.StudentBillActorProvider studentBillActorProvider, IRepository<StudentStatement, Guid> repositoryStudentStatement, IRepository<Currency, Guid> repositoryCurrency, IRepository<SystemSetting, Guid> repositorySystemSetting, IRepository<BillSetup, Guid> repositoryBillSetup, IAcademicPeriodMetaDataManager academicPeriodMetaDataManager, IRepository<BillType, Guid> repositoryBillType, IRepository<CancelledBill, Guid> repositoryCancelledBill, IMapper mapper, IRepository<Student, Guid> repositoryStudent, IUnitOfWorkManager unitOfWorkManager, ISystemSettingManager systemSettingManager, IHashids hashids, IRepository<StudentBillReportHistory, Guid> repositoryStudentBillReportHistory)
         {
             _repositoryStudentBill = repositoryStudentBill;
             _repositoryStudentStatement = repositoryStudentStatement;
@@ -55,8 +52,6 @@ public class StudentBillManager: Abp.Domain.Services.DomainService, IStudentBill
             _mapper = mapper;
             _repositoryStudent = repositoryStudent;
             _unitOfWorkManager = unitOfWorkManager;
-            _repositoryParent = repositoryParent;
-            _repositoryStudentParent = repositoryStudentParent;
             _systemSettingManager = systemSettingManager;
             _hashids = hashids;
             _repositoryStudentBillReportHistory = repositoryStudentBillReportHistory;
@@ -497,7 +492,24 @@ public class StudentBillManager: Abp.Domain.Services.DomainService, IStudentBill
 
         public async Task<object> ListStudentBills(Guid studentId)
         {
-            return await _repositoryStudentBill.GetAllListAsync(x => x.StudentId == studentId && Math.Round(x.BillBalance,2) > 0);
+            var billData = await _repositoryStudentBill.GetAllListAsync(x => x.StudentId == studentId && x.BillBalance > 0);
+            
+            
+            return billData.Select(a=> new
+            {
+                a.Id,
+                a.AcademicYearId,
+                AcademicYear = a.AcademicYearName,
+                Term =  a.TermName,
+                a.BillNo,
+                a.BillAmount,
+                a.BillBalance,
+                PaidAmount = a.BillAmount - a.BillBalance,
+                BillDate =  a.BillDate.ToString("dd-MMM-yyyy"),
+                
+            }).ToList();
+
+             
         }
 
         public async Task<object> GetBill(Guid id)
@@ -633,45 +645,50 @@ public class StudentBillManager: Abp.Domain.Services.DomainService, IStudentBill
          
         
        public async Task<object> GetParentWardsBillSummary(string phoneNo, int tenantId)
-        {
-            using (_unitOfWorkManager.Current.SetTenantId(tenantId))
-            {
-                var parentInfo = await _repositoryParent.FirstOrDefaultAsync(a =>
-                    a.FirstGuardianPhoneNo.Trim() == phoneNo.Trim() ||
-                    a.SecondGuardianPhoneNo.Trim() == phoneNo.Trim());
-        
-                if (parentInfo == null)
-                    return null;
-        
-                var studentsParents = await _repositoryStudentParent.GetAllListAsync(x => x.ParentId == parentInfo.Id);
-                var studentIds = studentsParents.Select(x => x.StudentId).ToList();
-        
-                var totalBillBalance = 0m;
-                var summaryBuilder = new StringBuilder();
-        
-                foreach (var studentId in studentIds)
-                {
-                    var bills = await _repositoryStudentBill.GetAllListAsync(x => x.StudentId == studentId && x.BillBalance > 0);
-                    var studentName = bills.FirstOrDefault()?.StudentName ?? "Unknown";
-                    var billBalance = bills.Sum(bill => bill.BillBalance);
-                    totalBillBalance += billBalance;
-        
-                    summaryBuilder.AppendLine(
-                        $"Student Name: {studentName}\nStudent ID: {studentId}\nBill Amount: {billBalance:C}\n"
-                    );
-                }
-        
-                var billSummary = summaryBuilder.Length > 0
-                    ? summaryBuilder.ToString()
-                    : "No outstanding bills for any wards.";
-        
-                return new
-                {
-                    BillSummary = billSummary,
-                    TotalBillBalance = totalBillBalance
-                };
-            }
-        }
+       {
+           await Task.Delay(1);
+           return new
+           {
+
+           };
+           /*using (_unitOfWorkManager.Current.SetTenantId(tenantId))
+           {
+               var parentInfo = await _repositoryParent.FirstOrDefaultAsync(a =>
+                   a.FirstGuardianPhoneNo.Trim() == phoneNo.Trim() ||
+                   a.SecondGuardianPhoneNo.Trim() == phoneNo.Trim());
+
+               if (parentInfo == null)
+                   return null;
+
+               var studentsParents = await _repositoryStudentParent.GetAllListAsync(x => x.ParentId == parentInfo.Id);
+               var studentIds = studentsParents.Select(x => x.StudentId).ToList();
+
+               var totalBillBalance = 0m;
+               var summaryBuilder = new StringBuilder();
+
+               foreach (var studentId in studentIds)
+               {
+                   var bills = await _repositoryStudentBill.GetAllListAsync(x => x.StudentId == studentId && x.BillBalance > 0);
+                   var studentName = bills.FirstOrDefault()?.StudentName ?? "Unknown";
+                   var billBalance = bills.Sum(bill => bill.BillBalance);
+                   totalBillBalance += billBalance;
+
+                   summaryBuilder.AppendLine(
+                       $"Student Name: {studentName}\nStudent ID: {studentId}\nBill Amount: {billBalance:C}\n"
+                   );
+               }
+
+               var billSummary = summaryBuilder.Length > 0
+                   ? summaryBuilder.ToString()
+                   : "No outstanding bills for any wards.";
+
+               return new
+               {
+                   BillSummary = billSummary,
+                   TotalBillBalance = totalBillBalance
+               };
+           }*/
+       }
        
         // bill summary by bill type
         

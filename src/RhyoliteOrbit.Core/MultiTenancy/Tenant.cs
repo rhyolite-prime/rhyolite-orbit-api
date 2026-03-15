@@ -11,6 +11,8 @@ public class Tenant : AbpTenant<User>
     public string BusinessId { get; set; }
     [MaxLength(150)]
     public string BusinessLogo { get; set; }
+    [MaxLength(20)]
+    public string Country { get; set; }
     //subscription configuration
     //gl
     public bool HasSubscribedToGl { get; set; }
@@ -72,6 +74,14 @@ public class Tenant : AbpTenant<User>
     public string PropertyRentalsBillingCycle { get; set; }
     public DateTime? PropertyRentalsNextRenewalDate { get; set; }
     
+    public bool IsDirectDebitEnabled { get; set; }
+   
+    [MaxLength(20)]
+    public string PhoneNumber { get; set; }
+    [MaxLength(30)]
+    public string PaymentMethod { get; set; } // mobile-money,bank-card
+    [MaxLength(30)]
+    public string MobileMoneyChannel { get; set; } //mtn-gh-direct-debit, vodafone-gh-direct-debit
     
     
     public Tenant()

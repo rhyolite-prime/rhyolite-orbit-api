@@ -23,6 +23,7 @@ using HashidsNet;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using RhyoliteOrbit.Actors;
+using RhyoliteOrbit.Models.Shared;
 using StackExchange.Redis;
 
 namespace RhyoliteOrbit.Web.Startup;
@@ -83,6 +84,16 @@ public class Startup
         });
 
         services.AddSignalR();
+        
+        services.Configure<SubscriptionPricingOptions>(options =>
+        {
+            // Bind Modules array
+            _configuration.GetSection("Modules").Bind(options.Modules);
+
+            // Bind exchange rate
+            options.UsdExchangeRate = _configuration.GetValue<decimal>("UsdExchangeRate");
+        });
+
         
         // Register ActorSystem ...
         services.AddSingleton(_ => ActorSystem.Create($"ActorSystem", ConfigurationLoader.Load()));
