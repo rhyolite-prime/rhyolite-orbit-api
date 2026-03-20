@@ -30,6 +30,8 @@ public class SubscriptionAppService : RhyoliteOrbitAppServiceBase
         {
             tenantInfo.BusinessId,
             tenantInfo.Name,
+            tenantInfo.Network,
+            tenantInfo.PhoneNumber,
             tenantInfo.BusinessLogo,
             tenantInfo.Country,
             tenantInfo.HasSubscribedToAp, 
@@ -38,12 +40,20 @@ public class SubscriptionAppService : RhyoliteOrbitAppServiceBase
             tenantInfo.HasSubscribedToPayroll,
             tenantInfo.HasSubscribedToPropertyRentals,
             tenantInfo.HasSubscribedToSchoolManager,
+            tenantInfo.HasSubscribedToDocumentManagement,
+            tenantInfo.HasSubscribedToFixedAssets,
+            tenantInfo.HasSubscribedToHumanResource,
+            tenantInfo.HasSubscribedToManufacturing,
+            tenantInfo.HasSubscribedToSupplyChain,
+            tenantInfo.HasSubscribedToPointOfSale,
+            tenantInfo.HasSubscribedToCoreBanking,
+            tenantInfo.HasSubscribedToInventory
             
         };
     }
     
     [HttpPost]
-    public async Task<object> InitializeSubscriptionPayment(SubscriptionPaymentDto dto)
+    public async Task<SubscriptionInitializationResponse> InitializeSubscriptionPayment(SubscriptionPaymentDto dto)
     {
         var tenantInfo = await GetCurrentTenantAsync();
         dto.TenantId = tenantInfo.Id;
@@ -54,6 +64,13 @@ public class SubscriptionAppService : RhyoliteOrbitAppServiceBase
         }
         
         return await _subscriptionManager.InitializeSubscriptionPayment(dto);
+    }
+    
+    [HttpPost]
+    public async Task<VerifyPreapprovalResponse> VerifyPreapproval(VerifyPreapprovalDto dto)
+    {
+        var tenantInfo = await GetCurrentTenantAsync();
+        return await _subscriptionManager.VerifyPreapproval(dto, tenantInfo.Id);
     }
     
     
@@ -89,7 +106,30 @@ public class SubscriptionAppService : RhyoliteOrbitAppServiceBase
     }
     
     
+    [HttpGet]
+    public async Task<object> CompleteSubscriptionPaymentViaDirectCharge(string reference)
+    {
+        var tenantInfo = await GetCurrentTenantAsync();
+        
+        return await _subscriptionManager.CompleteSubscriptionPaymentViaDirectCharge(reference, tenantInfo.Id);
+    }
     
+    [HttpPost]
+    public async Task<object> RunScheduledRenewal(string uniqueId)
+    {
+         //extract subscription renewal id and tenantid-> format: UniqueId = $"{subscriptionRenewalHistory?.Id:N}_{tenantId}"
+         // proceed to do a direct charge if preapproval is set
+         // if not send a reminder with a payment link
+         await Task.Delay(1);
+         
+         return new
+         {
+            success = true,
+            message = "Renewal scheduled"
+         };
+         
+         //return await _subscriptionManager.RenewSubscription(dto, tenantInfo.Id);
+    }
         
      
 }

@@ -29,6 +29,8 @@ public class SubscriptionRenewalHistory:Abp.Domain.Entities.Auditing.FullAudited
 
     [MaxLength(50)]
     public string Channel { get; set; }
+    [MaxLength(20)]
+    public string Network { get; set; }
     
     [MaxLength(30)]
     public string PaymentMethod { get; set; }
@@ -41,7 +43,7 @@ public class SubscriptionRenewalHistory:Abp.Domain.Entities.Auditing.FullAudited
     public DateTime RenewalStartDate { get; set; }
     
     public DateTime RenewalEndDate { get; set; }
-
+    
     // Optional operational fields
     [MaxLength(300)]
     public string Notes { get; set; }

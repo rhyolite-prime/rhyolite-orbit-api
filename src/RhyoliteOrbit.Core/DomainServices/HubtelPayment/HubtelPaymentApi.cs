@@ -102,7 +102,74 @@ public class HubtelPaymentApi: DomainService, IHubtelPaymentApi
 
     }
     
-    public async Task<DirectDebitResponse> InitializeDirectDebit(DirectDebitMobileMoneyDto dto, int tenantId)
+    public async Task<TransactionStatusCheckResponse> CheckoutStatusCheck(BaseHubtelPaymentRequestDto dto)
+    {
+        try
+        {
+            string posSalesAccountId = _configuration["HubtelPaymentApi:PosSalesAccountId"];
+            string username = _configuration["HubtelPaymentApi:ApiIdOrUsername"];
+            string password = _configuration["HubtelPaymentApi:ApiKeyOrPassword"];
+            
+            var client = new RestClient($"https://api-txnstatus.hubtel.com/transactions/{posSalesAccountId}/status");
+            var request = new RestRequest();
+    
+            // Add headers
+            request.AddHeader("Content-Type", "application/json");
+            
+            // Add Basic Authentication
+            var authBytes = System.Text.Encoding.UTF8.GetBytes($"{username}:{password}");
+            var authHeader = Convert.ToBase64String(authBytes);
+            request.AddHeader("Authorization", $"Basic {authHeader}");
+            
+            request.AddParameter("clientReference", dto.ClientReference);
+    
+            // Set timeout
+            var cancellationTokenSource = new CancellationTokenSource();
+            cancellationTokenSource.CancelAfter(30000);
+    
+            // Execute request
+            var response = await client.GetAsync(request, cancellationTokenSource.Token);
+    
+            Logger.Info($"CheckoutStatusCheck response => {JsonConvert.SerializeObject(response.Content)}, reference: {dto.ClientReference}");
+
+            if (response.IsSuccessful && response.Content != null)
+            {
+                var result = JsonConvert.DeserializeObject<HubtelPaymentApiResponse>(response.Content);
+                
+                Logger.Info($"CheckoutStatusCheck response => {JsonConvert.SerializeObject(result)}, reference: {dto.ClientReference}");
+                
+                return new TransactionStatusCheckResponse
+                {
+                    Status = result.ResponseCode == "0000"? "Success" : "Failure",
+                    ClientReference = dto.ClientReference,
+                    Code =  result.ResponseCode == "0000"? (int)RhyoliteOrbitConsts.PaymentStatus.Completed : (int)RhyoliteOrbitConsts.PaymentStatus.Failed,
+                    Message = result.ResponseCode == "0000"? "Transaction processed successfully." : "Transaction failed.",
+                };
+            }
+    
+            return new TransactionStatusCheckResponse
+            {
+                ClientReference = dto.ClientReference,
+                Status = "Failure",
+                Code = 1,
+                Message = "Failed to initiate transaction status check. Please try again."
+            };
+        }
+        catch (Exception ex)
+        {
+            Logger.Error("Error! Failed to initiate Hubtel transaction_status_check.", ex);
+
+            return new TransactionStatusCheckResponse
+            {
+                ClientReference = dto.ClientReference,
+                Status = "Failure",
+                Code = 1,
+                Message = "Failed to initiate transaction status check. Please try again."
+            };
+        }
+        
+    }
+    public async Task<DirectDebitResponse> InitializePreapproval(MobileMoneyPreapprovalDto dto, int tenantId)
     {
         try
         {
@@ -129,7 +196,7 @@ public class HubtelPaymentApi: DomainService, IHubtelPaymentApi
                 dto.CustomerMsisdn,
                 dto.CallbackUrl,
                 dto.Channel,
-                clientReferenceId = reference
+                clientReferenceId = reference,
             };
             
             request.AddJsonBody(payload);
@@ -161,7 +228,6 @@ public class HubtelPaymentApi: DomainService, IHubtelPaymentApi
             return null;
         }
     }
-
     
     public async Task<PreapprovalStatusCheckResponse> PreapprovalStatusCheck(string clientReference, int tenantId)
     {
@@ -262,7 +328,66 @@ public class HubtelPaymentApi: DomainService, IHubtelPaymentApi
         }
         
     }
+
+    public async Task<VerifyPreapprovalResponse> VerifyPreapproval(VerifyPreapprovalDto dto, int tenantId)
+    {
+        try
+        {
+            var reference = $"rhy_{DateTime.Now:yyyyMMddHHmmss}_{tenantId}";
+            
+            string merchantAccountNumber = _configuration["HubtelPaymentApi:MerchantAccountNumber"];
+            
+            var client = new RestClient($"https://preapproval.hubtel.com/api/v2/merchant/{merchantAccountNumber}/preapproval/verifyotp");
+            var request = new RestRequest();
     
+            // Add headers
+            request.AddHeader("Content-Type", "application/json");
+            string username = _configuration["HubtelPaymentApi:ApiIdOrUsername"];
+            string password = _configuration["HubtelPaymentApi:ApiKeyOrPassword"];
+            
+            
+            // Add Basic Authentication
+            var authBytes = System.Text.Encoding.UTF8.GetBytes($"{username}:{password}");
+            var authHeader = Convert.ToBase64String(authBytes);
+            request.AddHeader("Authorization", $"Basic {authHeader}");
+            
+            var payload = new
+            { 
+                dto.CustomerMsisdn,
+                dto.HubtelPreApprovalId,
+                clientReferenceId = reference,
+                
+            };
+            
+            request.AddJsonBody(payload);
+    
+            // Set timeout
+            var cancellationTokenSource = new CancellationTokenSource();
+            cancellationTokenSource.CancelAfter(30000);
+    
+            // Execute request
+            var response = await client.ExecutePostAsync<object>(request, cancellationTokenSource.Token);
+
+            Logger.Info($"VerifyPreapproval response => {JsonConvert.SerializeObject(response.Content)}, reference: {reference}");
+            
+            if (response.IsSuccessful && response.Content != null)
+            {
+                var result = JsonConvert.DeserializeObject<VerifyPreapprovalResponse>(response.Content);
+                
+                Logger.Info($"VerifyPreapproval response => {JsonConvert.SerializeObject(result.Data)}, reference: {reference}");
+
+                return result;
+            }
+
+            return null;
+        }
+        catch (Exception ex)
+        {
+            Logger.Error("Error! Failed to initiate Hubtel direct_debit.", ex);
+
+            return null;
+        }
+    }
     public async Task<DirectDebitResponse> ReactivatePreapproval(string customerMsisdn, int tenantId)
     {
         try
@@ -312,6 +437,73 @@ public class HubtelPaymentApi: DomainService, IHubtelPaymentApi
         
     }
 
+    public async Task<TransactionStatusCheckResponse> TransactionStatusCheck(string hubtelTransactionId, int tenantId)
+    {
+        try
+        {
+            string posSalesAccountId = _configuration["HubtelPaymentApi:PosSalesAccountId"];
+            string username = _configuration["HubtelPaymentApi:ApiIdOrUsername"];
+            string password = _configuration["HubtelPaymentApi:ApiKeyOrPassword"];
+            
+            var client = new RestClient($"https://api-txnstatus.hubtel.com/transactions/{posSalesAccountId}/status");
+            var request = new RestRequest();
+    
+            // Add headers
+            request.AddHeader("Content-Type", "application/json");
+            
+            // Add Basic Authentication
+            var authBytes = System.Text.Encoding.UTF8.GetBytes($"{username}:{password}");
+            var authHeader = Convert.ToBase64String(authBytes);
+            request.AddHeader("Authorization", $"Basic {authHeader}");
+            
+            request.AddParameter("hubtelTransactionId", hubtelTransactionId);
+    
+            // Set timeout
+            var cancellationTokenSource = new CancellationTokenSource();
+            cancellationTokenSource.CancelAfter(30000);
+    
+            // Execute request
+            var response = await client.GetAsync(request, cancellationTokenSource.Token);
+    
+            Logger.Info($"TransactionStatusCheck response => {JsonConvert.SerializeObject(response.Content)}, hubtelTransactionId: {hubtelTransactionId}");
+
+            if (response.IsSuccessful && response.Content != null)
+            {
+                var result = JsonConvert.DeserializeObject<HubtelPaymentApiResponse>(response.Content);
+                
+                Logger.Info($"TransactionStatusCheck response => {JsonConvert.SerializeObject(result)}, hubtelTransactionId: {hubtelTransactionId}");
+                
+                return new TransactionStatusCheckResponse
+                {
+                    Status = result.ResponseCode == "0000"? "Success" : "Failure",
+                    ClientReference = hubtelTransactionId,
+                    Code =  result.ResponseCode == "0000" ? (int)RhyoliteOrbitConsts.PaymentStatus.Completed : (int)RhyoliteOrbitConsts.PaymentStatus.Failed,
+                    Message = result.ResponseCode == "0000"? "Transaction processed successfully." : "Transaction failed.",
+                };
+            }
+    
+            return new TransactionStatusCheckResponse
+            {
+                ClientReference = hubtelTransactionId,
+                Status = "Failure",
+                Code = 1,
+                Message = "Failed to initiate transaction status check. Please try again."
+            };
+        }
+        catch (Exception ex)
+        {
+            Logger.Error("Error! Failed to initiate Hubtel transaction_status_check.", ex);
+
+            return new TransactionStatusCheckResponse
+            {
+                ClientReference = hubtelTransactionId,
+                Status = "Failure",
+                Code = 1,
+                Message = "Failed to initiate transaction status check. Please try again."
+            };
+        }
+        
+    }
     public async Task<DirectDebitChargeResponse> DirectDebitCharge(DirectDebitChargeDto dto, int tenantId)
     {
         try
@@ -342,7 +534,8 @@ public class HubtelPaymentApi: DomainService, IHubtelPaymentApi
                 clientReferenceId = reference,
                 dto.CustomerEmail,
                 dto.CustomerName,
-                dto.Amount, dto.Description
+                dto.Amount, 
+                dto.Description
                 
             };
             
@@ -378,71 +571,5 @@ public class HubtelPaymentApi: DomainService, IHubtelPaymentApi
         
     }
     
-    public async Task<TransactionStatusCheckResponse> CheckoutStatusCheck(BaseHubtelPaymentRequestDto dto)
-    {
-        try
-        {
-            string posSalesAccountId = _configuration["HubtelPaymentApi:PosSalesAccountId"];
-            string username = _configuration["HubtelPaymentApi:ApiIdOrUsername"];
-            string password = _configuration["HubtelPaymentApi:ApiKeyOrPassword"];
-            
-            var client = new RestClient($"https://api-txnstatus.hubtel.com/transactions/{posSalesAccountId}/status");
-            var request = new RestRequest();
-    
-            // Add headers
-            request.AddHeader("Content-Type", "application/json");
-            
-            // Add Basic Authentication
-            var authBytes = System.Text.Encoding.UTF8.GetBytes($"{username}:{password}");
-            var authHeader = Convert.ToBase64String(authBytes);
-            request.AddHeader("Authorization", $"Basic {authHeader}");
-            
-            request.AddParameter("clientReference", dto.ClientReference);
-    
-            // Set timeout
-            var cancellationTokenSource = new CancellationTokenSource();
-            cancellationTokenSource.CancelAfter(30000);
-    
-            // Execute request
-            var response = await client.GetAsync(request, cancellationTokenSource.Token);
-    
-            Logger.Info($"CheckoutStatusCheck response => {response.Content}, reference: {dto.ClientReference}");
-
-            if (response.IsSuccessful && response.Content != null)
-            {
-                var result = JsonConvert.DeserializeObject<HubtelPaymentApiResponse>(response.Content);
-                
-                Logger.Info($"CheckoutStatusCheck response => {JsonConvert.SerializeObject(result)}, reference: {dto.ClientReference}");
-                
-                return new TransactionStatusCheckResponse
-                {
-                    Status = result.ResponseCode == "0000"? "Success" : "Failure",
-                    ClientReference = dto.ClientReference,
-                    Code =  result.ResponseCode == "0000"? (int)RhyoliteOrbitConsts.PaymentStatus.Completed : (int)RhyoliteOrbitConsts.PaymentStatus.Failed,
-                    Message = result.ResponseCode == "0000"? "Transaction processed successfully." : "Transaction failed.",
-                };
-            }
-    
-            return new TransactionStatusCheckResponse
-            {
-                ClientReference = dto.ClientReference,
-                Status = "Failure",
-                Code = 1,
-                Message = "Failed to initiate transaction status check. Please try again."
-            };
-        }
-        catch (Exception ex)
-        {
-            Logger.Error("Error! Failed to initiate Hubtel transaction_status_check.", ex);
-
-            return new TransactionStatusCheckResponse
-            {
-                ClientReference = dto.ClientReference,
-                Status = "Failure",
-                Code = 1,
-                Message = "Failed to initiate transaction status check. Please try again."
-            };
-        }
-        
-    }
+   
 }

@@ -26,6 +26,9 @@ public class SubscriptionPayment: Abp.Domain.Entities.Auditing.FullAuditedEntity
     public string Description { get; set; }
     
     public decimal Amount { get; set; }
+    
+    [MaxLength(20)]
+    public string Network { get; set; }
     public int Status { get; set; }
      
     public int TenantId { get; set; }

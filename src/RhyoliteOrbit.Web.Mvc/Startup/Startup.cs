@@ -89,9 +89,11 @@ public class Startup
         {
             // Bind Modules array
             _configuration.GetSection("Modules").Bind(options.Modules);
-
             // Bind exchange rate
             options.UsdExchangeRate = _configuration.GetValue<decimal>("UsdExchangeRate");
+            
+            _configuration.GetSection("BillingCycleMultipliers").Bind(options.BillingCycleMultipliers);
+
         });
 
         

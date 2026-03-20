@@ -52,13 +52,22 @@ public class TransactionStatusCheckRequest: BaseHubtelPaymentRequestDto
     public string PrepaidAccountId { get; set; }
 }
 
-public class DirectDebitMobileMoneyDto 
+ 
+public class MobileMoneyPreapprovalDto 
 {
     public string ClientReferenceId { get; set; }
     public string CustomerMsisdn { get; set; }
     public string Channel { get; set; }
     public string CallbackUrl { get; set; }
     
+}
+
+public class VerifyPreapprovalDto
+{
+    public string CustomerMsisdn { get; set; }
+    public string HubtelPreApprovalId { get; set; }
+    
+    public string OtpCode { get; set; }
 }
 
 public class DirectDebitChargeDto
@@ -290,4 +299,16 @@ public class PreapprovalStatusCheckResponseData
     public string HubtelPreapprovalId { get; set; }
     public string ClientReferenceId { get; set; }
     public string CreatedAt { get; set; }
+}
+
+public class VerifyPreapprovalResponse : BaseTransactionStatusCheckResponse
+{
+    public VerifyPreapprovalResponseData Data { get; set; }
+}
+
+public class VerifyPreapprovalResponseData
+{
+    public string HubtelPreapprovalId { get; set; }
+    public string PreapprovalStatus { get; set; }
+    
 }

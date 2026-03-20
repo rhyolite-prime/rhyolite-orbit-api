@@ -13,6 +13,8 @@ public class SubscriptionPaymentDto
     
     //direct debit related field
     public string PhoneNumber { get; set; }
+    public string Network { get; set; }
+    
     public string Channel { get; set; }
     public int TenantId { get; set; }
 }
