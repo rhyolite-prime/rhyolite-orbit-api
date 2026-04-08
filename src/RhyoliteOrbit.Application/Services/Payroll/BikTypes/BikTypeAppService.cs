@@ -39,10 +39,10 @@ public class BikTypeAppService: RhyoliteOrbitAppServiceBase
     }
     
     [HttpPost]
-    public async Task<object> Create(CreateBikTypeInput input)
+    public async Task Create(CreateBikTypeInput input)
     {
         var obj = _mapper.Map<BikType>(input);
-        return await _bikTypeManager.Create(obj);
+        await _bikTypeManager.Create(obj);
     }
 
     [HttpPost]

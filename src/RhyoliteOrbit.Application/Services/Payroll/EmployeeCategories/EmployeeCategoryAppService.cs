@@ -27,10 +27,10 @@ public class EmployeeCategoryAppService: RhyoliteOrbitAppServiceBase
     }
 
     [HttpPost]
-    public async Task<object> Create(CreateEmployeeCategoryInput input)
+    public async Task Create(CreateEmployeeCategoryInput input)
     {
         var obj = _mapper.Map<EmployeeCategory>(input);
-        return await _employeeCategoryManager.Create(obj);
+        await _employeeCategoryManager.Create(obj);
     }
 
     [HttpPost]

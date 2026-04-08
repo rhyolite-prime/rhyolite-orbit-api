@@ -26,7 +26,7 @@ public class BikTypeManager: DomainService, IBikTypeManager
             _repositoryEmployeeSalaryData = repositoryEmployeeSalaryData;
         }
 
-        public async Task<object> Create(BikType entity)
+        public async Task Create(BikType entity)
         {
             var datta = await _repositoryBikType.FirstOrDefaultAsync(x => x.Name.Trim().ToLower() == entity.Name.Trim().ToLower());
 
@@ -34,11 +34,7 @@ public class BikTypeManager: DomainService, IBikTypeManager
             {
                 await _repositoryBikType.InsertAsync(entity);
 
-                return new
-                {
-                    code = 200,
-                    message = "successful"
-                };
+                return;
             }
             
             throw new UserFriendlyException(

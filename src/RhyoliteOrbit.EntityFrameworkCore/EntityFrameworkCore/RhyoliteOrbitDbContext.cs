@@ -4,6 +4,7 @@ using RhyoliteOrbit.Authorization.Roles;
 using RhyoliteOrbit.Authorization.Users;
 using RhyoliteOrbit.MultiTenancy;
 using Microsoft.EntityFrameworkCore;
+using RhyoliteOrbit.Models.Dms;
 using RhyoliteOrbit.Models.GeneralLedger;
 using RhyoliteOrbit.Models.Payroll;
 using RhyoliteOrbit.Models.ProductionPlanning;
@@ -156,7 +157,7 @@ public class RhyoliteOrbitDbContext : AbpZeroDbContext<Tenant, Role, User, Rhyol
     public DbSet<OvertimeType> OvertimeTypes { get; set; }
     public DbSet<EmployeeDaysWorked> EmployeeDaysWorked { get; set; }
     public DbSet<BonusAndOnetimeAllowance> BonusAndOnetimeAllowances { get; set; }
-    public DbSet<EmployeeBioData> EmployeeBioDatas { get; set; }
+    public DbSet<EmployeeBioData> EmployeeBioDatasx { get; set; }
     public DbSet<EmployeeSalaryData> EmployeeSalaryData { get; set; }
     public DbSet<EmployeeSnit> EmployeeSnits { get; set; }
     public DbSet<EmployeeSalaryAdvance> EmployeeSalaryAdvances { get; set; }
@@ -223,6 +224,21 @@ public class RhyoliteOrbitDbContext : AbpZeroDbContext<Tenant, Role, User, Rhyol
     //licensing
     public DbSet<SubscriptionPayment> SubscriptionPayments { get; set; }
     public DbSet<SubscriptionRenewalHistory> SubscriptionRenewalHistory { get; set; }
+    
+    // document management system
+    public DbSet<DmsFolder> Folders { get; set; }
+    public DbSet<DmsDocument> Documents { get; set; }
+    public DbSet<DmsTag> DmsTags { get; set; }
+    public DbSet<DmsDocumentTemplate> DmsDocumentTemplates { get; set; }
+    public DbSet<DmsCustomAttributes> DmsCustomAttributes { get; set; }
+    public DbSet<DmsDocumentMetadataValues> DmsDocumentMetadataValues { get; set; }
+    public DbSet<DmsCustomIdentifier> DmsCustomIdentifiers { get; set; }
+    public DbSet<DmsDocumentTag> DmsDocumentTags { get; set; }
+    public DbSet<DmsWorkflowTemplate> DmsWorkflowTemplates { get; set; }
+    public DbSet<DmsWorkflowInstance> DmsWorkflowInstances { get; set; }
+    public DbSet<DmsWorkflowTask> DmsWorkflowTasks { get; set; }
+    public DbSet<DmsComment> DmsComments { get; set; }
+    //public DbSet<DmsAnnotation> DmsAnnotations { get; set; }
     
     
    

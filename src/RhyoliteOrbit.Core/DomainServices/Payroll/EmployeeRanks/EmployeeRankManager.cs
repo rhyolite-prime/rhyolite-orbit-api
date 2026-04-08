@@ -17,7 +17,7 @@ public class EmployeeRankManager: Abp.Domain.Services.DomainService, IEmployeeRa
         _repositoryEmployeeRank = repositoryEmployeeRank;
     }
 
-    public async Task<object> Create(EmployeeRank entity)
+    public async Task Create(EmployeeRank entity)
     {
         var datta = await _repositoryEmployeeRank.FirstOrDefaultAsync(x => x.Name.Trim().ToLower() == entity.Name.Trim().ToLower());
 
@@ -25,11 +25,7 @@ public class EmployeeRankManager: Abp.Domain.Services.DomainService, IEmployeeRa
         {
             await _repositoryEmployeeRank.InsertAsync(entity);
 
-            return new
-            {
-                code = 200,
-                message = "successful"
-            };
+            return;
         }
         
         throw new Abp.UI.UserFriendlyException(

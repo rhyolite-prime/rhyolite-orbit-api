@@ -32,10 +32,10 @@ public class EmployeeReliefAppService: RhyoliteOrbitAppServiceBase
     }
 
     [HttpPost]
-    public async Task<object> Create(CreateEmployeeReliefInput input)
+    public async Task Create(CreateEmployeeReliefInput input)
     {
         var obj = _mapper.Map<EmployeeRelief>(input);
-        return await _employeeReliefManager.Create(obj);
+        await _employeeReliefManager.Create(obj);
     }
 
     [HttpPost]

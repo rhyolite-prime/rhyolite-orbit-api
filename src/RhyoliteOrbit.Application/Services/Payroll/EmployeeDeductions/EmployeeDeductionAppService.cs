@@ -39,10 +39,10 @@ public class EmployeeDeductionAppService: RhyoliteOrbitAppServiceBase
         }
         
         [HttpPost]
-        public async Task<object> Create(CreateEmployeeDeductionInput input)
+        public async Task Create(CreateEmployeeDeductionInput input)
         {
             var obj = _mapper.Map<EmployeeDeduction>(input);
-            return await _employeeDeductionManager.Create(obj);
+            await _employeeDeductionManager.Create(obj);
         }
 
         [HttpPost]

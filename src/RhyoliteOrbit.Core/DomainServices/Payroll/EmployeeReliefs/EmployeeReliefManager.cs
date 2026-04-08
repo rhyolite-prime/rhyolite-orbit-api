@@ -18,7 +18,7 @@ public class EmployeeReliefManager: Abp.Domain.Services.DomainService, IEmployee
         _repositoryEmployeeRelief = repositoryEmployeeRelief;
     }
 
-    public async Task<object> Create(EmployeeRelief entity)
+    public async Task Create(EmployeeRelief entity)
     {
         var data = await _repositoryEmployeeRelief.FirstOrDefaultAsync(x=> x.EmployeeId == entity.EmployeeId && x.ReliefTypeId == entity.ReliefTypeId);
             
@@ -26,11 +26,7 @@ public class EmployeeReliefManager: Abp.Domain.Services.DomainService, IEmployee
         {
             await _repositoryEmployeeRelief.InsertAsync(entity);
 
-            return new
-            {
-                code = 200,
-                message = "successful"
-            };
+            return;
         }
         
         throw new UserFriendlyException(

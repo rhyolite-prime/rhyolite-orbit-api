@@ -10,7 +10,7 @@ public interface IBikTypeManager: Abp.Domain.Services.IDomainService
     Task<object> ListAll(int pageNo, int pageSize, string query);
     Task<object> GetAsync(Guid id);
     Task<object> ListAll(Guid bikTypeId, Guid employeeId, Guid categoryId);
-    Task<object> Create(BikType entity);
+    Task Create(BikType entity);
     Task CreateBikRate(BikRateDto dto);
     Task<BikType> GetAsync(string name);
     Task UpdateBikRate(BikRateDto dto);

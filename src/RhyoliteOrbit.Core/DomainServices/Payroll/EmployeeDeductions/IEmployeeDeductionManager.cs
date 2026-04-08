@@ -8,7 +8,7 @@ public interface IEmployeeDeductionManager
 {
     Task<object> ListAll(int pageNo, int pageSize, string query);
     Task<object> ListAll(Guid employeeId);
-    Task<object> Create(EmployeeDeduction input);
+    Task Create(EmployeeDeduction input);
     Task Update(EmployeeDeduction input);
     Task Delete(Guid id);
 }

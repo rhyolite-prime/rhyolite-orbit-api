@@ -45,10 +45,10 @@ public class DeductionTypeAppService: RhyoliteOrbitAppServiceBase
     }
 
     [HttpPost]
-    public async Task<object> Create(CreateDeductionTypeInput input)
+    public async Task Create(CreateDeductionTypeInput input)
     {
         var obj = _mapper.Map<DeductionType>(input);
-        return await _deductionTypeManager.Create(obj);
+        await _deductionTypeManager.Create(obj);
     }
 
     [HttpPost]

@@ -18,7 +18,7 @@ public class EmployeeCategoryManager: Abp.Domain.Services.DomainService, IEmploy
             _repositoryEmployeeCategory = repositoryEmployeeCategory;
         }
 
-        public async Task<object> Create(EmployeeCategory entity)
+        public async Task Create(EmployeeCategory entity)
         {
             var datta = await _repositoryEmployeeCategory.FirstOrDefaultAsync(x => x.Name.Trim().ToLower() == entity.Name.Trim().ToLower());
 
@@ -26,11 +26,7 @@ public class EmployeeCategoryManager: Abp.Domain.Services.DomainService, IEmploy
             {
                 await _repositoryEmployeeCategory.InsertAsync(entity);
 
-                return new
-                {
-                    code = 200,
-                    message = "successful"
-                };
+                return ;
             }
 
             throw new UserFriendlyException(

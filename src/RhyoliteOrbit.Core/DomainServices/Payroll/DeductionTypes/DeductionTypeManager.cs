@@ -24,7 +24,7 @@ public class DeductionTypeManager: Abp.Domain.Services.DomainService, IDeduction
             _repositoryEmployeeCategory = repositoryEmployeeCategory;
         }
 
-        public async Task<object> Create(DeductionType entity)
+        public async Task Create(DeductionType entity)
         {
             var datta = await _repositoryDeductionType.FirstOrDefaultAsync(x => x.Name.Trim().ToLower() == entity.Name.Trim().ToLower());
 
@@ -32,11 +32,7 @@ public class DeductionTypeManager: Abp.Domain.Services.DomainService, IDeduction
             {
                 await _repositoryDeductionType.InsertAsync(entity);
 
-                return new
-                {
-                    code = 200,
-                    message = "successful"
-                };
+                return;
             }
 
             throw new UserFriendlyException(
