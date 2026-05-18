@@ -26,10 +26,10 @@ public class EmployeeRankAppService:RhyoliteOrbitAppServiceBase
     }
 
     [HttpPost]
-    public async Task<object> Create(CreateEmployeeRankInput input)
+    public async Task Create(CreateEmployeeRankInput input)
     {
         var obj = _mapper.Map<EmployeeRank>(input);
-        return await _employeeRankManager.Create(obj);
+        await _employeeRankManager.Create(obj);
     }
 
     [HttpPost]

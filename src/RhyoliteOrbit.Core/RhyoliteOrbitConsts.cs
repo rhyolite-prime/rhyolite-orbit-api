@@ -164,6 +164,100 @@ public class RhyoliteOrbitConsts
         Overdue = 8
     }
     
+    public enum WorkflowStepType
+    {
+        Submission = 0,      // Initial document upload/creation
+        Approval = 1,        // Standard approval
+        Review = 2,          // Review without approval authority
+        Signature = 3,       // Digital signature required
+        Notification = 4,    // Informational only, no action required
+        Condition = 5,       // Automatic decision point
+        Parallel = 6,        // Multiple simultaneous approvals
+        Sequential = 7,      // Ordered approvals
+        Escalation = 8       // Timeout handling step
+    }
+
+    public enum CompletionRule
+    {
+        Any = 0,             // First to respond wins
+        All = 1,             // Everyone must approve
+        Majority = 2,        // >50% approval
+        Percentage = 3,      // Custom percentage (e.g., 75%)
+        SpecificUsers = 4    // Specific users must approve
+    }
+
+    public enum StepActionType
+    {
+        Approve = 0,
+        Reject = 1,
+        RequestChanges = 2,
+        Assign = 3,
+        Delegate = 4,
+        AddComment = 5,
+        UploadAttachment = 6
+    }
+    
+    public enum ConditionField
+    {
+        DocumentMetadata,
+        DocumentProperty,
+        UserProperty,
+        SystemVariable,
+        PreviousStepOutcome
+    }
+    
+    public enum ConditionOperator
+    {
+        Equals,
+        NotEquals,
+        GreaterThan,
+        LessThan,
+        Contains,
+        StartsWith,
+        EndsWith,
+        In,
+        NotIn
+    }
+    
+    public enum WorkflowTaskType
+    {
+        Approval = 0,
+
+        Review = 1,
+
+        Signature = 2,
+
+        Submission = 3,
+
+        Notification = 4,
+
+        Escalation = 5
+    }
+    
+    public enum WorkflowTaskStatus
+    {
+        Pending = 0,
+
+        Completed = 1,
+
+        Rejected = 2,
+
+        RequestChanges = 3,
+
+        Skipped = 4,
+
+        Expired = 5
+    }
+    public enum AssigneeType
+    {
+        SpecificUser = 0,      // Fixed user ID
+        Role = 1,              // All users in role
+        Department = 2,        // Department head or members
+        DocumentCreator = 3,   // User who created the document
+        ManagerOfCreator = 4,  // Direct manager
+        Dynamic = 5            // Determined by document metadata
+    }
+    
     public enum SubscriptionRenewalStatus
     {
         Pending = 0,     // renewal scheduled/queued but not attempted yet

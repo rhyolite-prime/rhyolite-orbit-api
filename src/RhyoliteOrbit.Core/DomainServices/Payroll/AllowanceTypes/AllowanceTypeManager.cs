@@ -22,7 +22,7 @@ public class AllowanceTypeManager: Abp.Domain.Services.DomainService, IAllowance
             _repositoryEmployeeSalaryData = repositoryEmployeeSalaryData;
         }
 
-        public async Task<object> Create(AllowanceType entity)
+        public async Task Create(AllowanceType entity)
         {
             var datta = await _repositoryAllowanceType.FirstOrDefaultAsync(x => x.Name.Trim().ToLower() == entity.Name.Trim().ToLower());
 
@@ -32,11 +32,7 @@ public class AllowanceTypeManager: Abp.Domain.Services.DomainService, IAllowance
                 
                 await _repositoryAllowanceType.InsertAsync(entity);
 
-                return new
-                {
-                    code = 200,
-                    message = "successful"
-                };
+                return;
             }
             
             throw new UserFriendlyException(

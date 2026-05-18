@@ -23,12 +23,12 @@ public class RhyoliteOrbitDbContext : AbpZeroDbContext<Tenant, Role, User, Rhyol
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
         MigrateDatabase();
     }
-    
+
     public void MigrateDatabase()
     {
         Database.Migrate();
     }
-    
+
     //shared resources
     public DbSet<Bank> Banks { get; set; }
     public DbSet<BusinessProfile> BusinessProfiles { get; set; }
@@ -37,7 +37,7 @@ public class RhyoliteOrbitDbContext : AbpZeroDbContext<Tenant, Role, User, Rhyol
     public DbSet<Customer> Customers { get; set; }
     public DbSet<Department> Departments { get; set; }
     public DbSet<SystemSetting> SystemSetting { get; set; }
-    public DbSet<ReportDownload> ReportDownloads { get; set; }  
+    public DbSet<ReportDownload> ReportDownloads { get; set; }
     public DbSet<Supplier> Suppliers { get; set; }
     public DbSet<PartnerCategory> PartnerCategories { get; set; }
     public DbSet<MessageTemplate> MessageTemplates { get; set; }
@@ -46,11 +46,11 @@ public class RhyoliteOrbitDbContext : AbpZeroDbContext<Tenant, Role, User, Rhyol
     public DbSet<BusinessDate> BusinessDates { get; set; }
     public DbSet<UnitOfMeasure> UnitOfMeasurements { get; set; }
     public DbSet<Tag> Tags { get; set; }
-    
-    
+
+
     //document management
     public DbSet<Document> Documents { get; set; }
-    
+
     //school manager...
     public DbSet<AcademicYear> AcademicYears { get; set; }
     public DbSet<AssignedClass> AssignedClasses { get; set; }
@@ -84,7 +84,7 @@ public class RhyoliteOrbitDbContext : AbpZeroDbContext<Tenant, Role, User, Rhyol
     public DbSet<SubjectRemark> SubjectRemarks { get; set; }
     public DbSet<TerminalReport> TerminalReports { get; set; }
     public DbSet<MiscellaneousPayment> MiscellaneousPayments { get; set; }
-    
+
     //Academic Management
     public DbSet<Department> AcademicDepartments { get; set; }
     public DbSet<Curriculum> Curricula { get; set; }
@@ -95,7 +95,7 @@ public class RhyoliteOrbitDbContext : AbpZeroDbContext<Tenant, Role, User, Rhyol
     public DbSet<SubjectCategory> SubjectCategories { get; set; }
     public DbSet<ExamSchedule> ExamSchedules { get; set; }
     public DbSet<AssessmentType> AssessmentTypes { get; set; }
-    
+
     //Student Management
     public DbSet<StudentClubMembership> StudentClubMemberships { get; set; }
     public DbSet<Club> Clubs { get; set; }
@@ -105,7 +105,7 @@ public class RhyoliteOrbitDbContext : AbpZeroDbContext<Tenant, Role, User, Rhyol
     public DbSet<SpecialNeed> SpecialNeeds { get; set; }
     public DbSet<Scholarship> Scholarships { get; set; }
     public DbSet<StudentAward> StudentAwards { get; set; }
-    
+
     // facilities and resources
     public DbSet<Dormitory> Dormitories { get; set; }
     public DbSet<DormitoryRoom> DormitoryRooms { get; set; }
@@ -115,18 +115,18 @@ public class RhyoliteOrbitDbContext : AbpZeroDbContext<Tenant, Role, User, Rhyol
     public DbSet<BookLending> BookLendings { get; set; }
     public DbSet<Laboratory> Laboratories { get; set; }
     public DbSet<LaboratoryEquipment> LaboratoryEquipments { get; set; }
-    
+
     //Events and Activities
     public DbSet<SchoolEvent> Events { get; set; }
     public DbSet<SportsTeam> SportsTeams { get; set; }
     public DbSet<SportsCompetition> SportsCompetitions { get; set; }
     public DbSet<FieldTrip> FieldTrips { get; set; }
-    
+
     //Communication
     public DbSet<Announcement> Announcements { get; set; }
     public DbSet<ParentTeacherMeeting> ParentTeacherMeetings { get; set; }
     public DbSet<StaffMeeting> StaffMeetings { get; set; }
-    
+
     //general ledger
     public DbSet<AccountHead> AccountHeads { get; set; }
     public DbSet<CoaControl> CoaControls { get; set; }
@@ -141,8 +141,8 @@ public class RhyoliteOrbitDbContext : AbpZeroDbContext<Tenant, Role, User, Rhyol
     public DbSet<BankAccount> BankAccounts { get; set; }
     public DbSet<AccountBalance> AccountBalances { get; set; }
     public DbSet<DefaultGlNumber> DefaultGlNumbers { get; set; }
-    
-    
+
+
     //payroll
     public DbSet<EmployeeCategory> EmployeeCategories { get; set; }
     public DbSet<SalaryAdvanceApplication> SalaryAdvanceApplications { get; set; }
@@ -160,7 +160,7 @@ public class RhyoliteOrbitDbContext : AbpZeroDbContext<Tenant, Role, User, Rhyol
     public DbSet<OvertimeType> OvertimeTypes { get; set; }
     public DbSet<EmployeeDaysWorked> EmployeeDaysWorked { get; set; }
     public DbSet<BonusAndOnetimeAllowance> BonusAndOnetimeAllowances { get; set; }
-    public DbSet<EmployeeBioData> EmployeeBioDatas { get; set; }
+    public DbSet<EmployeeBioData> EmployeeBioDatasx { get; set; }
     public DbSet<EmployeeSalaryData> EmployeeSalaryData { get; set; }
     public DbSet<EmployeeSnit> EmployeeSnits { get; set; }
     public DbSet<EmployeeSalaryAdvance> EmployeeSalaryAdvances { get; set; }
@@ -206,7 +206,7 @@ public class RhyoliteOrbitDbContext : AbpZeroDbContext<Tenant, Role, User, Rhyol
     public DbSet<MonthlyOvertimeHistory> MonthlyOvertimeHistory { get; set; }
     public DbSet<MonthlyBonus> MonthlyBonuses { get; set; }
     public DbSet<MonthlyBonusHistory> MonthlyBonusHistory { get; set; }
-    
+
     //production planning and process control ...
     public DbSet<UnitOfMeasure> UnitOfMeasures { get; set; }
     public DbSet<Product> Products { get; set; }
@@ -223,11 +223,8 @@ public class RhyoliteOrbitDbContext : AbpZeroDbContext<Tenant, Role, User, Rhyol
     public DbSet<QcChecklist> QcChecklists { get; set; }
     public DbSet<InProcessInspection> InProcessInspections { get; set; }
     public DbSet<FinalProductTest> FinalProductTests { get; set; }
-    public DbSet<NonConformance> NonConformance { get; set; }   
+    public DbSet<NonConformance> NonConformance { get; set; }
     //licensing
     public DbSet<SubscriptionPayment> SubscriptionPayments { get; set; }
     public DbSet<SubscriptionRenewalHistory> SubscriptionRenewalHistory { get; set; }
-    
-    
-   
 }

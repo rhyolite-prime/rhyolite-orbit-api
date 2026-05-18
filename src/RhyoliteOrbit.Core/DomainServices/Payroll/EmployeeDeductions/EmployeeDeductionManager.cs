@@ -18,18 +18,14 @@ public class EmployeeDeductionManager: Abp.Domain.Services.DomainService, IEmplo
         _repositoryEmployeeDeduction = repositoryEmployeeDeduction;
     }
 
-    public async Task<object> Create(EmployeeDeduction entity)
+    public async Task Create(EmployeeDeduction entity)
     {
         var data = await _repositoryEmployeeDeduction.FirstOrDefaultAsync(x=>x.EmployeeId == entity.EmployeeId && x.DeductionTypeId == entity.DeductionTypeId);
 
         if (data == null)
         {
             await _repositoryEmployeeDeduction.InsertAsync(entity);
-            return new
-            {
-                code = 200,
-                message = "successful"
-            };
+            return ;
         }
 
         throw new UserFriendlyException(

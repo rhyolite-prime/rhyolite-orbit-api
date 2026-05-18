@@ -45,10 +45,10 @@ public class AllowanceTypeAppService: RhyoliteOrbitAppServiceBase
     }
 
     [HttpPost]
-    public async Task<object> Create(CreateAllowanceTypeInput input)
+    public async Task Create(CreateAllowanceTypeInput input)
     {
         var obj = _mapper.Map<AllowanceType>(input);
-        return await _allowanceTypeManager.Create(obj);
+        await _allowanceTypeManager.Create(obj);
     }
 
     [HttpPost]

@@ -10,7 +10,7 @@ public interface IAllowanceTypeManager: Abp.Domain.Services.IDomainService
     Task<object> ListAll(int pageNo, int pageSize, string query);
     Task<object> ListAll(Guid categoryId);
     Task<object> ListAll(Guid allowanceTypeId, Guid employeeId, Guid categoryId);
-    Task<object> Create(AllowanceType input);
+    Task Create(AllowanceType input);
     Task<AllowanceType> GetAsync(Guid id);
     Task<AllowanceType> GetAsync(string name);
     Task Update(AllowanceType input);
