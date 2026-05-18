@@ -6,12 +6,12 @@ using RhyoliteOrbit.Models.Shared;
 
 namespace RhyoliteOrbit.DomainServices.Subscription;
 
-public interface ISubscriptionManager: IDomainService
+public interface ISubscriptionManager : IDomainService
 {
     Task<object> ListPayments(int pageNo, int pageSize, string query);
     Task<SubscriptionInitializationResponse> InitializeSubscriptionPayment(SubscriptionPaymentDto dto);
     Task<SubscriptionInitializationResponse> InitializeRecurringSubscriptionPayment(SubscriptionPaymentDto dto);
-    
+
     Task<PreapprovalStatusCheckResponse> PreapprovalStatusCheck(string clientReference, int tenantId);
     Task<VerifyPreapprovalResponse> VerifyPreapproval(VerifyPreapprovalDto dto, int tenantId);
     Task<DirectDebitChargeResponse> RenewSubscription(DirectDebitChargeDto dto, int tenantId);

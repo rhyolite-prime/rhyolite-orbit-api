@@ -1,9 +1,11 @@
 using RhyoliteOrbit.Application.Services.SchoolManager.SubjectRemarks.Dto;
+using RhyoliteOrbit.Models.DocumentManagement;
 using RhyoliteOrbit.Models.GeneralLedger;
 using RhyoliteOrbit.Models.Payroll;
 using RhyoliteOrbit.Models.ProductionPlanning;
 using RhyoliteOrbit.Models.SchoolManager;
 using RhyoliteOrbit.Models.Shared;
+using RhyoliteOrbit.Services.DocumentManagement.Documents.Dto;
 using RhyoliteOrbit.Services.GeneralLedger.AccountHeads.Dto;
 using RhyoliteOrbit.Services.GeneralLedger.CoaControls.Dto;
 using RhyoliteOrbit.Services.GeneralLedger.CoaDetails.Dto;
@@ -37,31 +39,35 @@ using RhyoliteOrbit.Services.Shared.UnitOfMeasurements.Dto;
 
 namespace RhyoliteOrbit;
 
-public class MapProfile: AutoMapper.Profile
+public class MapProfile : AutoMapper.Profile
 {
     public MapProfile()
     {
-        
+
         //shared
         CreateMap<CreateCurrencyInput, Currency>();
         CreateMap<UpdateCurrencyInput, Currency>();
-        
+
         CreateMap<CreateMessageTemplateInput, MessageTemplate>();
         CreateMap<UpdateMessageTemplateInput, MessageTemplate>();
-        
+
+        //document management
+        CreateMap<CreateDocumentInput, Document>();
+        CreateMap<UpdateDocumentInput, Document>();
+
         //school manager
         CreateMap<CreateAcademicYearInput, AcademicYear>();
         CreateMap<UpdateAcademicYearInput, AcademicYear>();
 
         CreateMap<CreateBillTypeInput, BillType>();
         CreateMap<UpdateBillTypeInput, BillType>();
-        
+
         CreateMap<CreateBillSetupInput, BillSetup>();
         CreateMap<BillSetup, BillSetupInfo>();
 
         CreateMap<CreateFeesDescriptionInput, FeesDescription>();
         CreateMap<UpdateFeesDescriptionInput, FeesDescription>();
-        
+
         CreateMap<CreateClassStreamInput, ClassStream>();
         CreateMap<UpdateClassStreamInput, ClassStream>();
 
@@ -76,68 +82,68 @@ public class MapProfile: AutoMapper.Profile
 
         CreateMap<CreateSubjectInput, Subject>();
         CreateMap<UpdateSubjectInput, Subject>();
-        
+
         CreateMap<CreateSubjectRemarkInput, SubjectRemark>();
         CreateMap<UpdateSubjectRemarkInput, SubjectRemark>();
-        
+
         CreateMap<CreateSubjectCategoryInput, SubjectCategory>();
         CreateMap<UpdateSubjectCategoryInput, SubjectCategory>();
-        
+
         CreateMap<CreateStudentInput, Student>();
         CreateMap<UpdateStudentInput, Student>();
-        
+
         CreateMap<CreateStaffInput, Staff>();
         CreateMap<UpdateStaffInput, Staff>();
-        
+
         //payroll
         CreateMap<CreateAllowanceTypeInput, AllowanceType>();
         CreateMap<UpdateAllowanceTypeInput, AllowanceType>();
-        
+
         CreateMap<CreateBikTypeInput, BikType>();
         CreateMap<UpdateBikTypeInput, BikType>();
-        
+
         CreateMap<CreateDeductionTypeInput, DeductionType>();
         CreateMap<UpdateDeductionTypeInput, DeductionType>();
-        
+
         CreateMap<CreateEmployeeCategoryInput, EmployeeCategory>();
         CreateMap<UpdateEmployeeCategoryInput, EmployeeCategory>();
-        
+
         CreateMap<CreateOvertimeTypeInput, OvertimeType>();
         CreateMap<UpdateOvertimeTypeInput, OvertimeType>();
-        
+
         CreateMap<CreateLoanTypeInput, LoanType>();
         CreateMap<UpdateLoanTypeInput, LoanType>();
-        
+
         CreateMap<CreateEmployeeRankInput, EmployeeRank>();
         CreateMap<UpdateEmployeeRankInput, EmployeeRank>();
-        
+
         CreateMap<CreateTaxReliefInput, TaxRelief>();
         CreateMap<UpdateTaxReliefInput, TaxRelief>();
-        
+
         CreateMap<CreateTaxTableInput, TaxTable>();
         CreateMap<UpdateTaxTableInput, TaxTable>();
-        
+
         CreateMap<CreateGratuityInput, Gratuity>();
         CreateMap<UpdateGratuityInput, Gratuity>();
-        
+
         CreateMap<CreatePayCalendarInput, PayCalendar>();
         CreateMap<UpdatePayCalendarInput, PayCalendar>();
-        
+
         //gl
         CreateMap<CreateAccountHeadInput, AccountHead>();
         CreateMap<UpdateAccountHeadInput, AccountHead>();
-        
+
         CreateMap<CreateCoaControlInput, CoaControl>();
         CreateMap<UpdateCoaControlInput, CoaControl>();
-        
+
         CreateMap<CreateCoaDetailInput, CoaDetail>();
         CreateMap<UpdateCoaDetailInput, CoaDetail>();
-        
+
         //manufacturing...
-        
+
         CreateMap<CreateUnitOfMeasureInput, UnitOfMeasure>();
         CreateMap<UpdateUnitOfMeasureInput, UnitOfMeasure>();
-        
+
         CreateMap<CreateRawMaterialInput, RawMaterial>();
         CreateMap<UpdateRawMaterialInput, RawMaterial>();
     }

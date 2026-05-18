@@ -251,6 +251,9 @@ paket-files/
 .idea/
 *.sln.iml
 
+#VSCode
+.vscode/
+
 src/RhyoliteOrbit.Web.Mvc/secrets.json
 src/RhyoliteOrbit.Web.Host/secrets.json
 src/RhyoliteOrbit.Migrator/secrets.json

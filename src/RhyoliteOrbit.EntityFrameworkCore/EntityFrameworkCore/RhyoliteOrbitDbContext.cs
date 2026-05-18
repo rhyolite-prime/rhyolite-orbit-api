@@ -4,6 +4,7 @@ using RhyoliteOrbit.Authorization.Roles;
 using RhyoliteOrbit.Authorization.Users;
 using RhyoliteOrbit.MultiTenancy;
 using Microsoft.EntityFrameworkCore;
+using RhyoliteOrbit.Models.DocumentManagement;
 using RhyoliteOrbit.Models.GeneralLedger;
 using RhyoliteOrbit.Models.Payroll;
 using RhyoliteOrbit.Models.ProductionPlanning;
@@ -46,6 +47,9 @@ public class RhyoliteOrbitDbContext : AbpZeroDbContext<Tenant, Role, User, Rhyol
     public DbSet<UnitOfMeasure> UnitOfMeasurements { get; set; }
     public DbSet<Tag> Tags { get; set; }
     
+    
+    //document management
+    public DbSet<Document> Documents { get; set; }
     
     //school manager...
     public DbSet<AcademicYear> AcademicYears { get; set; }

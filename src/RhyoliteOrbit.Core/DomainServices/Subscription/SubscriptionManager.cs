@@ -18,12 +18,12 @@ using RhyoliteOrbit.MultiTenancy;
 
 namespace RhyoliteOrbit.DomainServices.Subscription;
 
-public class SubscriptionManager: DomainService, ISubscriptionManager
+public class SubscriptionManager : DomainService, ISubscriptionManager
 {
-    private readonly IRepository<SubscriptionPayment,Guid> _repositorySubscriptionPayment;
-    private readonly IRepository<SubscriptionRenewalHistory,Guid> _repositorySubscriptionRenewalHistory;
+    private readonly IRepository<SubscriptionPayment, Guid> _repositorySubscriptionPayment;
+    private readonly IRepository<SubscriptionRenewalHistory, Guid> _repositorySubscriptionRenewalHistory;
     private readonly IRepository<Tenant> _repositoryTenant;
-    private readonly IHubtelPaymentApi  _hubtelPaymentApi;
+    private readonly IHubtelPaymentApi _hubtelPaymentApi;
     private readonly IUnitOfWorkManager _unitOfWorkManager;
     private readonly TenantManager _tenantManager;
     private readonly IQuartzJobScheduler _quartzJobScheduler;
@@ -44,21 +44,21 @@ public class SubscriptionManager: DomainService, ISubscriptionManager
 
     public async Task<object> ListPayments(int pageNo, int pageSize, string query)
     {
-        
+
         var predicate = PredicateBuilder.New<SubscriptionPayment>();
 
         predicate.And(x => !x.IsDeleted);
-            
+
         if (!string.IsNullOrEmpty(query))
         {
             predicate.And(x => x.Description.ToLower().Contains(query.ToLower()) || x.Reference == query || x.PhoneNumber == query);
         }
-            
+
         var totalCount =
-                
+
             await _repositorySubscriptionPayment.CountAsync(predicate);
-            
-        var data = await (await _repositorySubscriptionPayment.GetAllAsync()).Where(predicate).Select(a=> new { a.Id, a.PhoneNumber, CreationTime = a.CreationTime.ToString("dd-MMM-yyyy"), a.Cycle, a.Description, Reference = ToDisplayReference(a.Reference), a.IsDirectDebitPayment, a.Amount, Status = ((RhyoliteOrbitConsts.PaymentStatus)a.Status).ToString(),}).Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
+
+        var data = await (await _repositorySubscriptionPayment.GetAllAsync()).Where(predicate).Select(a => new { a.Id, a.PhoneNumber, CreationTime = a.CreationTime.ToString("dd-MMM-yyyy"), a.Cycle, a.Description, Reference = ToDisplayReference(a.Reference), a.IsDirectDebitPayment, a.Amount, Status = ((RhyoliteOrbitConsts.PaymentStatus)a.Status).ToString(), }).Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
 
         var totalPages = totalCount > 0 ? Convert.ToInt32(Math.Ceiling(totalCount / (decimal)pageSize)) : 0;
 
@@ -75,29 +75,30 @@ public class SubscriptionManager: DomainService, ISubscriptionManager
 
         return paginatedResult;
     }
-   
+
+    // Added a dummy SubscriptionInitializationResponse class. Kindly check and rewrite class
     public async Task<SubscriptionInitializationResponse> InitializeSubscriptionPayment(SubscriptionPaymentDto dto)
     {
         var tenantInfo = await _tenantManager.FindByIdAsync(dto.TenantId);
         var (totalAmount, description, renewalEndDate) = CalculateSubscriptionDetails(dto);
         dto.Amount = totalAmount;
-        
-        var paymentResponse = await _hubtelPaymentApi.InitializeWebCheckout(new WebCheckoutDto 
-            { 
-                TotalAmount = dto.Amount, 
-                Description = "Rhyolite ERP Subscription", 
-                CallbackUrl = "http://213.165.245.124:5004/api/services/app/HubtelCallbackProcessor/WebCheckout", 
-                CancellationUrl = "https://erp.rhyoliteprime.com/Account/ModuleManager", 
-                ReturnUrl = "https://erp.rhyoliteprime.com"
-            }, 
-            
+
+        var paymentResponse = await _hubtelPaymentApi.InitializeWebCheckout(new WebCheckoutDto
+        {
+            TotalAmount = dto.Amount,
+            Description = "Rhyolite ERP Subscription",
+            CallbackUrl = "http://213.165.245.124:5004/api/services/app/HubtelCallbackProcessor/WebCheckout",
+            CancellationUrl = "https://erp.rhyoliteprime.com/Account/ModuleManager",
+            ReturnUrl = "https://erp.rhyoliteprime.com"
+        },
+
             dto.TenantId);
 
         if (paymentResponse is { Code: (int)RhyoliteOrbitConsts.PaymentStatus.Processing })
         {
             await CreateSubscriptionRecords(dto, paymentResponse.ClientReference, tenantInfo.Country, description, renewalEndDate);
         }
-        
+
         return new SubscriptionInitializationResponse
         {
             PaymentMode = "WebCheckout",
@@ -107,7 +108,7 @@ public class SubscriptionManager: DomainService, ISubscriptionManager
             ClientReference = paymentResponse.ClientReference
         };
     }
-    
+
     public async Task<SubscriptionInitializationResponse> InitializeRecurringSubscriptionPayment(SubscriptionPaymentDto dto)
     {
         var tenantInfo = await _tenantManager.FindByIdAsync(dto.TenantId);
@@ -141,7 +142,7 @@ public class SubscriptionManager: DomainService, ISubscriptionManager
             }, dto.TenantId);
 
             await CreateSubscriptionRecords(dto, chargeResponse.Data?.TransactionId, tenantInfo.Country, description, renewalEndDate);
-            
+
             return new SubscriptionInitializationResponse
             {
                 PaymentMode = "DirectDebit",
@@ -155,11 +156,11 @@ public class SubscriptionManager: DomainService, ISubscriptionManager
 
         // Default path: request user pre-approval first
         var paymentResponse = await _hubtelPaymentApi.InitializePreapproval(new MobileMoneyPreapprovalDto
-            {
-                CustomerMsisdn = dto.PhoneNumber,
-                CallbackUrl = "http://213.165.245.124:5004/api/services/app/HubtelCallbackProcessor/Preapproval",
-                Channel = dto.Channel,
-            },
+        {
+            CustomerMsisdn = dto.PhoneNumber,
+            CallbackUrl = "http://213.165.245.124:5004/api/services/app/HubtelCallbackProcessor/Preapproval",
+            Channel = dto.Channel,
+        },
             dto.TenantId);
 
         if (paymentResponse is { ResponseCode: "0000" })
@@ -183,13 +184,13 @@ public class SubscriptionManager: DomainService, ISubscriptionManager
     public async Task<object> CompleteSubscriptionPaymentViaDirectCharge(string reference, int tenantId)
     {
         await Task.Delay(TimeSpan.FromSeconds(3));
-        
+
         var statusResponse = await _hubtelPaymentApi.TransactionStatusCheck(reference, tenantId);
 
         if (statusResponse is { Code: (int)RhyoliteOrbitConsts.PaymentStatus.Completed })
         {
             await CompleteRecurringSubscriptionPayment(reference, tenantId);
-            
+
             return new SubscriptionInitializationResponse
             {
                 PaymentMode = "DirectDebit",
@@ -200,7 +201,7 @@ public class SubscriptionManager: DomainService, ISubscriptionManager
                 ClientReference = reference
             };
         }
- 
+
         return new SubscriptionInitializationResponse
         {
             PaymentMode = "DirectDebit",
@@ -216,7 +217,7 @@ public class SubscriptionManager: DomainService, ISubscriptionManager
     {
         return await _hubtelPaymentApi.PreapprovalStatusCheck(clientReference, tenantId);
     }
-    
+
     public async Task<PreapprovalCancellationResponse> CancelPreapproval(string customerMsisdn, int tenantId)
     {
         return await _hubtelPaymentApi.CancelPreapproval(customerMsisdn, tenantId);
@@ -230,7 +231,7 @@ public class SubscriptionManager: DomainService, ISubscriptionManager
     public async Task<DirectDebitChargeResponse> RenewSubscription(DirectDebitChargeDto dto, int tenantId)
     {
         dto.PrimaryCallbackUrl = "http://213.165.245.124:5004/api/services/app/HubtelCallbackProcessor/DirectDebitCharge";
-        
+
         return await _hubtelPaymentApi.DirectDebitCharge(dto, tenantId);
     }
 
@@ -272,7 +273,7 @@ public class SubscriptionManager: DomainService, ISubscriptionManager
                             tenant.PhoneNumber = subscriptionRenewalHistory.CustomerMsisdn;
                             tenant.Network = subscriptionRenewalHistory.Network;
                         }
-                        
+
 
                         await _repositoryTenant.UpdateAsync(tenant);
                     }
@@ -280,9 +281,9 @@ public class SubscriptionManager: DomainService, ISubscriptionManager
             }
         }
     }
-     
-    
-    
+
+
+
     public async Task<object> CompleteSubscriptionPayment(string reference)
     {
         if (string.IsNullOrWhiteSpace(reference))
@@ -342,8 +343,8 @@ public class SubscriptionManager: DomainService, ISubscriptionManager
         using (_unitOfWorkManager.Current.SetTenantId(tenantId))
         {
             await Task.Delay(TimeSpan.FromSeconds(3));
-            
-            var statusCheckResponse = await _hubtelPaymentApi.CheckoutStatusCheck(new BaseHubtelPaymentRequestDto { ClientReference = reference});
+
+            var statusCheckResponse = await _hubtelPaymentApi.CheckoutStatusCheck(new BaseHubtelPaymentRequestDto { ClientReference = reference });
 
             if (statusCheckResponse is { Code: (int)RhyoliteOrbitConsts.PaymentStatus.Completed })
             {
@@ -385,22 +386,22 @@ public class SubscriptionManager: DomainService, ISubscriptionManager
                             tenant.PhoneNumber = phoneNumber;
                             tenant.Network = subscriptionRenewalHistory.Network;
                         }
-                        
+
                         await _repositoryTenant.UpdateAsync(tenant);
                     }
                 }
 
 
                 //schedule a quartz job for subscription renewal reminder or direct charge based on the billing cycle chosen by the customer
-                
+
                 var scheduleCron = $"0 {subscriptionRenewalHistory.RenewalEndDate.Minute} " +
                                    $"{subscriptionRenewalHistory.RenewalEndDate.Hour} " +
                                    $"{subscriptionRenewalHistory.RenewalEndDate.Day} " +
                                    $"{subscriptionRenewalHistory.RenewalEndDate:MMM} " +
                                    $"? " +
                                    $"{subscriptionRenewalHistory.RenewalEndDate.Year}";
-                
-                
+
+
                 var payload = new JobModel
                 {
                     Name = $"SUBSCRIPTION_RENEWAL_{tenantId}_{subscriptionRenewalHistory?.Id}",
@@ -414,16 +415,16 @@ public class SubscriptionManager: DomainService, ISubscriptionManager
                         UniqueId = $"{subscriptionRenewalHistory.Id:N}_{tenantId}"
                     }
                 };
-                
+
                 await _quartzJobScheduler.CreateJob(payload);
-                
+
                 return new
                 {
                     PaymentStatus = nameof(RhyoliteOrbitConsts.PaymentStatus.Completed),
                     reference,
                 };
             }
-            
+
             return new
             {
                 PaymentStatus = nameof(RhyoliteOrbitConsts.PaymentStatus.Failed),
@@ -431,10 +432,10 @@ public class SubscriptionManager: DomainService, ISubscriptionManager
             };
         }
 
-         
+
     }
-    
-    
+
+
     private static DateTime CalculateRenewalEndDate(DateTime startUtc, string cycle)
     {
         if (string.IsNullOrWhiteSpace(cycle))
@@ -461,7 +462,7 @@ public class SubscriptionManager: DomainService, ISubscriptionManager
                 throw new Abp.UI.UserFriendlyException($"Unsupported billing cycle: {cycle}");
         }
     }
-    
+
     private static string ToDisplayReference(string reference)
     {
         if (string.IsNullOrWhiteSpace(reference))
@@ -481,206 +482,206 @@ public class SubscriptionManager: DomainService, ISubscriptionManager
         return reference.Substring(first + 1, last - first - 1);
     }
 
-    
+
     private void ApplySelectedModulesToTenant(
     Tenant tenant,
     IReadOnlyList<int> selectedModules,
     DateTime renewalStartDate,
     DateTime renewalEndDate,
     string cycle)
-{
-    if (tenant == null) throw new ArgumentNullException(nameof(tenant));
-    if (selectedModules == null || selectedModules.Count == 0) return;
-
-    var modules = _pricing.Modules ?? new List<ModulePriceOptions>();
-    var byId = modules.ToDictionary(m => m.Id);
-
-    var exchangeRate = _pricing.UsdExchangeRate <= 0 ? 1m : _pricing.UsdExchangeRate;
-    var multiplier = GetCycleMultiplier(cycle);
-
-    // Final (cycle-adjusted) local price for a module id; 0 if not configured.
-    decimal Price(int id)
     {
-        if (!byId.TryGetValue(id, out var m)) return 0m;
+        if (tenant == null) throw new ArgumentNullException(nameof(tenant));
+        if (selectedModules == null || selectedModules.Count == 0) return;
 
-        var amount = m.PriceInUsd * exchangeRate * multiplier;
-        return decimal.Round(amount, 2, MidpointRounding.AwayFromZero);
+        var modules = _pricing.Modules ?? new List<ModulePriceOptions>();
+        var byId = modules.ToDictionary(m => m.Id);
+
+        var exchangeRate = _pricing.UsdExchangeRate <= 0 ? 1m : _pricing.UsdExchangeRate;
+        var multiplier = GetCycleMultiplier(cycle);
+
+        // Final (cycle-adjusted) local price for a module id; 0 if not configured.
+        decimal Price(int id)
+        {
+            if (!byId.TryGetValue(id, out var m)) return 0m;
+
+            var amount = m.PriceInUsd * exchangeRate * multiplier;
+            return decimal.Round(amount, 2, MidpointRounding.AwayFromZero);
+        }
+
+        var unique = selectedModules.Distinct().ToHashSet();
+
+        // IMPORTANT: Adjust these ids to match your real module id configuration
+        const int GlId = 3;
+        const int PayrollId = 2;
+        const int SchoolManagerId = 1;
+        const int ApId = 4;
+        const int ArId = 5;
+        const int FixedAssetsId = 6;
+        const int PropertyRentalsId = 12;
+        const int PointOfSaleId = 7;
+        const int HumanResourceId = 8;
+        const int InventoryId = 9;
+        const int SupplyChainId = 10;
+        const int ManufacturingId = 11;
+        const int DocumentManagementId = 13;
+        const int CoreBankingId = 14;
+
+        if (unique.Contains(GlId))
+        {
+            tenant.HasSubscribedToGl = true;
+            tenant.GlSubscriptionStartDate = renewalStartDate;
+            tenant.GlSubscriptionEndDate = renewalEndDate;
+            tenant.GlBillingCycle = cycle;
+            tenant.GlNextRenewalDate = renewalEndDate;
+
+            tenant.GlSubscriptionFee = Price(GlId);
+        }
+
+        if (unique.Contains(PayrollId))
+        {
+            tenant.HasSubscribedToPayroll = true;
+            tenant.PayrollSubscriptionStartDate = renewalStartDate;
+            tenant.PayrollSubscriptionEndDate = renewalEndDate;
+            tenant.PayrollBillingCycle = cycle;
+            tenant.PayrollNextRenewalDate = renewalEndDate;
+
+            tenant.PayrollSubscriptionFee = Price(PayrollId);
+        }
+
+        if (unique.Contains(SchoolManagerId))
+        {
+            tenant.HasSubscribedToSchoolManager = true;
+            tenant.SchoolManagerSubscriptionStartDate = renewalStartDate;
+            tenant.SchoolManagerSubscriptionEndDate = renewalEndDate;
+            tenant.SchoolManagerBillingCycle = cycle;
+            tenant.SchoolManagerNextRenewalDate = renewalEndDate;
+
+            tenant.SchoolManagerSubscriptionFee = Price(SchoolManagerId);
+        }
+
+        if (unique.Contains(ApId))
+        {
+            tenant.HasSubscribedToAp = true;
+            tenant.ApSubscriptionStartDate = renewalStartDate;
+            tenant.ApSubscriptionEndDate = renewalEndDate;
+            tenant.ApBillingCycle = cycle;
+            tenant.ApNextRenewalDate = renewalEndDate;
+
+            tenant.ApSubscriptionFee = Price(ApId);
+        }
+
+        if (unique.Contains(ArId))
+        {
+            tenant.HasSubscribedToAr = true;
+            tenant.ArSubscriptionStartDate = renewalStartDate;
+            tenant.ArSubscriptionEndDate = renewalEndDate;
+            tenant.ArBillingCycle = cycle;
+            tenant.ArNextRenewalDate = renewalEndDate;
+
+            tenant.ArSubscriptionFee = Price(ArId);
+        }
+
+        if (unique.Contains(PropertyRentalsId))
+        {
+            tenant.HasSubscribedToPropertyRentals = true;
+            tenant.PropertyRentalsSubscriptionStartDate = renewalStartDate;
+            tenant.PropertyRentalsSubscriptionEndDate = renewalEndDate;
+            tenant.PropertyRentalsBillingCycle = cycle;
+            tenant.PropertyRentalsNextRenewalDate = renewalEndDate;
+
+            tenant.PropertyRentalsSubscriptionFee = Price(PropertyRentalsId);
+        }
+
+        if (unique.Contains(FixedAssetsId))
+        {
+            tenant.HasSubscribedToFixedAssets = true;
+            tenant.FixedAssetsSubscriptionStartDate = renewalStartDate;
+            tenant.FixedAssetsSubscriptionEndDate = renewalEndDate;
+            tenant.FixedAssetsBillingCycle = cycle;
+            tenant.FixedAssetsNextRenewalDate = renewalEndDate;
+
+            tenant.FixedAssetsSubscriptionFee = Price(FixedAssetsId);
+        }
+
+        if (unique.Contains(PointOfSaleId))
+        {
+            tenant.HasSubscribedToPointOfSale = true;
+            tenant.PointOfSaleSubscriptionStartDate = renewalStartDate;
+            tenant.PointOfSaleSubscriptionEndDate = renewalEndDate;
+            tenant.PointOfSaleBillingCycle = cycle;
+            tenant.PointOfSaleNextRenewalDate = renewalEndDate;
+
+            tenant.PointOfSaleSubscriptionFee = Price(PointOfSaleId);
+        }
+
+        if (unique.Contains(HumanResourceId))
+        {
+            tenant.HasSubscribedToHumanResource = true;
+            tenant.HumanResourceSubscriptionStartDate = renewalStartDate;
+            tenant.HumanResourceSubscriptionEndDate = renewalEndDate;
+            tenant.HumanResourceBillingCycle = cycle;
+            tenant.HumanResourceNextRenewalDate = renewalEndDate;
+
+            tenant.HumanResourceSubscriptionFee = Price(HumanResourceId);
+        }
+
+        if (unique.Contains(InventoryId))
+        {
+            tenant.HasSubscribedToInventory = true;
+            tenant.InventorySubscriptionStartDate = renewalStartDate;
+            tenant.InventorySubscriptionEndDate = renewalEndDate;
+            tenant.InventoryBillingCycle = cycle;
+            tenant.InventoryNextRenewalDate = renewalEndDate;
+
+            tenant.InventorySubscriptionFee = Price(InventoryId);
+        }
+
+        if (unique.Contains(SupplyChainId))
+        {
+            tenant.HasSubscribedToSupplyChain = true;
+            tenant.SupplyChainSubscriptionStartDate = renewalStartDate;
+            tenant.SupplyChainSubscriptionEndDate = renewalEndDate;
+            tenant.SupplyChainBillingCycle = cycle;
+            tenant.SupplyChainNextRenewalDate = renewalEndDate;
+
+            tenant.SupplyChainSubscriptionFee = Price(SupplyChainId);
+        }
+
+        if (unique.Contains(ManufacturingId))
+        {
+            tenant.HasSubscribedToManufacturing = true;
+            tenant.ManufacturingSubscriptionStartDate = renewalStartDate;
+            tenant.ManufacturingSubscriptionEndDate = renewalEndDate;
+            tenant.ManufacturingBillingCycle = cycle;
+            tenant.ManufacturingNextRenewalDate = renewalEndDate;
+
+            tenant.ManufacturingSubscriptionFee = Price(ManufacturingId);
+        }
+
+        if (unique.Contains(DocumentManagementId))
+        {
+            tenant.HasSubscribedToDocumentManagement = true;
+            tenant.DocumentManagementSubscriptionStartDate = renewalStartDate;
+            tenant.DocumentManagementSubscriptionEndDate = renewalEndDate;
+            tenant.DocumentManagementBillingCycle = cycle;
+            tenant.DocumentManagementNextRenewalDate = renewalEndDate;
+
+            tenant.DocumentManagementSubscriptionFee = Price(DocumentManagementId);
+        }
+
+        if (unique.Contains(CoreBankingId))
+        {
+            tenant.HasSubscribedToCoreBanking = true;
+            tenant.CoreBankingSubscriptionStartDate = renewalStartDate;
+            tenant.CoreBankingSubscriptionEndDate = renewalEndDate;
+            tenant.CoreBankingBillingCycle = cycle;
+            tenant.CoreBankingNextRenewalDate = renewalEndDate;
+
+            tenant.CoreBankingSubscriptionFee = Price(CoreBankingId);
+        }
     }
 
-    var unique = selectedModules.Distinct().ToHashSet();
 
-    // IMPORTANT: Adjust these ids to match your real module id configuration
-    const int GlId = 3;
-    const int PayrollId = 2;
-    const int SchoolManagerId = 1;
-    const int ApId = 4;
-    const int ArId = 5;
-    const int FixedAssetsId = 6;
-    const int PropertyRentalsId = 12;
-    const int PointOfSaleId = 7;
-    const int HumanResourceId = 8;
-    const int InventoryId = 9;
-    const int SupplyChainId = 10;
-    const int ManufacturingId = 11;
-    const int DocumentManagementId = 13;
-    const int CoreBankingId = 14;
-
-    if (unique.Contains(GlId))
-    {
-        tenant.HasSubscribedToGl = true;
-        tenant.GlSubscriptionStartDate = renewalStartDate;
-        tenant.GlSubscriptionEndDate = renewalEndDate;
-        tenant.GlBillingCycle = cycle;
-        tenant.GlNextRenewalDate = renewalEndDate;
-
-        tenant.GlSubscriptionFee = Price(GlId);
-    }
-
-    if (unique.Contains(PayrollId))
-    {
-        tenant.HasSubscribedToPayroll = true;
-        tenant.PayrollSubscriptionStartDate = renewalStartDate;
-        tenant.PayrollSubscriptionEndDate = renewalEndDate;
-        tenant.PayrollBillingCycle = cycle;
-        tenant.PayrollNextRenewalDate = renewalEndDate;
-
-        tenant.PayrollSubscriptionFee = Price(PayrollId);
-    }
-
-    if (unique.Contains(SchoolManagerId))
-    {
-        tenant.HasSubscribedToSchoolManager = true;
-        tenant.SchoolManagerSubscriptionStartDate = renewalStartDate;
-        tenant.SchoolManagerSubscriptionEndDate = renewalEndDate;
-        tenant.SchoolManagerBillingCycle = cycle;
-        tenant.SchoolManagerNextRenewalDate = renewalEndDate;
-
-        tenant.SchoolManagerSubscriptionFee = Price(SchoolManagerId);
-    }
-
-    if (unique.Contains(ApId))
-    {
-        tenant.HasSubscribedToAp = true;
-        tenant.ApSubscriptionStartDate = renewalStartDate;
-        tenant.ApSubscriptionEndDate = renewalEndDate;
-        tenant.ApBillingCycle = cycle;
-        tenant.ApNextRenewalDate = renewalEndDate;
-
-        tenant.ApSubscriptionFee = Price(ApId);
-    }
-
-    if (unique.Contains(ArId))
-    {
-        tenant.HasSubscribedToAr = true;
-        tenant.ArSubscriptionStartDate = renewalStartDate;
-        tenant.ArSubscriptionEndDate = renewalEndDate;
-        tenant.ArBillingCycle = cycle;
-        tenant.ArNextRenewalDate = renewalEndDate;
-
-        tenant.ArSubscriptionFee = Price(ArId);
-    }
-
-    if (unique.Contains(PropertyRentalsId))
-    {
-        tenant.HasSubscribedToPropertyRentals = true;
-        tenant.PropertyRentalsSubscriptionStartDate = renewalStartDate;
-        tenant.PropertyRentalsSubscriptionEndDate = renewalEndDate;
-        tenant.PropertyRentalsBillingCycle = cycle;
-        tenant.PropertyRentalsNextRenewalDate = renewalEndDate;
-
-        tenant.PropertyRentalsSubscriptionFee = Price(PropertyRentalsId);
-    }
-
-    if (unique.Contains(FixedAssetsId))
-    {
-        tenant.HasSubscribedToFixedAssets = true;
-        tenant.FixedAssetsSubscriptionStartDate = renewalStartDate;
-        tenant.FixedAssetsSubscriptionEndDate = renewalEndDate;
-        tenant.FixedAssetsBillingCycle = cycle;
-        tenant.FixedAssetsNextRenewalDate = renewalEndDate;
-
-        tenant.FixedAssetsSubscriptionFee = Price(FixedAssetsId);
-    }
-    
-    if (unique.Contains(PointOfSaleId))
-    {
-        tenant.HasSubscribedToPointOfSale = true;
-        tenant.PointOfSaleSubscriptionStartDate = renewalStartDate;
-        tenant.PointOfSaleSubscriptionEndDate = renewalEndDate;
-        tenant.PointOfSaleBillingCycle = cycle;
-        tenant.PointOfSaleNextRenewalDate = renewalEndDate;
-
-        tenant.PointOfSaleSubscriptionFee = Price(PointOfSaleId);
-    }
-
-    if (unique.Contains(HumanResourceId))
-    {
-        tenant.HasSubscribedToHumanResource = true;
-        tenant.HumanResourceSubscriptionStartDate = renewalStartDate;
-        tenant.HumanResourceSubscriptionEndDate = renewalEndDate;
-        tenant.HumanResourceBillingCycle = cycle;
-        tenant.HumanResourceNextRenewalDate = renewalEndDate;
-
-        tenant.HumanResourceSubscriptionFee = Price(HumanResourceId);
-    }
-
-    if (unique.Contains(InventoryId))
-    {
-        tenant.HasSubscribedToInventory = true;
-        tenant.InventorySubscriptionStartDate = renewalStartDate;
-        tenant.InventorySubscriptionEndDate = renewalEndDate;
-        tenant.InventoryBillingCycle = cycle;
-        tenant.InventoryNextRenewalDate = renewalEndDate;
-
-        tenant.InventorySubscriptionFee = Price(InventoryId);
-    }
-
-    if (unique.Contains(SupplyChainId))
-    {
-        tenant.HasSubscribedToSupplyChain = true;
-        tenant.SupplyChainSubscriptionStartDate = renewalStartDate;
-        tenant.SupplyChainSubscriptionEndDate = renewalEndDate;
-        tenant.SupplyChainBillingCycle = cycle;
-        tenant.SupplyChainNextRenewalDate = renewalEndDate;
-
-        tenant.SupplyChainSubscriptionFee = Price(SupplyChainId);
-    }
-
-    if (unique.Contains(ManufacturingId))
-    {
-        tenant.HasSubscribedToManufacturing = true;
-        tenant.ManufacturingSubscriptionStartDate = renewalStartDate;
-        tenant.ManufacturingSubscriptionEndDate = renewalEndDate;
-        tenant.ManufacturingBillingCycle = cycle;
-        tenant.ManufacturingNextRenewalDate = renewalEndDate;
-
-        tenant.ManufacturingSubscriptionFee = Price(ManufacturingId);
-    }
-
-    if (unique.Contains(DocumentManagementId))
-    {
-        tenant.HasSubscribedToDocumentManagement = true;
-        tenant.DocumentManagementSubscriptionStartDate = renewalStartDate;
-        tenant.DocumentManagementSubscriptionEndDate = renewalEndDate;
-        tenant.DocumentManagementBillingCycle = cycle;
-        tenant.DocumentManagementNextRenewalDate = renewalEndDate;
-
-        tenant.DocumentManagementSubscriptionFee = Price(DocumentManagementId);
-    }
-
-    if (unique.Contains(CoreBankingId))
-    {
-        tenant.HasSubscribedToCoreBanking = true;
-        tenant.CoreBankingSubscriptionStartDate = renewalStartDate;
-        tenant.CoreBankingSubscriptionEndDate = renewalEndDate;
-        tenant.CoreBankingBillingCycle = cycle;
-        tenant.CoreBankingNextRenewalDate = renewalEndDate;
-
-        tenant.CoreBankingSubscriptionFee = Price(CoreBankingId);
-    }
-}
-    
-    
 
     private decimal GetCycleMultiplier(string? cycle)
     {
@@ -702,8 +703,8 @@ public class SubscriptionManager: DomainService, ISubscriptionManager
             _ => throw new Abp.UI.UserFriendlyException($"Unsupported billing cycle: {cycle}")
         };
     }
-    
-    
+
+
 
     public async Task<SubscriptionRenewalHistory> GetSubscriptionRenewalHistory(string reference, int tenantId)
     {
@@ -731,7 +732,7 @@ public class SubscriptionManager: DomainService, ISubscriptionManager
         }
 
         var exchangeRate = _pricing.UsdExchangeRate <= 0 ? 1m : _pricing.UsdExchangeRate;
-        
+
         var multiplier = GetCycleMultiplier(dto.Cycle);
 
         var totalAmount = selectedModuleIds
@@ -798,3 +799,4 @@ public class SubscriptionManager: DomainService, ISubscriptionManager
         });
     }
 }
+
