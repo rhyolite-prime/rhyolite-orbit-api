@@ -16,7 +16,7 @@ public class Program
         Host.CreateDefaultBuilder(args)
             .ConfigureWebHostDefaults(webBuilder =>
             {
-                webBuilder.UseStartup<Startup>().UseUrls("http://*:5004");
+                webBuilder.UseStartup<Startup>().UseUrls("http://*:5003");
             })
             .UseCastleWindsor(IocManager.Instance.IocContainer);
 }

@@ -21,7 +21,7 @@ public class AccountHeadManager: DomainService, IAccountHeadManager
 
         public async Task Create(AccountHead entity)
         {
-            var datta = await _repositoryAccountHead.FirstOrDefaultAsync(x => x.Name == entity.Name && x.ParentId == entity.ParentId);
+            var datta = await _repositoryAccountHead.FirstOrDefaultAsync(x => x.Name == entity.Name);
             
             if (datta == null)
             {

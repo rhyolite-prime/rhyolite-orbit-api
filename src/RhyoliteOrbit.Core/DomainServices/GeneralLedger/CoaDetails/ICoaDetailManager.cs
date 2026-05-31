@@ -6,7 +6,7 @@ namespace RhyoliteOrbit.DomainServices.GeneralLedger.CoaDetails;
 
 public interface ICoaDetailManager : Abp.Domain.Services.IDomainService
 {
-    Task<object> ListAll(int pageNo, int pageSize, string query, bool isActive);
+    Task<object> ListAll(int pageNo, int pageSize, string query, int status);
     Task<object> ListActiveAccounts();
     Task Create(CoaDetail entity);
     

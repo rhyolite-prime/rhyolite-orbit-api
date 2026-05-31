@@ -59,7 +59,7 @@ public class CoaDetailManager: DomainService, ICoaDetailManager
             await _repositoryCoaDetail.DeleteAsync(id);
         }
 
-        public async Task<object> ListAll(int pageNo, int pageSize, string query, bool isActive)
+        public async Task<object> ListAll(int pageNo, int pageSize, string query, int status)
         {
             var predicate = PredicateBuilder.New<CoaDetail>();
 
@@ -67,10 +67,10 @@ public class CoaDetailManager: DomainService, ICoaDetailManager
             
             if (!string.IsNullOrEmpty(query))
             {
-                predicate.And(x => x.AccountName.ToLower().Contains(query));
+                predicate.And(x => x.AccountName.ToLower().Contains(query.ToLower()));
             }
 
-            predicate.And(x => x.Status.ToLower() == (isActive ? "active" : "inactive"));
+            predicate.And(x => x.Status == status);
             
             var totalCount =
                 
@@ -98,7 +98,7 @@ public class CoaDetailManager: DomainService, ICoaDetailManager
         
         public async Task<object> ListActiveAccounts()
         {
-            return await _repositoryCoaDetail.GetAllListAsync(x=>x.Status == "Active");
+            return await _repositoryCoaDetail.GetAllListAsync(x=> x.Status == (int)RhyoliteOrbitConsts.AccountStatus.Active);
         }
         
         

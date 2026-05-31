@@ -33,6 +33,14 @@ public class RhyoliteOrbitConsts
         Expenses = 4,
     }
     
+    public enum AccountStatus
+    {
+        Active = 1,
+        Inactive = 2,
+        Archived = 3,
+        Closed = 4,
+    };
+    
     public enum BusinessPartnerType
     {
         Customer = 1,
@@ -68,7 +76,7 @@ public class RhyoliteOrbitConsts
         Closed = 4
     }
     
-    //SportsTeam status
+    //Sports Team status
     public enum TeamStatus
     {
         Active = 0,

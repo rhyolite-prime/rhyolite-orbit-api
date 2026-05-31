@@ -227,6 +227,7 @@ public class RhyoliteOrbitDbContext : AbpZeroDbContext<Tenant, Role, User, Rhyol
     
     // document management system
     public DbSet<DmsFolder> Folders { get; set; }
+    public DbSet<DmsCollection> Collections { get; set; }
     public DbSet<DmsDocument> Documents { get; set; }
     public DbSet<DmsTag> DmsTags { get; set; }
     public DbSet<DmsDocumentTemplate> DmsDocumentTemplates { get; set; }

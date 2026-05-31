@@ -8,7 +8,6 @@ public class AccountHead: Abp.Domain.Entities.Auditing.FullAuditedEntity<Guid>, 
     [MaxLength(100)]
     public string Name { get; set; }
     public int AccountHeadType { get; set; }
-    public Guid ParentId { get; set; }
     public int TenantId { get; set; }
     
 }

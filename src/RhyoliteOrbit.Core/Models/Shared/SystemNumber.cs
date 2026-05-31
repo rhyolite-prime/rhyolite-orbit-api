@@ -10,6 +10,8 @@ public class SystemNumber: Abp.Domain.Entities.Auditing.FullAuditedEntity<Guid>,
     [MaxLength(100)]
     public string ItemName { get; set; }
     [MaxLength(100)]
+    public string Key { get; set; }
+    [MaxLength(100)]
     public string Prefix { get; set; }
     
     [MaxLength(100)]
@@ -18,6 +20,7 @@ public class SystemNumber: Abp.Domain.Entities.Auditing.FullAuditedEntity<Guid>,
     [MaxLength(50)]
     public string FormatPattern { get; set; } // eg [Prefix]:[Number]:[Suffix] or [Prefix]-[Number]-[Suffix]
     
-    public int TenantId { get; set; }
+    public int Padding { get; set; }
     public int LastNo { get; set; }
+    public int TenantId { get; set; }
 }

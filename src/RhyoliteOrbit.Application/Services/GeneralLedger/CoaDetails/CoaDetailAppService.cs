@@ -20,9 +20,9 @@ public class CoaDetailAppService: RhyoliteOrbitAppServiceBase
     }
 
     [HttpGet]
-    public async Task<object> GetAll(int pageNo, int pageSize, string query, bool isActive)
+    public async Task<object> GetAll(int pageNo, int pageSize, string query, int status)
     {
-        return await _coaDetailManager.ListAll(pageNo, pageSize, query, isActive);
+        return await _coaDetailManager.ListAll(pageNo, pageSize, query, status);
     }
     
     

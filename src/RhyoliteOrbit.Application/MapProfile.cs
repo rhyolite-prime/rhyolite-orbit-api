@@ -41,7 +41,6 @@ public class MapProfile: AutoMapper.Profile
 {
     public MapProfile()
     {
-        
         //shared
         CreateMap<CreateCurrencyInput, Currency>();
         CreateMap<UpdateCurrencyInput, Currency>();

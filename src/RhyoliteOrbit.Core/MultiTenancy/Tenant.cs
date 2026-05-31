@@ -11,11 +11,15 @@ public class Tenant : AbpTenant<User>
     public string BusinessId { get; set; }
     [MaxLength(150)]
     public string BusinessLogo { get; set; }
+    
+    public bool RequireTwoFactorAuth { get; set; }
+     
     [MaxLength(20)]
     public string Country { get; set; }
     //subscription configuration
     //gl
     public bool HasSubscribedToGl { get; set; }
+    
     public DateTime? GlSubscriptionStartDate { get; set; }
     public DateTime? GlSubscriptionEndDate { get; set; }
     public decimal GlSubscriptionFee{ get; set; }
