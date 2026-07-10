@@ -9,9 +9,10 @@ public class CoaDetail: Abp.Domain.Entities.Auditing.FullAuditedEntity<Guid>, Ab
     public string AccountName { get; set; }
     public int AccountNo { get; set; }
     public int Status { get; set; }
-    public Guid AccountHeaderId { get; set; }
+    
+    public Guid AccountControlId { get; set; }
     [MaxLength(100)]
-    public string AccountHeaderName { get; set; }
+    public string AccountControlName { get; set; }
     public Guid CurrencyId { get; set; }
     [MaxLength(50)]
     public string CurrencyName { get; set; }

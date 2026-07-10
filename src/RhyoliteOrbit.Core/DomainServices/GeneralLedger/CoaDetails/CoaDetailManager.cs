@@ -25,7 +25,7 @@ public class CoaDetailManager: DomainService, ICoaDetailManager
         
         public async Task Create(CoaDetail entity)
         {
-            var coaControl = await _repositoryCoaControl.FirstOrDefaultAsync(x => x.Id == entity.AccountHeaderId);
+            var coaControl = await _repositoryCoaControl.FirstOrDefaultAsync(x => x.Id == entity.AccountControlId);
         
             if (entity.AccountNo >= coaControl.MinAccount && entity.AccountNo <= coaControl.MaxAccount)
             {
@@ -59,24 +59,30 @@ public class CoaDetailManager: DomainService, ICoaDetailManager
             await _repositoryCoaDetail.DeleteAsync(id);
         }
 
-        public async Task<object> ListAll(int pageNo, int pageSize, string query, int status)
+        public async Task<object> ListAll(int pageNo, int pageSize, string query, RhyoliteOrbitConsts.AccountStatus? status)
         {
             var predicate = PredicateBuilder.New<CoaDetail>();
 
             predicate.And(x => !x.IsDeleted);
-            
+    
             if (!string.IsNullOrEmpty(query))
             {
-                predicate.And(x => x.AccountName.ToLower().Contains(query.ToLower()));
+                predicate.And(x => x.AccountName.ToLower().Contains(query.ToLower()) || x.CurrencyName.ToLower().Contains(query.ToLower()));
             }
-
-            predicate.And(x => x.Status == status);
-            
-            var totalCount =
-                
-                await _repositoryCoaDetail.CountAsync(predicate);
-            
-            var data = await (await _repositoryCoaDetail.GetAllAsync()).Where(predicate).Select(a=> new { a.Id, a.AccountName, a.AccountNo, a.Status, a.AccountHeaderId, a.AccountHeaderName, a.CurrencyId, a.CurrencyName, a.CurrencyCode, a.CurrentBalance, a.CurrentForeignBalance }).Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
+    
+            if (status.HasValue)
+            {
+                predicate.And(x => x.Status == (int)status.Value);
+            }
+    
+            var totalCount = await _repositoryCoaDetail.CountAsync(predicate);
+    
+            var data = await (await _repositoryCoaDetail.GetAllAsync())
+                .Where(predicate)
+                .Select(a => new { a.Id, a.AccountName, a.AccountNo, a.Status, a.AccountControlId, a.AccountControlName, a.CurrencyId, a.CurrencyName, a.CurrencyCode, a.CurrentBalance, a.CurrentForeignBalance })
+                .Skip((pageNo - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
 
             var totalPages = totalCount > 0 ? Convert.ToInt32(Math.Ceiling(totalCount / (decimal)pageSize)) : 0;
 
@@ -92,9 +98,7 @@ public class CoaDetailManager: DomainService, ICoaDetailManager
             };
 
             return paginatedResult;
-            
         }
-        
         
         public async Task<object> ListActiveAccounts()
         {
