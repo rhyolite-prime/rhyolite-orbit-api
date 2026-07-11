@@ -21,7 +21,7 @@ public class BankManager: DomainService, IBankManager
             _repositoryBank = repositoryBank;
         }
 
-        public async Task<object> Create(Bank entity)
+        public async Task Create(Bank entity)
         {
             var datta = await _repositoryBank.FirstOrDefaultAsync(x => x.Name.Trim().ToLower() == entity.Name.Trim().ToLower());
 
@@ -31,11 +31,7 @@ public class BankManager: DomainService, IBankManager
 
                 await _repositoryBank.InsertAsync(entity);
 
-                return new
-                {
-                    code = 200,
-                    message = "successful"
-                };
+                return;
             }
 
             throw new UserFriendlyException(
@@ -68,7 +64,7 @@ public class BankManager: DomainService, IBankManager
                 
                 await _repositoryBank.CountAsync(predicate);
             
-            var data = await (await _repositoryBank.GetAllAsync()).Where(predicate).Select(a=> new { a.Id, a.Name, a.BankCode, a.BankBranches,   }).Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
+            var data = await (await _repositoryBank.GetAllAsync()).Where(predicate).Select(a=> new { a.Id, a.Name, a.BankCode, a.BankBranches, a.ContactNo, a.ContactPerson, a.Email  }).Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
 
             var totalPages = totalCount > 0 ? Convert.ToInt32(Math.Ceiling(totalCount / (decimal)pageSize)) : 0;
 
@@ -98,17 +94,17 @@ public class BankManager: DomainService, IBankManager
         }
 
         // branches
-        public async Task<object> CreateBranch(BranchDto input)
+        public async Task CreateBranch(BranchDto input)
         {
             var bankData = await _repositoryBank.FirstOrDefaultAsync(input.BankId);
             var branchList = bankData.BankBranches;
-            var branchInfo = branchList.FirstOrDefault(x => x.Id == input.Id);
+            var branchInfo = branchList.FirstOrDefault(x => !string.IsNullOrEmpty(input.Id) && x.Id == Guid.Parse(input.Id));
 
             if (branchInfo == null)
             {
                 bankData.BankBranches.Add(new BankBranch
                 {
-                    Id = input.Id,
+                    Id = Guid.NewGuid(),
                     ContactNo = input.ContactNo,
                     ContactPerson = input.ContactPerson,
                     Email = input.Email,
@@ -118,21 +114,14 @@ public class BankManager: DomainService, IBankManager
 
                 await _repositoryBank.UpdateAsync(bankData);
 
-                return new
-                {
-                    code = 200,
-                    message = "successful"
-                };
+                return;
             }
-            else
-            {
-                return new
-                {
-                    code = 400,
-                    message = "Duplicate records are not allowed."
-                };
 
-            }
+            throw new UserFriendlyException(
+                400,
+                "Duplicate records are not allowed.",
+                "A Bank Branch with the same name already exists."
+            );
 
         }
 
@@ -141,7 +130,7 @@ public class BankManager: DomainService, IBankManager
         {
             var bankData = await _repositoryBank.FirstOrDefaultAsync(input.BankId);
             var branchList = bankData.BankBranches;
-            var branchInfo = branchList.FirstOrDefault(x => x.Id == input.Id);
+            var branchInfo = branchList.FirstOrDefault(x => !string.IsNullOrEmpty(input.Id) && x.Id == Guid.Parse(input.Id));
             branchList.Remove(branchInfo);
 
             branchInfo.Name = input.Name;
@@ -161,7 +150,7 @@ public class BankManager: DomainService, IBankManager
         {
             var bankData = await _repositoryBank.FirstOrDefaultAsync(input.BankId);
             var branchList = bankData.BankBranches;
-            var branchInfo = branchList.FirstOrDefault(x => x.Id == input.Id);
+            var branchInfo = branchList.FirstOrDefault(x => !string.IsNullOrEmpty(input.Id) && x.Id == Guid.Parse(input.Id));
             branchList.Remove(branchInfo);
 
             bankData.BankBranches = branchList;

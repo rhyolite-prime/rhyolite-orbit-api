@@ -5,8 +5,10 @@ using RhyoliteOrbit.Models.ProductionPlanning;
 using RhyoliteOrbit.Models.SchoolManager;
 using RhyoliteOrbit.Models.Shared;
 using RhyoliteOrbit.Services.GeneralLedger.AccountHeads.Dto;
+using RhyoliteOrbit.Services.GeneralLedger.BankAccounts.Dto;
 using RhyoliteOrbit.Services.GeneralLedger.CoaControls.Dto;
 using RhyoliteOrbit.Services.GeneralLedger.CoaDetails.Dto;
+using RhyoliteOrbit.Services.GeneralLedger.ImprestCategories.Dto;
 using RhyoliteOrbit.Services.Payroll.AllowanceTypes.Dto;
 using RhyoliteOrbit.Services.Payroll.BikTypes.Dto;
 using RhyoliteOrbit.Services.Payroll.DeductionTypes.Dto;
@@ -31,6 +33,7 @@ using RhyoliteOrbit.Services.SchoolManager.Staffs.Dto;
 using RhyoliteOrbit.Services.SchoolManager.Students.Dto;
 using RhyoliteOrbit.Services.SchoolManager.SubjectCategories.Dto;
 using RhyoliteOrbit.Services.SchoolManager.Subjects.Dto;
+using RhyoliteOrbit.Services.Shared.Banks.Dto;
 using RhyoliteOrbit.Services.Shared.CostCenters.Dto;
 using RhyoliteOrbit.Services.Shared.Currencies.Dto;
 using RhyoliteOrbit.Services.Shared.MessageTemplates.Dto;
@@ -45,6 +48,9 @@ public class MapProfile: AutoMapper.Profile
         //shared
         CreateMap<CreateCurrencyInput, Currency>();
         CreateMap<UpdateCurrencyInput, Currency>();
+        
+        CreateMap<CreateBankInput, Bank>();
+        CreateMap<UpdateBankInput, Bank>();
         
         CreateMap<CreateCostCenterInput, CostCenter>();
         CreateMap<UpdateCostCenterInput, CostCenter>();
@@ -135,6 +141,13 @@ public class MapProfile: AutoMapper.Profile
         
         CreateMap<CreateCoaDetailInput, CoaDetail>();
         CreateMap<UpdateCoaDetailInput, CoaDetail>();
+        
+        CreateMap<CreateBankAccountInput, BankAccount>();
+        CreateMap<UpdateBankAccountInput, BankAccount>();
+        
+        CreateMap<CreateImprestCategoryInput, ImprestCategory>();
+        CreateMap<UpdateImprestCategoryInput, ImprestCategory>();
+        
         
         //manufacturing...
         

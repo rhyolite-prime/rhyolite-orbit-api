@@ -21,7 +21,7 @@ public class CostCenterManager: Abp.Domain.Services.DomainService, ICostCenterMa
     public async Task Create(CostCenter entity)
     {
         var datta = await _repositoryCostCenter.FirstOrDefaultAsync(x => x.Name == entity.Name && x.ParentId == entity.ParentId);
-
+        
         if (datta == null)
         {
             await _repositoryCostCenter.InsertAsync(entity);
@@ -73,6 +73,13 @@ public class CostCenterManager: Abp.Domain.Services.DomainService, ICostCenterMa
     public async Task Delete(Guid id)
     {
         await _repositoryCostCenter.DeleteAsync(id);
+        
+        var costCenterChildren = await _repositoryCostCenter.GetAllListAsync(x=> x.ParentId == id);
+
+        foreach (var costCenterChild in costCenterChildren)
+        {
+            await _repositoryCostCenter.DeleteAsync(costCenterChild);
+        }
 
     }
 }

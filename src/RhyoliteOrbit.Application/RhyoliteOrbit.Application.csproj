@@ -17,10 +17,8 @@
   <ItemGroup>
     <Folder Include="Services\AccountsPayable\" />
     <Folder Include="Services\AccountsReceivable\" />
-    <Folder Include="Services\GeneralLedger\BankAccounts\" />
-    <Folder Include="Services\GeneralLedger\DefaultGlNumbers\" />
-    <Folder Include="Services\GeneralLedger\ImprestCategories\" />
-    <Folder Include="Services\GeneralLedger\PettyCashRecipients\" />
+    <Folder Include="Services\GeneralLedger\DefaultGlNumbers\Dto\" />
+    <Folder Include="Services\GeneralLedger\PettyCashRecipients\Dto\" />
     <Folder Include="Services\Hr\" />
     <Folder Include="Services\Inventory\" />
     <Folder Include="Services\Payroll\SalaryAdvanceApplications\Dto\" />

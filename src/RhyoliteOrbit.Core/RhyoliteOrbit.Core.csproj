@@ -33,7 +33,6 @@
     <Folder Include="DomainServices\AccountsReceivable\" />
     <Folder Include="DomainServices\Dms\" />
     <Folder Include="DomainServices\GeneralLedger\Budgets\" />
-    <Folder Include="DomainServices\GeneralLedger\Journals\" />
     <Folder Include="DomainServices\Hr\" />
     <Folder Include="DomainServices\Inventory\" />
     <Folder Include="DomainServices\Payroll\Dashboard\" />
