@@ -37,6 +37,7 @@ using RhyoliteOrbit.Services.Shared.Banks.Dto;
 using RhyoliteOrbit.Services.Shared.CostCenters.Dto;
 using RhyoliteOrbit.Services.Shared.Currencies.Dto;
 using RhyoliteOrbit.Services.Shared.MessageTemplates.Dto;
+using RhyoliteOrbit.Services.Shared.SystemNumbers.Dto;
 using RhyoliteOrbit.Services.Shared.UnitOfMeasurements.Dto;
 
 namespace RhyoliteOrbit;
@@ -54,6 +55,8 @@ public class MapProfile: AutoMapper.Profile
         
         CreateMap<CreateCostCenterInput, CostCenter>();
         CreateMap<UpdateCostCenterInput, CostCenter>();
+        
+        CreateMap<UpdateSystemNumberInput, SystemNumber>();
         
         CreateMap<CreateMessageTemplateInput, MessageTemplate>();
         CreateMap<UpdateMessageTemplateInput, MessageTemplate>();

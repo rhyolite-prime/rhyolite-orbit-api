@@ -33,7 +33,7 @@ public class OperationManager: DomainService, IOperationManager
         {
             
             //generate JobTicketIdentifier from system numbers
-            var systemNumber = await _repositorySystemNumber.FirstOrDefaultAsync(x => x.Module == (int)RhyoliteOrbitConsts.ErpModule.Manufacturing && x.ItemName == "JobTicketID");
+            var systemNumber = await _repositorySystemNumber.FirstOrDefaultAsync(x => x.ModuleId == (int)RhyoliteOrbitConsts.ErpModule.Manufacturing && x.ItemName == "JobTicketID");
         
             // Increment the last number
             systemNumber.LastNo++;

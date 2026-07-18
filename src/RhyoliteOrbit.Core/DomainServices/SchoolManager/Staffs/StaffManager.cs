@@ -93,7 +93,7 @@ public class StaffManager: Abp.Domain.Services.DomainService, IStaffManager
             var employeeId = Guid.NewGuid();
             
             //generate staff Id
-            var systemNumber = await _repositorySystemNumber.FirstOrDefaultAsync(x => x.Module == (int)RhyoliteOrbitConsts.ErpModule.SchoolInformationSystem && x.ItemName == "StaffID");
+            var systemNumber = await _repositorySystemNumber.FirstOrDefaultAsync(x => x.ModuleId == (int)RhyoliteOrbitConsts.ErpModule.SchoolInformationSystem && x.ItemName == "StaffID");
         
             // Increment the last number
             systemNumber.LastNo++;

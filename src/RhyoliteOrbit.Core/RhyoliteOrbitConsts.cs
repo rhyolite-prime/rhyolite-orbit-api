@@ -11,6 +11,7 @@ public class RhyoliteOrbitConsts
 
     public const bool MultiTenancyEnabled = true;
     
+    
     public enum BillStatus
     {
         Draft = 0,
@@ -145,6 +146,7 @@ public class RhyoliteOrbitConsts
     
     public enum ErpModule
     {
+       Shared = 0,
        SchoolInformationSystem = 1,
        PayrollSystem = 2,
        GeneralLedger = 3,
@@ -157,6 +159,8 @@ public class RhyoliteOrbitConsts
        SupplyChain = 10,
        Manufacturing = 11,
        PropertyOrAssetRental = 12,
+       CoreBanking = 13,
+       LogicPro = 14,
     }
     
     public enum PaymentStatus

@@ -18,12 +18,14 @@ public class JournalDetail: Abp.Domain.Entities.Auditing.FullAuditedEntity<Guid>
     public string ChequeNo { get; set; }
     [MaxLength(350)]
     public string Description { get; set; }
-    public decimal DebitAmount { get; set; }
-    public decimal CreditAmount { get; set; }
+    public decimal LocalDebit { get; set; }
+    public decimal LocalCredit { get; set; }
+    public decimal ForeignDebit { get; set; }
+    public decimal ForeignCredit { get; set; }
     public DateTime TransactionDate { get; set; } //can use system date
     [MaxLength(50)]
     public string TransactionSource { get; set; }
-    public bool IsMultiCurrency { get; set; }
+    public bool IsLocal { get; set; }
     public bool IsReconciled { get; set; }
     public bool IsOpeningBalance { get; set; }
     public bool IsConsolidated { get; set; }

@@ -131,6 +131,7 @@ public class RhyoliteOrbitDbContext : AbpZeroDbContext<Tenant, Role, User, Rhyol
     public DbSet<PettyCashRecipient> PettyCashRecipients { get; set; }
     public DbSet<Budget> Budgets { get; set; }
     public DbSet<Journal> Journals { get; set; }
+    public DbSet<JournalDetail> JournalDetails { get; set; }
     public DbSet<PvRetention> PvRetentions { get; set; }
     public DbSet<ImprestCategory> ImprestCategories { get; set; }
     public DbSet<Imprest> Imprests { get; set; }

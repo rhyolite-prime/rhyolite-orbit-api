@@ -3121,6 +3121,9 @@ namespace RhyoliteOrbit.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("IsMultiCurrency")
+                        .HasColumnType("boolean");
+
                     b.Property<bool>("IsPosted")
                         .HasColumnType("boolean");
 
@@ -3139,9 +3142,137 @@ namespace RhyoliteOrbit.Migrations
                     b.Property<decimal>("TotalDebit")
                         .HasColumnType("numeric");
 
+                    b.Property<string>("TransactionSource")
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
 
                     b.ToTable("Journals");
+                });
+
+            modelBuilder.Entity("RhyoliteOrbit.Models.GeneralLedger.JournalDetail", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("AccountId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("AccountName")
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.Property<decimal>("BuyRate")
+                        .HasColumnType("numeric");
+
+                    b.Property<string>("ChequeNo")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<DateTime?>("ClosedDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<long?>("CreatorUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("CurrencyCode")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<Guid>("CurrencyId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("CurrencyName")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTime>("DateConsolidated")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<long?>("DeleterUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(350)
+                        .HasColumnType("character varying(350)");
+
+                    b.Property<decimal>("ForeignCredit")
+                        .HasColumnType("numeric");
+
+                    b.Property<decimal>("ForeignDebit")
+                        .HasColumnType("numeric");
+
+                    b.Property<bool>("IsConsolidated")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsLocal")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsOpeningBalance")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsReconciled")
+                        .HasColumnType("boolean");
+
+                    b.Property<Guid>("JournalId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<long?>("LastModifierUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<decimal>("LocalCredit")
+                        .HasColumnType("numeric");
+
+                    b.Property<decimal>("LocalDebit")
+                        .HasColumnType("numeric");
+
+                    b.Property<Guid>("OuId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("OuName")
+                        .HasMaxLength(350)
+                        .HasColumnType("character varying(350)");
+
+                    b.Property<Guid>("PettyCashRecipientId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("PettyCashRecipientName")
+                        .HasMaxLength(130)
+                        .HasColumnType("character varying(130)");
+
+                    b.Property<string>("ReferenceNumber")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<decimal>("SellRate")
+                        .HasColumnType("numeric");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("TransactionDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("TransactionSource")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("JournalDetails");
                 });
 
             modelBuilder.Entity("RhyoliteOrbit.Models.GeneralLedger.PettyCashRecipient", b =>
@@ -13807,7 +13938,7 @@ namespace RhyoliteOrbit.Migrations
                     b.Property<int>("LastNo")
                         .HasColumnType("integer");
 
-                    b.Property<int>("Module")
+                    b.Property<int>("ModuleId")
                         .HasColumnType("integer");
 
                     b.Property<int>("Padding")

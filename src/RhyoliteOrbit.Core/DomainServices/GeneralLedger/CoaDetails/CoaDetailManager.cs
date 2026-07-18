@@ -79,7 +79,7 @@ public class CoaDetailManager: DomainService, ICoaDetailManager
     
             var data = await (await _repositoryCoaDetail.GetAllAsync())
                 .Where(predicate)
-                .Select(a => new { a.Id, a.AccountName, a.AccountNo, a.Status, a.AccountControlId, a.AccountControlName, a.CurrencyId, a.CurrencyName, a.CurrencyCode, a.CurrentBalance, a.CurrentForeignBalance })
+                .Select(a => new { a.Id, a.AccountName, Name = $"{a.AccountNo}-{a.AccountName}", a.AccountNo, a.Status, a.AccountControlId, a.AccountControlName, a.CurrencyId, a.CurrencyName, a.CurrencyCode, a.CurrentBalance, a.CurrentForeignBalance })
                 .Skip((pageNo - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
@@ -92,7 +92,7 @@ public class CoaDetailManager: DomainService, ICoaDetailManager
                 pageSize,
                 totalCount,
                 totalPages,
-                data,
+                data = data.OrderBy(a=> a.AccountNo).ToList(),
                 lowerBound = pageSize * (pageNo - 1) + 1,
                 upperBound = totalPages == pageNo ? totalCount : pageNo * pageSize,
             };

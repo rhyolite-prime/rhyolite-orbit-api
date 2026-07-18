@@ -5,7 +5,7 @@ namespace RhyoliteOrbit.Models.Shared;
 
 public class SystemNumber: Abp.Domain.Entities.Auditing.FullAuditedEntity<Guid>, Abp.Domain.Entities.IMustHaveTenant
 {
-    public int Module { get; set; }
+    public int ModuleId { get; set; }
     
     [MaxLength(100)]
     public string ItemName { get; set; }
@@ -18,7 +18,7 @@ public class SystemNumber: Abp.Domain.Entities.Auditing.FullAuditedEntity<Guid>,
     public string Suffix { get; set; }
     
     [MaxLength(50)]
-    public string FormatPattern { get; set; } // eg [Prefix]:[Number]:[Suffix] or [Prefix]-[Number]-[Suffix]
+    public string FormatPattern { get; set; } // eg. {PREFIX}{NO}{SUFFIX}
     
     public int Padding { get; set; }
     public int LastNo { get; set; }

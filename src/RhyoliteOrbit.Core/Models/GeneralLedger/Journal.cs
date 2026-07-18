@@ -11,5 +11,9 @@ public class Journal: Abp.Domain.Entities.Auditing.FullAuditedEntity<Guid>, Abp.
     public decimal TotalCredit { get; set; }
     public decimal TotalDebit { get; set; }
     public bool IsPosted { get; set; }
+    public bool IsMultiCurrency { get; set; }
+    
+    public string TransactionSource { get; set; }
+    
     public int TenantId { get; set; }
 }

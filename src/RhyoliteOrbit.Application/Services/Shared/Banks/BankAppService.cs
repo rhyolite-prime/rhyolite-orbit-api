@@ -37,13 +37,15 @@ public class BankAppService: RhyoliteOrbitAppServiceBase
     public async Task Update(UpdateBankInput input)
     {
         var obj = _mapper.Map<Bank>(input);
+        var tenantInfo = await GetCurrentTenantAsync();
+        obj.TenantId = tenantInfo.Id;
         await _bankManager.Update(obj);
     }
 
     [HttpDelete]
-    public async Task Delete(Guid Id)
+    public async Task Delete(Guid id)
     {   
-        await _bankManager.Delete(Id);
+        await _bankManager.Delete(id);
     }
 
     // branches...
