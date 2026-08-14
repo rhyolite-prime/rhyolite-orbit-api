@@ -386,7 +386,31 @@ public class RhyoliteOrbitConsts
     }
 
     
+    public enum WssdActionType
+    {
+        Api = 0,
+        Menu = 1,
+        Display = 2,
+        Input = 3,
+        OptionSelect = 4,
+        DeferredRoutine = 5,
+        Redirect = 6,
+        Terminate = 7,
+        PersistData = 8,
+        SendNotification = 9,
+    }
     
+    public enum DeliveryStatus
+    {
+        Pending = 0,
+        Processing = 1,
+        InTransit = 2,
+        OutForDelivery = 3,
+        Delivered = 4,
+        Failed = 5,
+        Returned = 6,
+        Cancelled = 7,
+    }
 
 
      

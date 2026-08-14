@@ -22,6 +22,7 @@
     <Folder Include="Services\Hr\" />
     <Folder Include="Services\Inventory\" />
     <Folder Include="Services\Payroll\SalaryAdvanceApplications\Dto\" />
+    <Folder Include="Services\Pos\" />
     <Folder Include="Services\ProductionPlanning\FinalProductTests\Dto\" />
     <Folder Include="Services\ProductionPlanning\InProcessInspections\Dto\" />
     <Folder Include="Services\ProductionPlanning\Schedules\Dto\" />

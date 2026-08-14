@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Abp.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RhyoliteOrbit.DomainServices.GeneralLedger.Journals;
 using RhyoliteOrbit.DomainServices.GeneralLedger.Journals.Dto;
@@ -7,6 +8,7 @@ using RhyoliteOrbit.Services.GeneralLedger.Journals.Dto;
 
 namespace RhyoliteOrbit.Services.GeneralLedger.Journals;
 
+[AbpAuthorize]
 public class JournalAppService : RhyoliteOrbitAppServiceBase
 {
     private readonly IJournalManager  _journalManager;
@@ -32,6 +34,12 @@ public class JournalAppService : RhyoliteOrbitAppServiceBase
     public async Task Create(JournalDto dto)
     {
         await _journalManager.Create(dto);
+    }
+    
+    [HttpPut]
+    public async Task Update(JournalDto dto)
+    {
+        await _journalManager.Update(dto);
     }
 
     [HttpDelete]

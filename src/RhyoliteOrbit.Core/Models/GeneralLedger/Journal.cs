@@ -13,6 +13,12 @@ public class Journal: Abp.Domain.Entities.Auditing.FullAuditedEntity<Guid>, Abp.
     public bool IsPosted { get; set; }
     public bool IsMultiCurrency { get; set; }
     
+    public Guid OuId { get; set; }
+    [MaxLength(350)]
+    
+    public string OuName { get; set; }
+    [MaxLength(20)]
+    
     public string TransactionSource { get; set; }
     
     public int TenantId { get; set; }

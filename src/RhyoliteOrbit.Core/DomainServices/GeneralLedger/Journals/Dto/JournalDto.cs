@@ -11,6 +11,10 @@ public class JournalDto
     public decimal TotalCredit { get; set; }
     public decimal TotalDebit { get; set; }
     public bool IsMultiCurrency { get; set; }
+    
+    public Guid OuId { get; set; }
+    
+    public string OuName { get; set; }
     public List<JournalDetail> Details { get; set; }
     
 }

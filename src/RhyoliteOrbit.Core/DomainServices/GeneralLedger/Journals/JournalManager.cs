@@ -6,11 +6,13 @@ using Microsoft.EntityFrameworkCore;
 using Abp.Domain.Repositories;
 using Abp.Linq.Expressions;
 using Abp.Domain.Services;
+using Abp.UI;
 using RhyoliteOrbit.DomainServices.GeneralLedger.Journals.Dto;
 using RhyoliteOrbit.Models.GeneralLedger;
 using RhyoliteOrbit.Models.Shared;
 
 namespace RhyoliteOrbit.DomainServices.GeneralLedger.Journals;
+
 
 public class JournalManager: DomainService, IJournalManager
 {
@@ -27,42 +29,81 @@ public class JournalManager: DomainService, IJournalManager
 
     
     public async Task Create(JournalDto dto)
+    {
+        var journalId = Guid.NewGuid();
+        
+        if (dto.BatchDate == default)
         {
-            var journalId = Guid.NewGuid();
-            
-            if (dto.BatchDate == default)
-            {
-                dto.BatchDate = DateTime.UtcNow;
-            }
-            
-            await _repositoryJournal.InsertAsync(new Journal
-            {
-                BatchDate = dto.BatchDate,
-                BatchNumber = dto.BatchNumber, 
-                Id = journalId, 
-                IsPosted = false,
-                IsMultiCurrency = dto.IsMultiCurrency, 
-                TotalCredit = dto.TotalCredit, 
-                TotalDebit = dto.TotalDebit,
-            });
-
-            // insert details
-            foreach (var detailDto in dto.Details)
-            {
-                detailDto.JournalId = journalId;
-                await _repositoryJournalDetail.InsertAsync(detailDto);
-            }
-            
-            //increase the next batch number in system numbers
-            var journalBatchSystemNumber = await _repositorySystemNumber.FirstOrDefaultAsync(a=> a.Key == "journal-batch-id");
-
-            if (journalBatchSystemNumber != null)
-            {
-                journalBatchSystemNumber.LastNo += 1;
-            }
-            
+            dto.BatchDate = DateTime.UtcNow;
         }
         
+        await _repositoryJournal.InsertAsync(new Journal
+        {
+            BatchDate = dto.BatchDate,
+            BatchNumber = dto.BatchNumber, 
+            Id = journalId, 
+            IsPosted = false,
+            IsMultiCurrency = dto.IsMultiCurrency, 
+            TotalCredit = dto.TotalCredit, 
+            TotalDebit = dto.TotalDebit,
+        });
+
+        // insert details
+        foreach (var detailDto in dto.Details)
+        {
+            detailDto.JournalId = journalId;
+            await _repositoryJournalDetail.InsertAsync(detailDto);
+        }
+        
+        //increase the next batch number in system numbers
+        var journalBatchSystemNumber = await _repositorySystemNumber.FirstOrDefaultAsync(a=> a.Key == "journal-batch-id");
+
+        if (journalBatchSystemNumber != null)
+        {
+            journalBatchSystemNumber.LastNo += 1;
+        }
+            
+    }
+        
+    public async Task Update(JournalDto dto)
+    {
+        // 1. Fetch the existing journal batch header by BatchNumber (or by Id depending on your DTO)
+        var journal = await _repositoryJournal.FirstOrDefaultAsync(j => j.BatchNumber.Trim() == dto.BatchNumber.Trim());
+
+        if (journal == null)
+        {
+            throw new UserFriendlyException($"Journal batch with batch number '{dto.BatchNumber}' was not found.");
+        }
+
+        // Optional Guard: Prevent updating if the journal has already been posted
+        if (journal.IsPosted)
+        {
+            throw new UserFriendlyException("Cannot modify a journal batch that has already been posted.");
+        }
+
+        // 2. Update journal header properties
+        journal.BatchDate = dto.BatchDate == default ? DateTime.UtcNow : dto.BatchDate;
+        journal.IsMultiCurrency = dto.IsMultiCurrency;
+        journal.TotalCredit = dto.TotalCredit;
+        journal.TotalDebit = dto.TotalDebit;
+        journal.OuId = dto.OuId;
+        journal.OuName = dto.OuName;
+
+        await _repositoryJournal.UpdateAsync(journal);
+
+        // 3. Delete existing journal details for this batch
+        await _repositoryJournalDetail.HardDeleteAsync(d => d.JournalId == journal.Id);
+
+        // 4. Insert updated line items
+        if (dto.Details != null && dto.Details.Any())
+        {
+            foreach (var detailDto in dto.Details)
+            {
+                detailDto.JournalId = journal.Id;
+                await _repositoryJournalDetail.InsertAsync(detailDto);
+            }
+        }
+    }
     public async Task<object> ListAll(int pageNo, int pageSize, string batchNumber = null, DateTime? startDate = null, DateTime? endDate = null, bool? isPosted = null, bool? isMultiCurrency = null)
     {
         var predicate = PredicateBuilder.New<Journal>();
@@ -71,7 +112,7 @@ public class JournalManager: DomainService, IJournalManager
 
         if (!string.IsNullOrWhiteSpace(batchNumber))
         {
-            predicate.And(x => x.BatchNumber == batchNumber);
+            predicate.And(x => x.BatchNumber.Trim() == batchNumber.Trim());
         }
 
         if (startDate.HasValue)
@@ -108,6 +149,8 @@ public class JournalManager: DomainService, IJournalManager
             BatchDate = j.BatchDate,
             TotalCredit = j.TotalCredit,
             TotalDebit = j.TotalDebit,
+            OuId = j.OuId,
+            OuName = j.OuName,
             IsMultiCurrency = j.IsMultiCurrency,
             Details = details.Where(d => d.JournalId == j.Id).ToList()
         }).ToList();
