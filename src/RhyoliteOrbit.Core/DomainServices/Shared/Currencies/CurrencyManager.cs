@@ -60,7 +60,7 @@ public class CurrencyManager : Abp.Domain.Services.DomainService, ICurrencyManag
                 
             await _repositoryCurrency.CountAsync(predicate);
             
-        var data = await (await _repositoryCurrency.GetAllAsync()).Where(predicate).Select(a=> new { a.Id, a.Name, a.Code, a.BuyRate, a.SellRate, a.MinorName }).Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
+        var data = await (await _repositoryCurrency.GetAllAsync()).Where(predicate).Select(a=> new { a.Id, a.Name, a.Code,a.IsDefault, a.BuyRate, a.SellRate, a.MinorName }).Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
 
         var totalPages = totalCount > 0 ? Convert.ToInt32(Math.Ceiling(totalCount / (decimal)pageSize)) : 0;
 

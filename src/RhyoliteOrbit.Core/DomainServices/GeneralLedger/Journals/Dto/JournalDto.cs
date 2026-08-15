@@ -13,6 +13,7 @@ public class JournalDto
     public bool IsMultiCurrency { get; set; }
     
     public Guid OuId { get; set; }
+    public Guid Id { get; set; }
     
     public string OuName { get; set; }
     public List<JournalDetail> Details { get; set; }

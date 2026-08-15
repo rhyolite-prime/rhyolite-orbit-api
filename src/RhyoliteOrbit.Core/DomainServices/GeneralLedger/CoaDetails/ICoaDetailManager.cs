@@ -12,4 +12,5 @@ public interface ICoaDetailManager : Abp.Domain.Services.IDomainService
     
     Task Update(CoaDetail entity);
     Task Delete(Guid id);
+    Task<object> CheckAccountDetails(int accountNumber,  Guid accountControlId);
 }

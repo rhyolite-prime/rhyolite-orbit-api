@@ -42,6 +42,8 @@ public class JournalManager: DomainService, IJournalManager
             BatchDate = dto.BatchDate,
             BatchNumber = dto.BatchNumber, 
             Id = journalId, 
+            OuId = dto.OuId,
+            OuName = dto.OuName,
             IsPosted = false,
             IsMultiCurrency = dto.IsMultiCurrency, 
             TotalCredit = dto.TotalCredit, 
@@ -150,6 +152,7 @@ public class JournalManager: DomainService, IJournalManager
             TotalCredit = j.TotalCredit,
             TotalDebit = j.TotalDebit,
             OuId = j.OuId,
+            Id =  j.Id,
             OuName = j.OuName,
             IsMultiCurrency = j.IsMultiCurrency,
             Details = details.Where(d => d.JournalId == j.Id).ToList()
@@ -188,5 +191,12 @@ public class JournalManager: DomainService, IJournalManager
     public async Task Delete(Guid id)
     {
         await _repositoryJournal.DeleteAsync(id);
+        
+        var journalDetails = await _repositoryJournalDetail.GetAllListAsync(x=> x.JournalId == id);
+        
+        foreach (var journalDetail in journalDetails)
+        {
+            await _repositoryJournalDetail.DeleteAsync(journalDetail);
+        }
     }
 }

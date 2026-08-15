@@ -31,7 +31,12 @@ public class CoaDetailAppService: RhyoliteOrbitAppServiceBase
     {
         return await _coaDetailManager.ListActiveAccounts();
     }
-
+    
+    [HttpGet]
+    public async Task<object> CheckAccountDetails(int accountNumber, Guid accountControlId)
+    {
+        return await _coaDetailManager.CheckAccountDetails(accountNumber, accountControlId);
+    }
     
     [HttpPost]
     public async Task Create(CreateCoaDetailInput input)

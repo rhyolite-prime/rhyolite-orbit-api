@@ -21,7 +21,6 @@ public class CoaDetailManager: DomainService, ICoaDetailManager
             _repositoryCoaDetail = repositoryCoaDetail;
             _repositoryCoaControl = repositoryCoaControl;
         }
-
         
         public async Task Create(CoaDetail entity)
         {
@@ -104,8 +103,11 @@ public class CoaDetailManager: DomainService, ICoaDetailManager
         {
             return await _repositoryCoaDetail.GetAllListAsync(x=> x.Status == (int)RhyoliteOrbitConsts.AccountStatus.Active);
         }
-        
-        
+
+        public async Task<object> CheckAccountDetails(int accountNumber, Guid accountControlId)
+        {
+            return await _repositoryCoaDetail.FirstOrDefaultAsync(x => x.AccountNo == accountNumber && x.AccountControlId == accountControlId);
+        }
         public async Task Update(CoaDetail entity)
         {
             var exists = await _repositoryCoaDetail.FirstOrDefaultAsync(
