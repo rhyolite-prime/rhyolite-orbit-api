@@ -4,7 +4,9 @@ using System.Threading.Tasks;
 using Abp.Domain.Repositories;
 using Abp.Linq.Expressions;
 using Abp.UI;
+using Akka.Actor;
 using Microsoft.EntityFrameworkCore;
+using RhyoliteOrbit.Actors;
 using RhyoliteOrbit.Models.Shared;
 
 namespace RhyoliteOrbit.DomainServices.Shared.Currencies;
@@ -12,29 +14,49 @@ namespace RhyoliteOrbit.DomainServices.Shared.Currencies;
 public class CurrencyManager : Abp.Domain.Services.DomainService, ICurrencyManager
 {
     private readonly IRepository<Currency, Guid> _repositoryCurrency;
+    private readonly IActorRef _dataSupportEntitySyncActorProvider;
 
-    public CurrencyManager(IRepository<Currency, Guid> repositoryCurrency)
+    public CurrencyManager(IRepository<Currency, Guid> repositoryCurrency, TopLevelActors.DataSupportEntitySyncActorProvider dataSupportEntitySyncActorProvider)
     {
         _repositoryCurrency = repositoryCurrency;
+        _dataSupportEntitySyncActorProvider = dataSupportEntitySyncActorProvider();
     }
 
-    public async Task Create(Currency entity)
+    public async Task Create(Currency entity, string dataSupportBusinessAccountId)
     {
         var datta = await _repositoryCurrency.FirstOrDefaultAsync(x => x.Name == entity.Name );
 
-        if (datta == null)
+        if (datta != null)
         {
-            await _repositoryCurrency.InsertAsync(entity);
-            return;
-
+            throw new UserFriendlyException(400, "Duplicate records are not allowed.");
         }
         
-        throw new UserFriendlyException(400, "Duplicate records are not allowed.");
+        await _repositoryCurrency.InsertAsync(entity);
+        
+        var syncDataModel = new
+        {
+            EntityName = "erp_currency",
+            Operation = "create",
+            BusinessAccountId = dataSupportBusinessAccountId,
+            Data = entity
+        };
+        
+        _dataSupportEntitySyncActorProvider.Tell(syncDataModel);
     }
     
-    public async Task Update(Currency entity)
+    public async Task Update(Currency entity, string dataSupportBusinessAccountId)
     {
         await _repositoryCurrency.UpdateAsync(entity);
+        
+        var syncDataModel = new
+        {
+            EntityName = "erp_currency",
+            Operation = "update",
+            BusinessAccountId = dataSupportBusinessAccountId,
+            Data = entity
+        };
+        
+        _dataSupportEntitySyncActorProvider.Tell(syncDataModel);
     }
     
     public async Task<Currency> GetAsync(string currencyName)
@@ -77,9 +99,20 @@ public class CurrencyManager : Abp.Domain.Services.DomainService, ICurrencyManag
         return paginatedResult;
         
     }
-    public async Task Delete(Guid id)
+    public async Task Delete(Guid id, string dataSupportBusinessAccountId)
     {
+        var currencyInfo = await _repositoryCurrency.FirstOrDefaultAsync(id);
+        
         await _repositoryCurrency.DeleteAsync(id);
-
+        
+        var syncDataModel = new
+        {
+            EntityName = "erp_currency",
+            Operation = "delete",
+            BusinessAccountId = dataSupportBusinessAccountId,
+            Data = currencyInfo
+        };
+        
+        _dataSupportEntitySyncActorProvider.Tell(syncDataModel);
     }
 }

@@ -95,6 +95,16 @@ public class RhyoliteOrbitConsts
         Completed = 2
     }
     
+    public enum OrderStatus
+    {
+        Pending = 0,
+        Processing = 1,
+        Completed = 2,
+        Cancelled = 3,
+        Refunded = 4,
+        PartiallyRefunded = 5
+    }
+    
     
     //QualityControl status
     public enum QualityControlStatus
@@ -163,6 +173,42 @@ public class RhyoliteOrbitConsts
        LogicPro = 14,
     }
     
+    public enum ReceiptStatus
+    {
+        Draft = 0,
+        Completed = 1,
+        DiscrepancyFlagged = 2,
+        Cancelled = 3
+    }
+    
+    public enum TransferStatus
+    {
+        Draft = 0,
+        Requested = 1,
+        InTransit = 2,
+        Received = 3,
+        Rejected = 4,
+        Cancelled = 5
+    }
+    public enum GiftCardStatus
+    {
+        PendingActivation = 0,
+        Active = 1,
+        FullyRedeemed = 2,
+        Expired = 3,
+        Voided = 4
+    }
+    
+    public enum CreditSaleStatus
+    {
+        Pending = 0,          // Created but not yet approved/activated
+        Approved = 1,         // Approved for credit
+        PartiallyPaid = 2,    // Some payments made, balance remains
+        FullyPaid = 3,        // Settled in full
+        Overdue = 4,          // Past due date with outstanding balance
+        WrittenOff = 5,       // Written off as bad debt
+        Cancelled = 6         // Cancelled before completion
+    }
     public enum PaymentStatus
     {
         Pending = 0,
@@ -173,7 +219,31 @@ public class RhyoliteOrbitConsts
         Refunded = 5,
         PartiallyRefunded = 6,
         OnHold = 7,
-        Overdue = 8
+        Overdue = 8,
+        PartiallyPaid = 9,
+    }
+    
+    public enum RefundStatus
+    {
+        Pending = 0,
+        Approved = 1,
+        Rejected = 2,
+        Completed = 3
+    }
+    
+    public enum RequestedAction
+    {
+        Refund = 0,
+        Exchange = 1,
+        StoreCredit = 2
+    }
+
+    public enum RefundPaymentMethod
+    {
+        OriginalPaymentMethod = 0,
+        Cash = 1,
+        CustomerWallet = 2,
+        StoreCredit = 3
     }
     
     public enum WorkflowStepType
@@ -372,18 +442,6 @@ public class RhyoliteOrbitConsts
         OnHold = 4,      // Test completed, but product release pending decision
         Cancelled = 5    // Test was voided or not applicable
     }
-    
-    public enum InventoryCategory
-    {
-        RawMaterial = 0,          // Basic unprocessed inputs
-        SemiFinishedGood = 1,     // Work-in-progress or partly processed items
-        FinishedGood = 2,         // Ready for sale/distribution
-        PackagingMaterial = 3,    // Boxes, labels, containers, cartons
-        Consumable = 4,           // Items used up in production (glue, paint, solvents)
-        SparePart = 5,            // Machine spares, replacement parts
-        ToolAndEquipment = 6,     // Tools used for manufacturing but not sold
-        Energy = 7                 // Electricity, fuel, gas, renewable sources tracked as inventory
-    }
 
     
     public enum WssdActionType
@@ -403,13 +461,14 @@ public class RhyoliteOrbitConsts
     public enum DeliveryStatus
     {
         Pending = 0,
-        Processing = 1,
+        Assigned = 1,
         InTransit = 2,
-        OutForDelivery = 3,
-        Delivered = 4,
-        Failed = 5,
-        Returned = 6,
-        Cancelled = 7,
+        PickedUp = 3,
+        ArrivedAtDestination = 5,
+        Delivered = 6,
+        Failed = 7,
+        Returned = 8,
+        Cancelled = 9,
     }
 
 

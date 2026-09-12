@@ -243,11 +243,13 @@ public class RhyoliteOrbitDbContext : AbpZeroDbContext<Tenant, Role, User, Rhyol
     public DbSet<DmsWorkflowTask> DmsWorkflowTasks { get; set; }
     public DbSet<DmsComment> DmsComments { get; set; }
     //public DbSet<DmsAnnotation> DmsAnnotations { get; set; }
+    // 
     
     // POS
     public DbSet<PosBranch> PosBranches { get; set; }
+    public DbSet<PosCustomer> PosCustomers { get; set; }
     public DbSet<PosSalesAgent> SalesAgents { get; set; }
-    public DbSet<ItemCategory> ItemCategories { get; set; }
+    public DbSet<InventoryCategory> InventoryCategories { get; set; }
     public DbSet<Coupon> Coupons { get; set; }
     public DbSet<CustomerRank> CustomerRanks { get; set; }
     public DbSet<Delivery> Deliveries { get; set; }
@@ -256,14 +258,14 @@ public class RhyoliteOrbitDbContext : AbpZeroDbContext<Tenant, Role, User, Rhyol
     public DbSet<DeliveryChannel> DeliveryChannels { get; set; }     
     public DbSet<NotificationAccount> NotificationAccounts { get; set; }
     public DbSet<RefundAndReturn> RefundAndReturns { get; set; }
-    public DbSet<PosItem> Items { get; set; }
+    public DbSet<PosInventoryItem> PosInventoryItems { get; set; }
     public DbSet<CreditSale> CreditSales { get; set; }
-    public DbSet<CreditSaleRepaymentSchedule> CreditSaleRepaymentSchedule { get; set; }
+    public DbSet<CreditSaleRepaymentSchedule> CreditSaleRepaymentSchedules { get; set; }
     public DbSet<CreditTerm> CreditTerms { get; set; }
     public DbSet<CreditAdjustment> CreditAdjustments { get; set; }
     public DbSet<PickupPoint> PickupPoints { get; set; }
-    //public DbSet<StockReceipt> StockReceipts { get; set; }
-    //public DbSet<StockTransfer> StockTransfers { get; set; }
+    public DbSet<StockReceipt> StockReceipts { get; set; }
+    public DbSet<StockTransfer> StockTransfers { get; set; }
     public DbSet<UomCode> UomCodes { get; set; }
     public DbSet<ItemTag> ItemTags { get; set; }
     public DbSet<ProductReview> ProductReviews { get; set; }

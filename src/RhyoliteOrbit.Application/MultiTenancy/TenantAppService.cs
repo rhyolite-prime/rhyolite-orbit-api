@@ -1,4 +1,5 @@
-﻿using Abp.Application.Services;
+﻿using System;
+using Abp.Application.Services;
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
@@ -7,7 +8,6 @@ using Abp.IdentityFramework;
 using Abp.Linq.Extensions;
 using Abp.MultiTenancy;
 using Abp.Runtime.Security;
-using RhyoliteOrbit.Authorization;
 using RhyoliteOrbit.Authorization.Roles;
 using RhyoliteOrbit.Authorization.Users;
 using RhyoliteOrbit.Editions;
@@ -16,6 +16,9 @@ using Microsoft.AspNetCore.Identity;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using Abp.Domain.Uow;
+using Abp.Runtime.Session;
+using HashidsNet;
 using Microsoft.AspNetCore.Authorization;
 
 namespace RhyoliteOrbit.MultiTenancy;
@@ -30,6 +33,7 @@ public class TenantAppService : AsyncCrudAppService<Tenant, TenantDto, int, Page
     private readonly UserManager _userManager;
     private readonly RoleManager _roleManager;
     private readonly IAbpZeroDbMigrator _abpZeroDbMigrator;
+    private readonly IUnitOfWorkManager _unitOfWorkManager;
 
     public TenantAppService(
         IRepository<Tenant, int> repository,
@@ -37,7 +41,7 @@ public class TenantAppService : AsyncCrudAppService<Tenant, TenantDto, int, Page
         EditionManager editionManager,
         UserManager userManager,
         RoleManager roleManager,
-        IAbpZeroDbMigrator abpZeroDbMigrator)
+        IAbpZeroDbMigrator abpZeroDbMigrator, IUnitOfWorkManager unitOfWorkManager)
         : base(repository)
     {
         _tenantManager = tenantManager;
@@ -45,14 +49,67 @@ public class TenantAppService : AsyncCrudAppService<Tenant, TenantDto, int, Page
         _userManager = userManager;
         _roleManager = roleManager;
         _abpZeroDbMigrator = abpZeroDbMigrator;
+        _unitOfWorkManager = unitOfWorkManager;
     }
 
-    
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
     public async Task<TenantDto> PrivateCreate(CreateTenantDto input)
     {
         // Reuse the existing logic for tenant creation
         return await CreateAsync(input);
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    public async Task<object> GenerateApiKeys()
+    {
+        int tenantId = AbpSession.GetTenantId();
+        
+        var tenantInfo = await _tenantManager.FindByIdAsync(tenantId);
+
+        if (tenantInfo != null)
+        {
+            var accountSecret = Guid.NewGuid().ToString();
+            var hashids = new Hashids(accountSecret, 10);
+                    
+            var accountId = hashids.Encode(tenantId);
+                
+            tenantInfo.AccountId = accountId;
+            tenantInfo.AccountSecret = accountSecret;
+                
+            await _tenantManager.UpdateAsync(tenantInfo);
+            
+            // push to rabbit mq consumer to sync credentials ...
+                
+            return new
+            {
+                accountId,
+                accountSecret,
+                businessAccountId = tenantInfo.DataSupportBusinessAccountId
+            };
+                
+        }
+             
+        return new
+        {
+            accountId = string.Empty,
+            accountSecret = string.Empty,
+            businessAccountId = string.Empty
+        };
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
     public override async Task<TenantDto> CreateAsync(CreateTenantDto input)
     {
         CheckCreatePermission();
@@ -122,6 +179,10 @@ public class TenantAppService : AsyncCrudAppService<Tenant, TenantDto, int, Page
         entity.IsActive = updateInput.IsActive;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="input"></param>
     public override async Task DeleteAsync(EntityDto<int> input)
     {
         CheckDeletePermission();

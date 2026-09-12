@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using Abp.Domain.Services;
@@ -20,18 +21,17 @@ public class FileUploadApi: DomainService, IFileUploadApi
         _cloudinaryApiSecret = configuration["CloudinarySettings:ApiSecret"];
     }
      
-    public async Task<string> UploadFileStream(Stream dataFileStream,string fileName,string fileExtension)
+    public async Task<string> UploadFileStream(Stream dataFileStream,string fileName,string fileExtension, string folderName)
     {
         Account account = new Account(_cloudinaryName, _cloudinaryApiKey, _cloudinaryApiSecret);
         var cloudinary = new Cloudinary(account);
 
         if (!string.IsNullOrEmpty(fileName) && dataFileStream.Length > 0)
         {
-
             var uploadParams = new RawUploadParams()
             {
                 File = new FileDescription($"{fileName}{fileExtension}", dataFileStream),
-                Folder = "school_manager_repository",
+                Folder = folderName,
                 Overwrite = true,
             };
 
@@ -46,6 +46,34 @@ public class FileUploadApi: DomainService, IFileUploadApi
 
     }
 
+    public async Task<string> SingleUpload(string base64Image, string folderName)
+    {
+        Account account = new Account(_cloudinaryName, _cloudinaryApiKey, _cloudinaryApiSecret);
+        var cloudinary = new Cloudinary(account);
+
+        string[] words = base64Image.Split(',');
+        string imageString = words[1];
+
+        byte[] imageBytes = Convert.FromBase64String(imageString);
+        MemoryStream imageMemory = new MemoryStream(imageBytes, 0, imageBytes.Length);
+
+        var uploadParams = new ImageUploadParams()
+        {
+            File = new FileDescription(Guid.NewGuid().ToString("N"), imageMemory),
+            Folder = folderName,
+            Overwrite = true,
+        };
+
+        var uploadResult = await cloudinary.UploadAsync(uploadParams);
+        if (uploadResult != null)
+        {
+            return uploadResult.Url.ToString();
+
+        }
+        
+        return string.Empty;
+    }
+    
     private async Task<byte[]> GetBytes(Stream stream)
         {
             var bytes = new byte[stream.Length];

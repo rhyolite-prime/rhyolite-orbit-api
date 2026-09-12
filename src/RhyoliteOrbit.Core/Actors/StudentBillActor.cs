@@ -37,133 +37,132 @@ public class StudentBillActor: ReceiveActor
     
     private async Task HandleMessage(List<StudentBillDto> msgList)
     {
-        using (var scope = _serviceProvider.CreateScope())
+        using var scope = _serviceProvider.CreateScope();
+        
+        try
         {
-            try
+            var viewRenderService = scope.ServiceProvider.GetRequiredService<IViewRenderService>();
+            var webHostEnvironment = scope.ServiceProvider.GetRequiredService<IWebHostEnvironment>();
+            var fileUploadApi = scope.ServiceProvider.GetRequiredService<IFileUploadApi>();
+            var rabbitMqClient = scope.ServiceProvider.GetRequiredService<IRabbitMqClient>();
+            var configuration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
+                
+            var studentBillReportUpdatesQueue = configuration["RabbitMqBroker:StudentBillReportUpdatesQueue"];
+            var topicExchangeType = configuration["RabbitMqBroker:ExchangeTypes:AmqTopic"];
+
+            List<MemoryStream> streamArray = new List<MemoryStream>();
+            List<object> studentBillReportList = new List<object>();
+                
+            string reportsFolder = Path.Combine(webHostEnvironment.WebRootPath, "Reports");
+            Directory.CreateDirectory(reportsFolder);
+
+            string blinkEnginePath = RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
+                ? Path.Combine(webHostEnvironment.WebRootPath, "PdfEngine", "mac")
+                : Path.Combine(webHostEnvironment.WebRootPath, "PdfEngine", "linux");
+
+            _logger.LogInformation("Blink engine path: " + blinkEnginePath);
+
+            var htmlConverter = new HtmlToPdfConverter(HtmlRenderingEngine.Blink);
+            var blinkConverterSettings = new BlinkConverterSettings
             {
-                var viewRenderService = scope.ServiceProvider.GetRequiredService<IViewRenderService>();
-                var webHostEnvironment = scope.ServiceProvider.GetRequiredService<IWebHostEnvironment>();
-                var fileUploadApi = scope.ServiceProvider.GetRequiredService<IFileUploadApi>();
-                var rabbitMqClient = scope.ServiceProvider.GetRequiredService<IRabbitMqClient>();
-                var configuration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
-                
-                var studentBillReportUpdatesQueue = configuration["RabbitMqBroker:StudentBillReportUpdatesQueue"];
-                var topicExchangeType = configuration["RabbitMqBroker:ExchangeTypes:AmqTopic"];
+                BlinkPath = blinkEnginePath,
+                Orientation = PdfPageOrientation.Portrait,
+                EnableJavaScript = true,
+                AdditionalDelay = 3000
+            };
+            blinkConverterSettings.CommandLineArguments.Add("--no-sandbox");
+            blinkConverterSettings.CommandLineArguments.Add("--disable-setuid-sandbox");
 
-                List<MemoryStream> streamArray = new List<MemoryStream>();
-                List<object> studentBillReportList = new List<object>();
-                
-                string reportsFolder = Path.Combine(webHostEnvironment.WebRootPath, "Reports");
-                Directory.CreateDirectory(reportsFolder);
+            htmlConverter.ConverterSettings = blinkConverterSettings;
 
-                string blinkEnginePath = RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
-                    ? Path.Combine(webHostEnvironment.WebRootPath, "PdfEngine", "mac")
-                    : Path.Combine(webHostEnvironment.WebRootPath, "PdfEngine", "linux");
+            foreach (var msg in msgList)
+            {
+                var reportHtml = await viewRenderService.RenderToStringAsync("Home/StudentBillReport", msg);
 
-                _logger.LogInformation("Blink engine path: " + blinkEnginePath);
+                _logger.LogInformation($"Successfully generated html for student_bill_report for student {msg.StudentInfo.Id}");
 
-                var htmlConverter = new HtmlToPdfConverter(HtmlRenderingEngine.Blink);
-                var blinkConverterSettings = new BlinkConverterSettings
+                var billStream = new MemoryStream();
+                using (var document1 = htmlConverter.Convert(reportHtml, string.Empty))
                 {
-                    BlinkPath = blinkEnginePath,
-                    Orientation = PdfPageOrientation.Portrait,
-                    EnableJavaScript = true,
-                    AdditionalDelay = 3000
-                };
-                blinkConverterSettings.CommandLineArguments.Add("--no-sandbox");
-                blinkConverterSettings.CommandLineArguments.Add("--disable-setuid-sandbox");
+                    document1.Save(billStream);
+                    document1.Close(false);
+                }
 
-                htmlConverter.ConverterSettings = blinkConverterSettings;
-
-                foreach (var msg in msgList)
+                // Save/write/upload as usual (after reset)
+                billStream.Position = 0;
+                string individualReportPath = Path.Combine(reportsFolder, $"{msg.StudentInfo.Id}.pdf");
+                using (var fileStream = new FileStream(individualReportPath, FileMode.Create, FileAccess.Write))
                 {
-                    var reportHtml = await viewRenderService.RenderToStringAsync("Home/StudentBillReport", msg);
+                    await billStream.CopyToAsync(fileStream);
+                }
 
-                    _logger.LogInformation($"Successfully generated html for student_bill_report for student {msg.StudentInfo.Id}");
+                // >>>> CREATE a CLONE of billStream for merging BEFORE upload (which might dispose it) <<<<
+                billStream.Position = 0;
+                var mergeCopy = new MemoryStream();
+                await billStream.CopyToAsync(mergeCopy);
+                mergeCopy.Position = 0;
+                streamArray.Add(mergeCopy);
 
-                    var billStream = new MemoryStream();
-                    using (var document1 = htmlConverter.Convert(reportHtml, string.Empty))
-                    {
-                        document1.Save(billStream);
-                        document1.Close(false);
-                    }
+                billStream.Position = 0;
+                var uploadedFileUrl = await fileUploadApi.UploadFileStream(billStream, msg.StudentInfo.Id.ToString(), ".pdf", "school_manager_repository");
+                _logger.LogInformation($"Uploaded student bill PDF: {uploadedFileUrl}");
 
-                    // Save/write/upload as usual (after reset)
-                    billStream.Position = 0;
-                    string individualReportPath = Path.Combine(reportsFolder, $"{msg.StudentInfo.Id}.pdf");
-                    using (var fileStream = new FileStream(individualReportPath, FileMode.Create, FileAccess.Write))
-                    {
-                        await billStream.CopyToAsync(fileStream);
-                    }
-
-                    // >>>> CREATE a CLONE of billStream for merging BEFORE upload (which might dispose it) <<<<
-                    billStream.Position = 0;
-                    var mergeCopy = new MemoryStream();
-                    await billStream.CopyToAsync(mergeCopy);
-                    mergeCopy.Position = 0;
-                    streamArray.Add(mergeCopy);
-
-                    billStream.Position = 0;
-                    var uploadedFileUrl = await fileUploadApi.UploadFileStream(billStream, msg.StudentInfo.Id.ToString(), ".pdf");
-                    _logger.LogInformation($"Uploaded student bill PDF: {uploadedFileUrl}");
-
-                    // Now dispose billStream after use
-                    await billStream.DisposeAsync();
+                // Now dispose billStream after use
+                await billStream.DisposeAsync();
                     
-                    studentBillReportList.Add(new {
-                        StudentId = msg.StudentInfo.Id,
-                        BillReportUrl = uploadedFileUrl
-                    });
+                studentBillReportList.Add(new {
+                    StudentId = msg.StudentInfo.Id,
+                    BillReportUrl = uploadedFileUrl
+                });
 
-                }
-
-                // Merge all CLONED streams (mergeCopy in streamArray)
-                var finalDoc = new PdfDocument { PageSettings = { Size = PdfPageSize.A4 } };
-                PdfDocumentBase.Merge(finalDoc, streamArray.ToArray());
-
-                var reportStream = new MemoryStream();
-                finalDoc.Save(reportStream);
-                finalDoc.Close(true);
-
-                reportStream.Position = 0;
-
-                string combinedReportPath = Path.Combine(reportsFolder, $"CombinedStudentBills_{DateTime.UtcNow:yyyyMMddHHmmss}.pdf");
-                using (var fileStream = new FileStream(combinedReportPath, FileMode.Create, FileAccess.Write))
-                {
-                    await reportStream.CopyToAsync(fileStream);
-                }
-                _logger.LogInformation($"Saved combined student bills PDF: {combinedReportPath}");
-
-                reportStream.Position = 0;
-                string combinedUploadName = $"CombinedStudentBills_{DateTime.UtcNow:yyyyMMddHHmmss}";
-                var combinedUploadedFileUrl = await fileUploadApi.UploadFileStream(reportStream, combinedUploadName, ".pdf");
-                _logger.LogInformation($"Uploaded combined student bills PDF: {combinedUploadedFileUrl}");
-
-                // Dispose all MemoryStreams
-                foreach (var stream in streamArray)
-                {
-                    await stream.DisposeAsync();
-                }
-                await reportStream.DisposeAsync();
-
-                var billReportUpdates = new
-                {
-                    studentBillReportList,
-                    msgList[0].BillMetaData,
-                    BatchDocumentUrl = combinedUploadedFileUrl,
-                    msgList[0].TenantId,
-                };
-                
-                //log the payload here
-                _logger.LogInformation($"billReportUpdates_payload => {JsonConvert.SerializeObject(billReportUpdates)}");
-                //produce to rabbit mq
-               rabbitMqClient.Produce(topicExchangeType, studentBillReportUpdatesQueue, billReportUpdates);
             }
-            catch (Exception ex)
+
+            // Merge all CLONED streams (mergeCopy in streamArray)
+            var finalDoc = new PdfDocument { PageSettings = { Size = PdfPageSize.A4 } };
+            PdfDocumentBase.Merge(finalDoc, streamArray.ToArray());
+
+            var reportStream = new MemoryStream();
+            finalDoc.Save(reportStream);
+            finalDoc.Close(true);
+
+            reportStream.Position = 0;
+
+            string combinedReportPath = Path.Combine(reportsFolder, $"CombinedStudentBills_{DateTime.UtcNow:yyyyMMddHHmmss}.pdf");
+            using (var fileStream = new FileStream(combinedReportPath, FileMode.Create, FileAccess.Write))
             {
-                _logger.LogError(ex, $"Error generating student bill report: {ex.Message}, {ex.StackTrace}");
-                throw;
+                await reportStream.CopyToAsync(fileStream);
             }
+            _logger.LogInformation($"Saved combined student bills PDF: {combinedReportPath}");
+
+            reportStream.Position = 0;
+            string combinedUploadName = $"CombinedStudentBills_{DateTime.UtcNow:yyyyMMddHHmmss}";
+            var combinedUploadedFileUrl = await fileUploadApi.UploadFileStream(reportStream, combinedUploadName, ".pdf", "school_manager_repository");
+            _logger.LogInformation($"Uploaded combined student bills PDF: {combinedUploadedFileUrl}");
+
+            // Dispose all MemoryStreams
+            foreach (var stream in streamArray)
+            {
+                await stream.DisposeAsync();
+            }
+            await reportStream.DisposeAsync();
+
+            var billReportUpdates = new
+            {
+                studentBillReportList,
+                msgList[0].BillMetaData,
+                BatchDocumentUrl = combinedUploadedFileUrl,
+                msgList[0].TenantId,
+            };
+                
+            //log the payload here
+            _logger.LogInformation($"billReportUpdates_payload => {JsonConvert.SerializeObject(billReportUpdates)}");
+            //produce to rabbit mq
+            rabbitMqClient.Produce(topicExchangeType, studentBillReportUpdatesQueue, billReportUpdates);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"Error generating student bill report: {ex.Message}, {ex.StackTrace}");
+            throw;
         }
     }
     

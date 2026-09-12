@@ -14,6 +14,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Abp;
+using Abp.Domain.Uow;
 
 namespace RhyoliteOrbit.Controllers
 {
@@ -24,17 +26,23 @@ namespace RhyoliteOrbit.Controllers
         private readonly ITenantCache _tenantCache;
         private readonly AbpLoginResultTypeHelper _abpLoginResultTypeHelper;
         private readonly TokenAuthConfiguration _configuration;
+        private readonly IPermissionManager _permissionManager;
+        private readonly IPermissionChecker _permissionChecker;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
 
         public TokenAuthController(
             LogInManager logInManager,
             ITenantCache tenantCache,
             AbpLoginResultTypeHelper abpLoginResultTypeHelper,
-            TokenAuthConfiguration configuration)
+            TokenAuthConfiguration configuration, IPermissionManager permissionManager, IPermissionChecker permissionChecker, IUnitOfWorkManager unitOfWorkManager)
         {
             _logInManager = logInManager;
             _tenantCache = tenantCache;
             _abpLoginResultTypeHelper = abpLoginResultTypeHelper;
             _configuration = configuration;
+            _permissionManager = permissionManager;
+            _permissionChecker = permissionChecker;
+            _unitOfWorkManager = unitOfWorkManager;
         }
 
         [HttpPost]
@@ -48,6 +56,9 @@ namespace RhyoliteOrbit.Controllers
 
             var accessToken = CreateAccessToken(CreateJwtClaims(loginResult.Identity));
 
+            // Get all granted permissions for the logged-in user
+            var permissionNames = await GetEffectivePermissionNamesAsync(loginResult);
+
             return new AuthenticateResultModel
             {
                 AccessToken = accessToken,
@@ -56,6 +67,28 @@ namespace RhyoliteOrbit.Controllers
                 UserId = loginResult.User.Id
             };
         }
+        
+        private async Task<List<string>> GetEffectivePermissionNamesAsync(AbpLoginResult<Tenant, User> loginResult)
+        {
+            var tenantId = loginResult.User.TenantId;
+            var userIdentifier = new UserIdentifier(tenantId, loginResult.User.Id);
+
+            using (_unitOfWorkManager.Current.SetTenantId(tenantId))
+            {
+                var grantedPermissionNames = new List<string>();
+
+                foreach (var permission in await _permissionManager.GetAllPermissionsAsync())
+                {
+                    if (await _permissionChecker.IsGrantedAsync(userIdentifier, permission.Name))
+                    {
+                        grantedPermissionNames.Add(permission.Name);
+                    }
+                }
+
+                return grantedPermissionNames;
+            }
+        }
+
 
         private string GetTenancyNameOrNull()
         {

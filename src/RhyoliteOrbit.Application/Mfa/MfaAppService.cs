@@ -7,12 +7,12 @@ namespace RhyoliteOrbit.Mfa;
 public class MfaAppService: RhyoliteOrbitAppServiceBase
 {
     private readonly IMfaManager _mfaManager;
-    private readonly IValidateTenant _validateTenant;
+    private readonly IValidateAuth _validateAuth;
     
-    public MfaAppService(IMfaManager mfaManager, IValidateTenant validateTenant)
+    public MfaAppService(IMfaManager mfaManager, IValidateAuth validateAuth)
     {
         _mfaManager = mfaManager;
-        _validateTenant = validateTenant;
+        _validateAuth = validateAuth;
     }
     
     /// <summary>

@@ -10,5 +10,8 @@ public class CustomerRank: Abp.Domain.Entities.Auditing.FullAuditedEntity<Guid>,
     public decimal MinimumTotalSpend { get; set; }
     public decimal InStoreDiscount { get; set; }
     public decimal OnlineDiscount { get; set; }
+    public Guid CurrencyId { get; set; }
+    [MaxLength(20)]
+    public string CurrencyCode { get; set; }
     public int TenantId { get; set; }
 }

@@ -100,6 +100,15 @@ public class Startup
         // Register ActorSystem ...
         services.AddSingleton(_ => ActorSystem.Create($"ActorSystem", ConfigurationLoader.Load()));
 
+         
+        services.AddSingleton<TopLevelActors.DataSupportEntitySyncActorProvider>(provider =>
+        {
+            var actorSystem = provider.GetService<ActorSystem>();
+            var configuration = provider.GetService<IConfiguration>();
+            var dataSupportEntitySyncActor = actorSystem.ActorOf(Props.Create(() => new DataSupportEntitySyncActor(provider, configuration)).WithRouter(new RoundRobinPool(2)));
+            return () => dataSupportEntitySyncActor;
+        });
+        
         services.AddSingleton<TopLevelActors.EmailActorProvider>(provider =>
         {
             var actorSystem = provider.GetService<ActorSystem>();

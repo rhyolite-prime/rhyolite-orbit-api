@@ -21,7 +21,7 @@ public class CreateRawMaterialInput
      
     public decimal StandardCost { get; set; }
 
-    public int InventoryCategory { get; set; } = (int)RhyoliteOrbitConsts.InventoryCategory.RawMaterial;
+    public int InventoryCategory { get; set; }
     
     public bool IsActive { get; set; }
 }
@@ -44,7 +44,7 @@ public class UpdateRawMaterialInput: EntityDto<Guid>
      
     public decimal StandardCost { get; set; }
     
-    public int InventoryCategory { get; set; } = (int)RhyoliteOrbitConsts.InventoryCategory.RawMaterial;
+    public int InventoryCategory { get; set; }
     
     public bool IsActive { get; set; }
 }

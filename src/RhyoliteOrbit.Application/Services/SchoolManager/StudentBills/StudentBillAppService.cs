@@ -10,12 +10,12 @@ namespace RhyoliteOrbit.Services.SchoolManager.StudentBills;
 public class StudentBillAppService: RhyoliteOrbitAppServiceBase
 {
     private readonly IStudentBillManager _studentBillManager;
-    private readonly IValidateTenant _validateTenant;
+    private readonly IValidateAuth _validateAuth;
 
-    public StudentBillAppService(IStudentBillManager studentBillManager, IValidateTenant validateTenant)
+    public StudentBillAppService(IStudentBillManager studentBillManager, IValidateAuth validateAuth)
     {
         _studentBillManager = studentBillManager;
-        _validateTenant = validateTenant;
+        _validateAuth = validateAuth;
     }
 
     [HttpPost]
@@ -62,7 +62,7 @@ public class StudentBillAppService: RhyoliteOrbitAppServiceBase
     [HttpGet]
     public async Task<object> GetStudentBillSummary(string studentId, string pin)
     {
-        var tenantId = await _validateTenant.Validate();
+        var tenantId = await _validateAuth.ValidateTenant();
         
         return await _studentBillManager.GetStudentBillSummary(studentId, pin, tenantId);
     }

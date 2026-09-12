@@ -7,11 +7,8 @@ namespace RhyoliteOrbit.DomainServices.Shared.Currencies;
 public interface ICurrencyManager : Abp.Domain.Services.IDomainService
 {
     Task<object> ListAll(int pageNo, int pageSize, string query);
-
-    Task Create(Currency input);
+    Task Create(Currency input, string dataSupportBusinessAccountId);
     Task<Currency> GetAsync(string currencyName);
-
-    Task Update(Currency input);
-
-    Task Delete(Guid id);
+    Task Update(Currency input, string dataSupportBusinessAccountId);
+    Task Delete(Guid id, string dataSupportBusinessAccountId);
 }

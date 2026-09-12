@@ -12,14 +12,14 @@ namespace RhyoliteOrbit.Services.SchoolManager.Staffs;
 public class StaffAppService: RhyoliteOrbitAppServiceBase
 {
     private readonly IStaffManager _staffManager;
-    private readonly IValidateTenant _validateTenant;
+    private readonly IValidateAuth _validateAuth;
     private readonly IMapper _mapper;
 
-    public StaffAppService(IStaffManager staffManager, IMapper mapper, IValidateTenant validateTenant)
+    public StaffAppService(IStaffManager staffManager, IMapper mapper, IValidateAuth validateAuth)
     {
         _staffManager = staffManager;
         _mapper = mapper;
-        _validateTenant = validateTenant;
+        _validateAuth = validateAuth;
     }
 
      
@@ -29,6 +29,10 @@ public class StaffAppService: RhyoliteOrbitAppServiceBase
         return await _staffManager.ListAll(pageNo, pageSize, query);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="input"></param>
     [HttpPost]
     public async Task Create(CreateStaffInput input)
     {
@@ -56,7 +60,7 @@ public class StaffAppService: RhyoliteOrbitAppServiceBase
     [HttpPost]
     public async Task Register(CreateStaffInput input)
     {
-        var tenantId = await _validateTenant.Validate();
+        var tenantId = await _validateAuth.ValidateTenant();
         var obj = _mapper.Map<Staff>(input);
         obj.TenantId = tenantId;
         await _staffManager.RegisterViaSelfService(obj);

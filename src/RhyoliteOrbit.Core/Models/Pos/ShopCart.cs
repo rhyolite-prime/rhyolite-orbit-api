@@ -16,7 +16,7 @@ public class ShopCart: Abp.Domain.Entities.Auditing.FullAuditedEntity<Guid>, Abp
     public int Quantity { get; set; }
     public int MinOrderQuantity { get; set; }
     //
-    [MaxLength(65)]
+    [MaxLength(100)]
     public string Username { get; set; }
     
     public Guid CustomerId { get; set; }

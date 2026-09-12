@@ -14,6 +14,8 @@ public class ProductReview: Abp.Domain.Entities.Auditing.FullAuditedEntity<Guid>
     [MaxLength(100)]
     public string ItemName { get; set; }
     
+    public Guid CustomerId { get; set; }
+    
     [MaxLength(100)]
     public string CustomerName { get; set; }
     

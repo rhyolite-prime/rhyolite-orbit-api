@@ -13,6 +13,9 @@ public class Tenant : AbpTenant<User>
     public string BusinessLogo { get; set; }
     
     public bool RequireTwoFactorAuth { get; set; }
+    
+    [MaxLength(100)]
+    public string DataSupportBusinessAccountId { get; set; }
      
     [MaxLength(20)]
     public string Country { get; set; }
@@ -155,6 +158,13 @@ public class Tenant : AbpTenant<User>
     public string MobileMoneyChannel { get; set; } //mtn-gh-direct-debit, vodafone-gh-direct-debit
     [MaxLength(20)]
     public string Network { get; set; }
+    
+    //=> 
+    [MaxLength(50)]
+    public string AccountId { get; set; } //as username
+        
+    [MaxLength(20)]
+    public string AccountSecret { get; set; } // as password
     
     public Tenant()
     {

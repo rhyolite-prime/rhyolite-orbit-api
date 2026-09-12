@@ -10,6 +10,11 @@ namespace RhyoliteOrbit.Web.Controllers;
 
 public class HomeController : RhyoliteOrbitControllerBase
 {
+    public ActionResult Index()
+    {
+        return View();
+    }
+    
     public async Task<ActionResult> StudentBillReport(StudentBillDto dto)
     {
         await Task.Delay(1);

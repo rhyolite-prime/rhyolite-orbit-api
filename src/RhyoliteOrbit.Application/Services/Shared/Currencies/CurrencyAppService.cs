@@ -30,7 +30,8 @@ public class CurrencyAppService: RhyoliteOrbitAppServiceBase
     public async Task Create(CreateCurrencyInput input)
     {
         var obj = _mapper.Map<Currency>(input);
-        await _currencyManager.Create(obj);
+        var tenantInfo = await GetCurrentTenantAsync();
+        await _currencyManager.Create(obj, tenantInfo.DataSupportBusinessAccountId);
     }
 
     [HttpPost]
@@ -39,12 +40,15 @@ public class CurrencyAppService: RhyoliteOrbitAppServiceBase
         var obj = _mapper.Map<Currency>(input);
         var tenantInfo = await GetCurrentTenantAsync();
         obj.TenantId = tenantInfo.Id;
-        await _currencyManager.Update(obj);
+        await _currencyManager.Update(obj, tenantInfo.DataSupportBusinessAccountId);
     }
 
     [HttpDelete]
     public async Task Delete(Guid id)
     {
-        await _currencyManager.Delete(id);
+        var tenantInfo = await GetCurrentTenantAsync();
+        
+        await _currencyManager.Delete(id, tenantInfo.DataSupportBusinessAccountId);
+        
     }
 }

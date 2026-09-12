@@ -1,6 +1,7 @@
 using RhyoliteOrbit.Application.Services.SchoolManager.SubjectRemarks.Dto;
 using RhyoliteOrbit.Models.GeneralLedger;
 using RhyoliteOrbit.Models.Payroll;
+using RhyoliteOrbit.Models.Pos;
 using RhyoliteOrbit.Models.ProductionPlanning;
 using RhyoliteOrbit.Models.SchoolManager;
 using RhyoliteOrbit.Models.Shared;
@@ -21,6 +22,12 @@ using RhyoliteOrbit.Services.Payroll.OvertimeTypes.Dto;
 using RhyoliteOrbit.Services.Payroll.PayCalendars.Dto;
 using RhyoliteOrbit.Services.Payroll.TaxReliefs.Dto;
 using RhyoliteOrbit.Services.Payroll.TaxTables.Dto;
+using RhyoliteOrbit.Services.Pos.Branches.Dto;
+using RhyoliteOrbit.Services.Pos.Categories.Dto;
+using RhyoliteOrbit.Services.Pos.Coupons.Dto;
+using RhyoliteOrbit.Services.Pos.DeliveryChannels.Dto;
+using RhyoliteOrbit.Services.Pos.Inventory.Dto;
+using RhyoliteOrbit.Services.Pos.PickupPoints.Dto;
 using RhyoliteOrbit.Services.ProductionPlanning.RawMaterials.Dto;
 using RhyoliteOrbit.Services.SchoolManager.AcademicYears.Dto;
 using RhyoliteOrbit.Services.SchoolManager.BillSetups.Dto;
@@ -151,6 +158,13 @@ public class MapProfile: AutoMapper.Profile
         CreateMap<CreateImprestCategoryInput, ImprestCategory>();
         CreateMap<UpdateImprestCategoryInput, ImprestCategory>();
         
+        //POS 
+        CreateMap<PosBranchDto, PosBranch>();
+        CreateMap<PosInventoryCategoryDto, InventoryCategory>();
+        CreateMap<DeliveryChannelDto, DeliveryChannel>();
+        CreateMap<CouponDto, Coupon>();
+        CreateMap<PickupPointDto, PickupPoint>();
+        CreateMap<PosInventoryItemDto, PosInventoryItem>();
         
         //manufacturing...
         

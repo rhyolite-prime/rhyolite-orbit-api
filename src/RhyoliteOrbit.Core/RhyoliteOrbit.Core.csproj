@@ -18,6 +18,7 @@
     <PackageReference Include="Abp.AutoMapper" Version="10.0.0" />
     <PackageReference Include="Abp.ZeroCore.EntityFrameworkCore" Version="10.0.0" />
     <PackageReference Include="Castle.Windsor.MsDependencyInjection" Version="4.1.0" />
+    <PackageReference Include="EmptyFiles" Version="4.4.0" />
     <PackageReference Include="RabbitMQ.Client" Version="6.4.0" />
     <PackageReference Include="CloudinaryDotNet" Version="1.22.0" />
     <PackageReference Include="StackExchange.Redis" Version="2.6.90" />
@@ -36,9 +37,17 @@
     <Folder Include="DomainServices\Hr\" />
     <Folder Include="DomainServices\Inventory\" />
     <Folder Include="DomainServices\Payroll\Dashboard\" />
-    <Folder Include="DomainServices\Pos\" />
     <Folder Include="DomainServices\SchoolManager\StudentBillReceipts\" />
     <Folder Include="DomainServices\SupplyChain\" />
+    <Folder Include="DomainServices\Wssd\InstalledPlugins\" />
+    <Folder Include="DomainServices\Wssd\PluginActivityLogs\" />
+    <Folder Include="DomainServices\Wssd\WebHookRegistry\" />
+    <Folder Include="DomainServices\Wssd\WssdDataBuckets\" />
+    <Folder Include="DomainServices\Wssd\WssdServiceInteractionConfigurations\" />
+    <Folder Include="DomainServices\Wssd\WssdServiceReleases\" />
+    <Folder Include="DomainServices\Wssd\WssdServiceRequests\" />
+    <Folder Include="DomainServices\Wssd\WssdServices\" />
+    <Folder Include="DomainServices\Wssd\WssdSessionInteractions\" />
     <Folder Include="Models\AccountsPayable\" />
     <Folder Include="Models\AccountsReceivable\" />
     <Folder Include="Models\Inventory\" />

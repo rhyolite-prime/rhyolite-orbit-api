@@ -11,10 +11,7 @@ public interface IJournalManager: Abp.Domain.Services.IDomainService
 
     Task Create(JournalDto dto);
     Task Update(JournalDto dto);
-
     Task<object> GetDetails(Guid id);
-
     Task BatchDelete(List<Guid> ids);
-
     Task Delete(Guid id);
 }

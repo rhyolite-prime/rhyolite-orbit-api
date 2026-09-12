@@ -11,5 +11,6 @@ public class GiftCard: Abp.Domain.Entities.Auditing.FullAuditedEntity<Guid>, Abp
     public DateTime ExpiryDate { get; set; }
     public bool IsActive { get; set; }
     public DateTime? RedeemedAt { get; set; }
+    public RhyoliteOrbitConsts.GiftCardStatus Status { get; set; } = RhyoliteOrbitConsts.GiftCardStatus.PendingActivation;
     public int TenantId { get; set; }
 }
