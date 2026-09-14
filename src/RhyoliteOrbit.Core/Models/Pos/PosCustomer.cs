@@ -18,7 +18,10 @@ public class PosCustomer: FullAuditedEntity<Guid>, Abp.Domain.Entities.IMustHave
     [MaxLength(15)]
     public string PhoneNumber { get; set; }
     
-    [MaxLength(50)]
+    [MaxLength(250)]
+    public string Pin { get; set; }
+    
+    [MaxLength(250)]
     public string Email { get; set; }
     
     public Guid RankId { get; set; }

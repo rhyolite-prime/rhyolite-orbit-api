@@ -160,10 +160,10 @@ public class Tenant : AbpTenant<User>
     public string Network { get; set; }
     
     //=> 
-    [MaxLength(50)]
+    [MaxLength(100)]
     public string AccountId { get; set; } //as username
         
-    [MaxLength(20)]
+    [MaxLength(250)]
     public string AccountSecret { get; set; } // as password
     
     public Tenant()

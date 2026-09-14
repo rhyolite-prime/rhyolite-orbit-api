@@ -74,6 +74,7 @@ public class ShopCartAppService: RhyoliteOrbitAppServiceBase
     {
         var tenantId = await _validateAuth.ValidateTenant();
         var customerId = await _validateAuth.ValidateCustomer();
+        
         return await _shopCartManager.GetCartItemCount(tenantId, customerId);
     }
 
@@ -82,6 +83,7 @@ public class ShopCartAppService: RhyoliteOrbitAppServiceBase
     {
         var tenantId = await _validateAuth.ValidateTenant();
         var customerId = await _validateAuth.ValidateCustomer();
+        
         return await _shopCartManager.GetCartSubtotal(tenantId, customerId);
         
     }

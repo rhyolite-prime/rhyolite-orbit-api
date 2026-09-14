@@ -81,7 +81,7 @@ public class OrderManager: DomainService, IOrderManager
                 throw new UserFriendlyException(400, "Customer account is required to pay via store wallet.");
             }
 
-            await _customerManager.AdjustWalletBalanceAsync(
+            await _customerManager.AdjustWalletBalance(
                 order.CustomerId.Value, 
                 -order.OrderTotal, 
                 $"Payment for order {order.ReceiptNo}"
@@ -94,7 +94,7 @@ public class OrderManager: DomainService, IOrderManager
                 throw new UserFriendlyException(400, "Customer account is required for credit purchases.");
             }
 
-            bool isEligible = await _customerManager.CanPurchaseOnCreditAsync(order.CustomerId.Value, order.OrderTotal);
+            bool isEligible = await _customerManager.CanPurchaseOnCredit(order.CustomerId.Value, order.OrderTotal);
             if (!isEligible)
             {
                 throw new UserFriendlyException(400, "Customer is not eligible for this credit purchase amount.");
@@ -130,13 +130,13 @@ public class OrderManager: DomainService, IOrderManager
         // 4. Accumulate Customer Loyalty Metrics
         if (order.CustomerId.HasValue)
         {
-            await _customerManager.RecordPurchaseAsync(order.CustomerId.Value, order.OrderTotal);
+            await _customerManager.RecordPurchase(order.CustomerId.Value, order.OrderTotal);
             
             // Example rule: 1 point for every $10 spent
             int pointsEarned = (int)(order.OrderTotal / 10);
             if (pointsEarned > 0)
             {
-                await _customerManager.AddLoyaltyPointsAsync(order.CustomerId.Value, pointsEarned);
+                await _customerManager.AddLoyaltyPoints(order.CustomerId.Value, pointsEarned);
             }
         }
     }
@@ -199,7 +199,7 @@ public class OrderManager: DomainService, IOrderManager
         // 2. Adjust Customer Wallet if originally paid via Wallet
         if (order.PaymentMethod.Equals("CustomerWallet", StringComparison.OrdinalIgnoreCase) && order.CustomerId.HasValue)
         {
-            await _customerManager.AdjustWalletBalanceAsync(
+            await _customerManager.AdjustWalletBalance(
                 order.CustomerId.Value, 
                 totalRefundAmount, 
                 $"Refund for order {order.ReceiptNo}"

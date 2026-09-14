@@ -25,6 +25,7 @@ using RhyoliteOrbit.Services.Payroll.TaxTables.Dto;
 using RhyoliteOrbit.Services.Pos.Branches.Dto;
 using RhyoliteOrbit.Services.Pos.Categories.Dto;
 using RhyoliteOrbit.Services.Pos.Coupons.Dto;
+using RhyoliteOrbit.Services.Pos.Customers.Dto;
 using RhyoliteOrbit.Services.Pos.DeliveryChannels.Dto;
 using RhyoliteOrbit.Services.Pos.Inventory.Dto;
 using RhyoliteOrbit.Services.Pos.PickupPoints.Dto;
@@ -165,6 +166,7 @@ public class MapProfile: AutoMapper.Profile
         CreateMap<CouponDto, Coupon>();
         CreateMap<PickupPointDto, PickupPoint>();
         CreateMap<PosInventoryItemDto, PosInventoryItem>();
+        CreateMap<PosCustomerDto, PosCustomer>();
         
         //manufacturing...
         

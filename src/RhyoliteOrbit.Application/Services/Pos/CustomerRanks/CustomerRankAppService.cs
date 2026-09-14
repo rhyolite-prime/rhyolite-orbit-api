@@ -57,7 +57,7 @@ public class CustomerRankAppService : RhyoliteOrbitAppServiceBase
     /// <param name="id"></param>
     [AbpAuthorize(PermissionNames.POS_UpdateCustomerRanks)]
     [HttpPut("{id}")]
-    public async Task Update(CustomerDto dto, Guid id)
+    public async Task Update(PosCustomerDto dto, Guid id)
     {
         var tenantInfo = await GetCurrentTenantAsync();
         

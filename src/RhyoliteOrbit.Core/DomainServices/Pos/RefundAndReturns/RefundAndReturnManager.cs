@@ -144,7 +144,7 @@ public class RefundAndReturnManager: DomainService, IRefundAndReturnManager
                     throw new UserFriendlyException(400, "Customer account is required for wallet or store credit refunds.");
                 }
 
-                await _customerManager.AdjustWalletBalanceAsync(
+                await _customerManager.AdjustWalletBalance(
                     request.CustomerId.Value,
                     request.RefundAmount,
                     $"Refund credit for return request {request.RequestNo}"
@@ -154,7 +154,7 @@ public class RefundAndReturnManager: DomainService, IRefundAndReturnManager
             case RhyoliteOrbitConsts.RefundPaymentMethod.OriginalPaymentMethod:
                 if (order.PaymentMethod.Equals("CustomerWallet", StringComparison.OrdinalIgnoreCase) && request.CustomerId.HasValue)
                 {
-                    await _customerManager.AdjustWalletBalanceAsync(
+                    await _customerManager.AdjustWalletBalance(
                         request.CustomerId.Value,
                         request.RefundAmount,
                         $"Original method refund for return request {request.RequestNo}"

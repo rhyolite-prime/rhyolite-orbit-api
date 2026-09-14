@@ -18,8 +18,11 @@ using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using Abp.Domain.Uow;
 using Abp.Runtime.Session;
+using Akka.Actor;
 using HashidsNet;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using RhyoliteOrbit.Actors;
 
 namespace RhyoliteOrbit.MultiTenancy;
 
@@ -34,6 +37,7 @@ public class TenantAppService : AsyncCrudAppService<Tenant, TenantDto, int, Page
     private readonly RoleManager _roleManager;
     private readonly IAbpZeroDbMigrator _abpZeroDbMigrator;
     private readonly IUnitOfWorkManager _unitOfWorkManager;
+    private readonly IActorRef _apiCredentialSyncActorProvider;
 
     public TenantAppService(
         IRepository<Tenant, int> repository,
@@ -41,6 +45,7 @@ public class TenantAppService : AsyncCrudAppService<Tenant, TenantDto, int, Page
         EditionManager editionManager,
         UserManager userManager,
         RoleManager roleManager,
+        TopLevelActors.ApiCredentialSyncActorProvider apiCredentialSyncActorProvider,
         IAbpZeroDbMigrator abpZeroDbMigrator, IUnitOfWorkManager unitOfWorkManager)
         : base(repository)
     {
@@ -50,6 +55,7 @@ public class TenantAppService : AsyncCrudAppService<Tenant, TenantDto, int, Page
         _roleManager = roleManager;
         _abpZeroDbMigrator = abpZeroDbMigrator;
         _unitOfWorkManager = unitOfWorkManager;
+        _apiCredentialSyncActorProvider = apiCredentialSyncActorProvider();
     }
 
 
@@ -58,6 +64,7 @@ public class TenantAppService : AsyncCrudAppService<Tenant, TenantDto, int, Page
     /// </summary>
     /// <param name="input"></param>
     /// <returns></returns>
+    [HttpPost]
     public async Task<TenantDto> PrivateCreate(CreateTenantDto input)
     {
         // Reuse the existing logic for tenant creation
@@ -68,6 +75,7 @@ public class TenantAppService : AsyncCrudAppService<Tenant, TenantDto, int, Page
     /// 
     /// </summary>
     /// <returns></returns>
+    [HttpGet]
     public async Task<object> GenerateApiKeys()
     {
         int tenantId = AbpSession.GetTenantId();
@@ -87,13 +95,16 @@ public class TenantAppService : AsyncCrudAppService<Tenant, TenantDto, int, Page
             await _tenantManager.UpdateAsync(tenantInfo);
             
             // push to rabbit mq consumer to sync credentials ...
-                
-            return new
+            var credentials = new
             {
                 accountId,
                 accountSecret,
                 businessAccountId = tenantInfo.DataSupportBusinessAccountId
             };
+            
+            _apiCredentialSyncActorProvider.Tell(credentials);
+                
+            return credentials;
                 
         }
              

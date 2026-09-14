@@ -109,11 +109,19 @@ public class Startup
             return () => dataSupportEntitySyncActor;
         });
         
+        services.AddSingleton<TopLevelActors.ApiCredentialSyncActorProvider>(provider =>
+        {
+            var actorSystem = provider.GetService<ActorSystem>();
+            var configuration = provider.GetService<IConfiguration>();
+            var apiCredentialSyncActor = actorSystem.ActorOf(Props.Create(() => new ApiCredentialSyncActor(provider, configuration)).WithRouter(new RoundRobinPool(2)));
+            return () => apiCredentialSyncActor;
+        });
+        
         services.AddSingleton<TopLevelActors.EmailActorProvider>(provider =>
         {
             var actorSystem = provider.GetService<ActorSystem>();
             var configuration = provider.GetService<IConfiguration>();
-            var emailActor = actorSystem.ActorOf(Props.Create(() => new EmailActor(provider, configuration)).WithRouter(new RoundRobinPool(1)));
+            var emailActor = actorSystem.ActorOf(Props.Create(() => new EmailActor(provider, configuration)).WithRouter(new RoundRobinPool(2)));
             return () => emailActor;
         });
         

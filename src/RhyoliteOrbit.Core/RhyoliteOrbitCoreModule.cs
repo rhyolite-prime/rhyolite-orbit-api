@@ -1,15 +1,18 @@
-﻿using Abp.Localization;
+﻿using Abp.Dependency;
+using Abp.Localization;
 using Abp.Modules;
 using Abp.Reflection.Extensions;
 using Abp.Runtime.Security;
 using Abp.Timing;
 using Abp.Zero;
 using Abp.Zero.Configuration;
+using Microsoft.AspNetCore.Identity;
 using Npgsql;
 using RhyoliteOrbit.Authorization.Roles;
 using RhyoliteOrbit.Authorization.Users;
 using RhyoliteOrbit.Configuration;
 using RhyoliteOrbit.Localization;
+using RhyoliteOrbit.Models.Pos;
 using RhyoliteOrbit.MultiTenancy;
 using RhyoliteOrbit.Timing;
 
@@ -48,6 +51,7 @@ public class RhyoliteOrbitCoreModule : AbpModule
     public override void Initialize()
     {
         IocManager.RegisterAssemblyByConvention(typeof(RhyoliteOrbitCoreModule).GetAssembly());
+        IocManager.Register<IPasswordHasher<PosCustomer>, PasswordHasher<PosCustomer>>(DependencyLifeStyle.Singleton);
     }
 
     public override void PostInitialize()
