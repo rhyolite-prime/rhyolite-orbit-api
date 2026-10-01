@@ -42,7 +42,6 @@ public class CustomerManager: DomainService, ICustomerManager
     
     public async Task<object> GetAll(int pageNo, int pageSize, string query)
     {
-            
         var predicate = PredicateBuilder.New<PosCustomer>();
 
         predicate.And(x => !x.IsDeleted);
@@ -74,7 +73,6 @@ public class CustomerManager: DomainService, ICustomerManager
         return paginatedResult;
             
     }
-
 
     
     public async Task Create(PosCustomer customer)
@@ -117,7 +115,7 @@ public class CustomerManager: DomainService, ICustomerManager
         customer.LastName = customer.LastName;
         customer.Email = customer.Email;
         customer.PhoneNumber = customer.PhoneNumber;
-        customer.DefaultRegion = customer.PhoneNumber;
+        customer.DefaultCountry = customer.DefaultCountry;
 
         await _customerRepository.UpdateAsync(customer);
     }
@@ -266,9 +264,10 @@ public class CustomerManager: DomainService, ICustomerManager
             }
 
             customer.TenantId = tenantId;
+            customer.DefaultCountry = "gh";
             customer.Pin = _passwordHasher.HashPassword(customer, customer.Pin); // hash the password
 
-             await _customerRepository.InsertAsync(customer);
+            await _customerRepository.InsertAsync(customer);
         }
  
         //send email to customer
@@ -349,6 +348,7 @@ public class CustomerManager: DomainService, ICustomerManager
                 customer.Username,
                 customer.Email,
                 AccountIdentifier = accountIdentifier,
+                customer.DefaultCountry,
                 token = jwtToken
             };
         }
@@ -462,8 +462,7 @@ public class CustomerManager: DomainService, ICustomerManager
         var securityKey = _configuration["Authentication:JwtBearer:SecurityKey"];
         if (string.IsNullOrWhiteSpace(securityKey))
         {
-            throw new UserFriendlyException(500,
-                "Authentication is misconfigured: JWT security key is missing.");
+            throw new UserFriendlyException(500, "Authentication is misconfigured: JWT security key is missing.");
         }
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(securityKey));

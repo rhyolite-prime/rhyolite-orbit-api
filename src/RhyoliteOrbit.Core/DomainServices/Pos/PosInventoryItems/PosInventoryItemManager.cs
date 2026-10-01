@@ -263,7 +263,7 @@ public class PosInventoryItemManager: DomainService, IPosInventoryItemManager
     {
         var itemInfo = await _repositoryItem.FirstOrDefaultAsync(id);
         
-        await _repositoryItem.DeleteAsync(id);
+        await _repositoryItem.HardDeleteAsync(itemInfo);
         
         var syncDataModel = new
         {

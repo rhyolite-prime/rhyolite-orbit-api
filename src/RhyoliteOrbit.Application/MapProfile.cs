@@ -43,8 +43,10 @@ using RhyoliteOrbit.Services.SchoolManager.SubjectCategories.Dto;
 using RhyoliteOrbit.Services.SchoolManager.Subjects.Dto;
 using RhyoliteOrbit.Services.Shared.Banks.Dto;
 using RhyoliteOrbit.Services.Shared.CostCenters.Dto;
+using RhyoliteOrbit.Services.Shared.Countries.Dto;
 using RhyoliteOrbit.Services.Shared.Currencies.Dto;
 using RhyoliteOrbit.Services.Shared.MessageTemplates.Dto;
+using RhyoliteOrbit.Services.Shared.PaymentOptions.Dto;
 using RhyoliteOrbit.Services.Shared.SystemNumbers.Dto;
 using RhyoliteOrbit.Services.Shared.UnitOfMeasurements.Dto;
 
@@ -65,6 +67,9 @@ public class MapProfile: AutoMapper.Profile
         CreateMap<UpdateCostCenterInput, CostCenter>();
         
         CreateMap<UpdateSystemNumberInput, SystemNumber>();
+        
+        CreateMap<PaymentOptionDto, PaymentOption>();
+        CreateMap<CountryDto, Country>();
         
         CreateMap<CreateMessageTemplateInput, MessageTemplate>();
         CreateMap<UpdateMessageTemplateInput, MessageTemplate>();
@@ -159,7 +164,7 @@ public class MapProfile: AutoMapper.Profile
         CreateMap<CreateImprestCategoryInput, ImprestCategory>();
         CreateMap<UpdateImprestCategoryInput, ImprestCategory>();
         
-        //POS 
+        //POS
         CreateMap<PosBranchDto, PosBranch>();
         CreateMap<PosInventoryCategoryDto, InventoryCategory>();
         CreateMap<DeliveryChannelDto, DeliveryChannel>();

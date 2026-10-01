@@ -9,6 +9,7 @@ using RhyoliteOrbit.Services.Shared.Banks.Dto;
 
 namespace RhyoliteOrbit.Services.Shared.Banks;
 
+
 public class BankAppService: RhyoliteOrbitAppServiceBase
 {
     private readonly IBankManager _bankManager;

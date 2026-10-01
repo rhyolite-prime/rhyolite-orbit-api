@@ -45,10 +45,11 @@ public class RhyoliteOrbitDbContext : AbpZeroDbContext<Tenant, Role, User, Rhyol
     public DbSet<MessageTemplate> MessageTemplates { get; set; }
     public DbSet<SystemNumber> SystemNumbers { get; set; }
     public DbSet<Country> Countries { get; set; }
+    public DbSet<Region> Regions { get; set; }
     public DbSet<BusinessDate> BusinessDates { get; set; }
     public DbSet<UnitOfMeasure> UnitOfMeasurements { get; set; }
     public DbSet<Tag> Tags { get; set; }
-    
+    public DbSet<PaymentOption> PaymentOptions { get; set; }
     
     //school manager...
     public DbSet<AcademicYear> AcademicYears { get; set; }
@@ -253,6 +254,7 @@ public class RhyoliteOrbitDbContext : AbpZeroDbContext<Tenant, Role, User, Rhyol
     public DbSet<Coupon> Coupons { get; set; }
     public DbSet<CustomerRank> CustomerRanks { get; set; }
     public DbSet<Delivery> Deliveries { get; set; }
+    public DbSet<PosCustomerDeliveryAddress> PosCustomerDeliveryAddresses { get; set; }
     public DbSet<PosOrder> Orders { get; set; }
     public DbSet<Payment> Payments { get; set; }
     public DbSet<DeliveryChannel> DeliveryChannels { get; set; }     
@@ -271,7 +273,9 @@ public class RhyoliteOrbitDbContext : AbpZeroDbContext<Tenant, Role, User, Rhyol
     public DbSet<ProductReview> ProductReviews { get; set; }
     public DbSet<Merchant> Merchants { get; set; }
     public DbSet<ShopCart> ShopCarts { get; set; }
+    public DbSet<Wishlist> Wishlists { get; set; }
     public DbSet<GiftCard> GiftCards { get; set; }
+    public DbSet<BannerSlider> BannerSliders { get; set; }
     
     // WSSD & USSD
     public DbSet<WssdServiceRequest> WssdServiceRequests { get; set; }

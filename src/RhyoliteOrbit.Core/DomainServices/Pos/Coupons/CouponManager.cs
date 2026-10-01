@@ -38,9 +38,7 @@ public class CouponManager
 
         }
         
-        var totalCount =
-            
-            await _repositoryCoupon.CountAsync(predicate);
+        var totalCount =  await _repositoryCoupon.CountAsync(predicate);
         
         var data = await (await _repositoryCoupon.GetAllAsync()).Where(predicate).Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
 

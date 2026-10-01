@@ -13,34 +13,21 @@ public class CountryManager: Abp.Domain.Services.DomainService, ICountryManager
 {
     
     private readonly IRepository<Country, Guid> _repositoryCountry;
+    private readonly IRepository<Customer, Guid> _repositoryCustomer;
+    private readonly IRepository<Region, Guid> _repositoryRegion;
 
-    public CountryManager(IRepository<Country, Guid> repositoryCountry)
+    public CountryManager(IRepository<Country, Guid> repositoryCountry, IRepository<Region, Guid> repositoryRegion, IRepository<Customer, Guid> repositoryCustomer)
     {
         _repositoryCountry = repositoryCountry;
+        _repositoryRegion = repositoryRegion;
+        _repositoryCustomer = repositoryCustomer;
     }
 
 
 
-    public async Task<object> Create(Country entity)
+    public async Task Create(Country entity)
     {
-        var datta = await _repositoryCountry.FirstOrDefaultAsync(x => x.Name == entity.Name);
-
-        if (datta == null)
-        {
-            await _repositoryCountry.InsertAsync(entity);
-
-            return new
-            {
-                code = 200,
-                message = "successful"
-            };
-        }
-
-        throw new UserFriendlyException(
-            400,
-            "Duplicate records are not allowed.",
-            "A duplicate Country with the same name already exists."
-        );
+        await _repositoryCountry.InsertAsync(entity);
     }
 
     public async Task Update(Country entity)
@@ -72,7 +59,7 @@ public class CountryManager: Abp.Domain.Services.DomainService, ICountryManager
         var totalCount =
             await _repositoryCountry.CountAsync(predicate);
             
-        var data = await (await _repositoryCountry.GetAllAsync()).Where(predicate).Select(a=> new { a.Id, a.Name, a.CreationTime, }).Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
+        var data = await (await _repositoryCountry.GetAllAsync()).Where(predicate).Select(a=> new { a.Id, a.Name, a.IsoCode, a.NumericIsoCode }).Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
 
         var totalPages = totalCount > 0 ? Convert.ToInt32(Math.Ceiling(totalCount / (decimal)pageSize)) : 0;
 
@@ -91,8 +78,35 @@ public class CountryManager: Abp.Domain.Services.DomainService, ICountryManager
     
     public async Task Delete(Guid id)
     {
-        await _repositoryCountry.DeleteAsync(id);
-
+        var country = await _repositoryCountry.FirstOrDefaultAsync(id);
+        await _repositoryCountry.HardDeleteAsync(country);
     }
     
+    //regions
+    public async Task<object> ListRegions(string defaultRegion)
+    {
+        var countryInfo = await _repositoryCountry.FirstOrDefaultAsync(x=> x.IsoCode == defaultRegion);
+
+        var customerRegions = await _repositoryRegion.GetAllListAsync(a=> a.CountryId == countryInfo.Id);
+        
+        var data = customerRegions.Select(a=> new { a.Id, a.Name, a.Code, a.CountryId, a.Cities }).ToList();
+
+        return data;
+    }
+
+    public async Task CreateRegion(Region input)
+    {
+        await _repositoryRegion.InsertAsync(input);
+    }
+
+    public async Task UpdateRegion(Region input)
+    {
+        await _repositoryRegion.UpdateAsync(input);
+    }
+
+    public async Task DeleteRegion(Guid id)
+    {
+        var region = await _repositoryRegion.FirstOrDefaultAsync(id);
+        await _repositoryRegion.HardDeleteAsync(region);
+    }
 }

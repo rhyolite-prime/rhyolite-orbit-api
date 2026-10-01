@@ -1,15 +1,17 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RhyoliteOrbit.Models.Shared;
 
 public class Country: Abp.Domain.Entities.Auditing.FullAuditedEntity<Guid>
 {
-    [MaxLength(100)]
+    [MaxLength(150)]
     public string Name { get; set; }
     [MaxLength(20)]
-    public string Code { get; set; }
+    public string IsoCode { get; set; }
     public int NumericIsoCode { get; set; }
-    [MaxLength(100)]
+    [MaxLength(150)]
     public string Nationality { get; set; }
 }

@@ -8,6 +8,7 @@ using RhyoliteOrbit.Services.Shared.Currencies.Dto;
 
 namespace RhyoliteOrbit.Services.Shared.Currencies;
 
+
 public class CurrencyAppService: RhyoliteOrbitAppServiceBase
 {
     private readonly ICurrencyManager  _currencyManager;

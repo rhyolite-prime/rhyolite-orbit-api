@@ -8,7 +8,6 @@ using RhyoliteOrbit.Services.Pos.ShopCarts.Dto;
 
 namespace RhyoliteOrbit.Services.Pos.ShopCarts;
 
-[AbpAuthorize]
 public class ShopCartAppService: RhyoliteOrbitAppServiceBase
 {
     private readonly IShopCartManager _shopCartManager;
@@ -42,13 +41,13 @@ public class ShopCartAppService: RhyoliteOrbitAppServiceBase
         await _shopCartManager.UpdateQuantity(tenantId, customerId, dto.ItemId, dto.Quantity);
     }
 
-    [HttpPost]
-    public async Task RemoveItem(ShopCartDto dto)
+    [HttpGet]
+    public async Task RemoveItem([FromQuery]Guid itemId)
     {
         var tenantId = await _validateAuth.ValidateTenant();
         var customerId = await _validateAuth.ValidateCustomer();
 
-        await _shopCartManager.RemoveItem(tenantId, customerId, dto.ItemId);
+        await _shopCartManager.RemoveItem(tenantId, customerId, itemId);
     }
 
     [HttpGet]

@@ -8,10 +8,19 @@ public interface ICountryManager: Abp.Domain.Services.IDomainService
 {
     Task<object> ListAll(int pageNo, int pageSize, string query);
     
-    Task<object> Create(Country input);
+    Task Create(Country input);
     Task<Country> GetNationality(string nationality);
     
     Task Update(Country input);
     
     Task Delete(Guid id);
+    
+    //region
+
+    Task<object> ListRegions(string defaultRegion);
+    Task CreateRegion(Region entity);
+    Task UpdateRegion(Region entity);
+    Task DeleteRegion(Guid id);
+    
+
 }

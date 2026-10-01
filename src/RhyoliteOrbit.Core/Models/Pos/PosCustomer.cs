@@ -32,9 +32,8 @@ public class PosCustomer: FullAuditedEntity<Guid>, Abp.Domain.Entities.IMustHave
     
     public int NumberOfVisits { get; set; }
     public int LoyaltyPoints { get; set; }
-    
-    [MaxLength(60)]
-    public string DefaultRegion { get; set; }
+
+    [MaxLength(10)] public string DefaultCountry { get; set; }
         
     //credit profile settings
     public decimal CreditLimit { get; set; }

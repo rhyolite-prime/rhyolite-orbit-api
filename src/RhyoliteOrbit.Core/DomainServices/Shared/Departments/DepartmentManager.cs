@@ -75,6 +75,7 @@ public class DepartmentManager: Abp.Domain.Services.DomainService, IDepartmentMa
         return paginatedResult;
         
     }
+    
     public async Task Delete(Guid id)
     {
         await _repositoryDepartment.DeleteAsync(id);

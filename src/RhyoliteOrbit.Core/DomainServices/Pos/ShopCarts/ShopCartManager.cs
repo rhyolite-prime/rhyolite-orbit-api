@@ -45,6 +45,7 @@ public class ShopCartManager: DomainService, IShopCartManager
             
                     // Keep price synced with latest addition
                     existingCartItem.UnitPrice = itemInfo.SellingPrice; 
+                    existingCartItem.TenantId = tenantId; 
 
                     await _shopCartRepository.UpdateAsync(existingCartItem);
                 }
@@ -58,12 +59,13 @@ public class ShopCartManager: DomainService, IShopCartManager
                         CustomerId = customerId,
                         Username = customerInfo != null ? customerInfo.Username : string.Empty,
                         ItemId = itemId,
+                        ItemName = itemInfo.Name,
                         Sku = itemInfo.Sku,
                         Quantity = quantity,
                         UnitPrice = itemInfo.SellingPrice,
                         MinOrderQuantity = itemInfo.MinimumCartQuantity,
                         ItemImageUrl = itemInfo.Images.FirstOrDefault(), 
-
+                        TenantId = tenantId
                     };
 
                     await _shopCartRepository.InsertAsync(newShopCart);
@@ -127,6 +129,7 @@ public class ShopCartManager: DomainService, IShopCartManager
                     x.Id,
                     x.ItemId,
                     x.Sku,
+                    x.ItemName,
                     x.Quantity,
                     x.UnitPrice,
                     x.MinOrderQuantity,
@@ -140,7 +143,8 @@ public class ShopCartManager: DomainService, IShopCartManager
     {
         using (_unitOfWorkManager.Current.SetTenantId(tenantId))
         {
-            return await _shopCartRepository.CountAsync(x => x.CustomerId == customerId);
+            var itemList = await _shopCartRepository.GetAllListAsync(x => x.CustomerId == customerId);
+            return itemList.Sum(x => x.Quantity);
         }
 
     }
@@ -195,6 +199,5 @@ public class ShopCartManager: DomainService, IShopCartManager
             }   
         }
     }
-
     
 }

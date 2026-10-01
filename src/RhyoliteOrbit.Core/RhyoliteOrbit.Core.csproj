@@ -31,8 +31,10 @@
     <PackageReference Include="Syncfusion.HtmlToPdfConverter.Blink.Net.Core.Mac" Version="19.3.0.48" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="DomainServices\AccountsPayable\" />
-    <Folder Include="DomainServices\AccountsReceivable\" />
+    <Folder Include="DomainServices\Ap\" />
+    <Folder Include="DomainServices\Ar\Invoices\" />
+    <Folder Include="DomainServices\Ar\Payments\" />
+    <Folder Include="DomainServices\Ar\Quotations\" />
     <Folder Include="DomainServices\Dms\" />
     <Folder Include="DomainServices\GeneralLedger\Budgets\" />
     <Folder Include="DomainServices\Hr\" />
@@ -49,8 +51,7 @@
     <Folder Include="DomainServices\Wssd\WssdServiceRequests\" />
     <Folder Include="DomainServices\Wssd\WssdServices\" />
     <Folder Include="DomainServices\Wssd\WssdSessionInteractions\" />
-    <Folder Include="Models\AccountsPayable\" />
-    <Folder Include="Models\AccountsReceivable\" />
+    <Folder Include="Models\Ap\" />
     <Folder Include="Models\Inventory\" />
     <Folder Include="Models\SupplyChain\" />
     <Folder Include="Pdf\ApInvoice\" />
