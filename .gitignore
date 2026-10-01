@@ -254,3 +254,4 @@ paket-files/
 src/RhyoliteOrbit.Web.Mvc/secrets.json
 src/RhyoliteOrbit.Web.Host/secrets.json
 src/RhyoliteOrbit.Migrator/secrets.json
+src/src.code-workspace
