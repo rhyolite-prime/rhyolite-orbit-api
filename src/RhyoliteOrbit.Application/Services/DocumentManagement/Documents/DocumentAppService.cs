@@ -39,7 +39,8 @@ public class DocumentAppService: DmsAppServiceBase
         DomainServices.Dms.Audit.IAuditTrail auditTrail,
         DomainServices.Dms.Folders.IFolderManager folderManager,
         Abp.Domain.Repositories.IRepository<Authorization.Users.UserRole, long> userRoleRepository,
-        Abp.Domain.Repositories.IRepository<Authorization.Roles.Role, int> roleRepository)
+        Abp.Domain.Repositories.IRepository<Authorization.Roles.Role, int> roleRepository,
+        IMapper mapper)
         : base(aclManager, documents, folderManager, auditTrail, userRoleRepository, roleRepository)
     {
         _documents = documents;
