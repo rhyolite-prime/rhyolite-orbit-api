@@ -134,4 +134,52 @@ public static class PermissionNames
 
 
         
+
+    // ------------------------------------------------------------------
+    // Document Management System
+    // ------------------------------------------------------------------
+    public const string Pages_Documents = "Pages.Documents";
+
+    public const string DMS_ViewDocuments = "DMS.View Documents";
+    public const string DMS_CreateDocument = "DMS.Create Document";
+    public const string DMS_UpdateDocument = "DMS.Update Document";
+    public const string DMS_DeleteDocument = "DMS.Delete Document";
+    public const string DMS_PurgeDocument = "DMS.Purge Document";
+    public const string DMS_DownloadDocument = "DMS.Download Document";
+    public const string DMS_PreviewDocument = "DMS.Preview Document";
+    public const string DMS_PrintDocument = "DMS.Print Document";
+    public const string DMS_CheckOutDocument = "DMS.Check Out Document";
+    public const string DMS_ForceUnlockDocument = "DMS.Force Unlock Document";
+    public const string DMS_ManageVersions = "DMS.Manage Versions";
+
+    public const string DMS_ManageFolders = "DMS.Manage Folders";
+    public const string DMS_ManageCollections = "DMS.Manage Collections";
+    public const string DMS_ManageTags = "DMS.Manage Tags";
+    public const string DMS_ManageTemplates = "DMS.Manage Templates";
+    public const string DMS_ManageIdentifiers = "DMS.Manage Identifiers";
+
+    public const string DMS_ManagePermissions = "DMS.Manage Permissions";
+    public const string DMS_ShareDocument = "DMS.Share Document";
+    public const string DMS_ManageShares = "DMS.Manage Shares";
+
+    public const string DMS_ManageWorkflows = "DMS.Manage Workflows";
+    public const string DMS_StartWorkflow = "DMS.Start Workflow";
+    public const string DMS_ParticipateInWorkflow = "DMS.Participate In Workflow";
+
+    public const string DMS_ViewAuditTrail = "DMS.View Audit Trail";
+    public const string DMS_ExportAuditTrail = "DMS.Export Audit Trail";
+
+    public const string DMS_ManageRetention = "DMS.Manage Retention";
+    public const string DMS_ApplyLegalHold = "DMS.Apply Legal Hold";
+    public const string DMS_ManageSignatures = "DMS.Manage Signatures";
+    public const string DMS_SignDocument = "DMS.Sign Document";
+    public const string DMS_ManageAnnotations = "DMS.Manage Annotations";
+
+    public const string DMS_BulkImport = "DMS.Bulk Import";
+    public const string DMS_BulkExport = "DMS.Bulk Export";
+
+    public const string DMS_ManageSettings = "DMS.Manage Settings";
+    public const string DMS_ManageQuotas = "DMS.Manage Quotas";
+    public const string DMS_UseAiFeatures = "DMS.Use AI Features";
 }
+
