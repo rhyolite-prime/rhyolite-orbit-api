@@ -16,6 +16,16 @@ public class WssdService: Abp.Domain.Entities.Auditing.FullAuditedEntity<Guid>, 
     [MaxLength(100)]
     public string DisplayTitle { get; set; }
     
+    [Column(TypeName = "jsonb")] public List<string> Networks { get; set; }
+    
+    public int Status { get; set; }
+    
+    public int SessionsUsed { get; set; }
+    
+    public int SessionsQuota { get; set; }
+    
+    public bool IsPorted { get; set; }
+    
     [MaxLength(250)]
     public string Description { get; set; }
      
@@ -39,20 +49,21 @@ public class WssdService: Abp.Domain.Entities.Auditing.FullAuditedEntity<Guid>, 
     [MaxLength(50)]
     public string CustomSubdomain { get; set; }
     
-    [MaxLength(100)]
-    public string ClientId { get; set; }
-    
-    [MaxLength(200)]
-    public string ClientSecret { get; set; }
-    
     [Column(TypeName = "jsonb")] public List<string> AllowedOrigins { get; set; }
     
-    public bool UseAsSecondaryService { get; set; }
+    [Column(TypeName = "jsonb")] public Dictionary<string,object> MetaData { get; set; }
+    
+    [Column(TypeName = "jsonb")] public Dictionary<string,object> Executable { get; set; }
     
     public Guid MerchantId { get; set; }
     
     [MaxLength(100)]
     public string MerchantName { get; set; }
+    
+    public Guid FlowId { get; set; }
+    
+    [MaxLength(100)]
+    public string FlowName { get; set; }
     
     [MaxLength(80)]
     public string Country { get; set; }
@@ -78,9 +89,6 @@ public class WssdService: Abp.Domain.Entities.Auditing.FullAuditedEntity<Guid>, 
     public int SubscriptionDuration { get; set; } //in day units
     
     public DateTime LastRenewalDate { get; set; }
-    
-    [MaxLength(350)]
-    public string WebhookUrl { get; set; }
     
     public decimal UssdSessionBalance { get; set; } 
     

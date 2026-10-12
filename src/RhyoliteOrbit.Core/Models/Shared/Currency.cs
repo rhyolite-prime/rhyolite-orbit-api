@@ -16,6 +16,7 @@ public class Currency: Abp.Domain.Entities.Auditing.FullAuditedEntity<Guid>, Abp
     public decimal BuyRate { get; set; }
     public decimal SellRate { get; set; }
     public bool IsDefault { get; set; }
+    
     [Column(TypeName = "jsonb")] public List<CurrencyRate> Rates { get; set; }
     public int TenantId { get; set; }
 }

@@ -59,7 +59,7 @@ public class CountryManager: Abp.Domain.Services.DomainService, ICountryManager
         var totalCount =
             await _repositoryCountry.CountAsync(predicate);
             
-        var data = await (await _repositoryCountry.GetAllAsync()).Where(predicate).Select(a=> new { a.Id, a.Name, a.IsoCode, a.NumericIsoCode }).Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
+        var data = await (await _repositoryCountry.GetAllAsync()).Where(predicate).Select(a=> new { a.Id, a.Name, a.IsoCode, a.NumericIsoCode, a.TelecomNetworkProviders }).Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
 
         var totalPages = totalCount > 0 ? Convert.ToInt32(Math.Ceiling(totalCount / (decimal)pageSize)) : 0;
 

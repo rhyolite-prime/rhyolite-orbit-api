@@ -25,9 +25,9 @@ public class InstalledPlugin: Abp.Domain.Entities.Auditing.FullAuditedEntity<Gui
 
     public bool IsActive { get; set; }
     
-    [Column(TypeName = "jsonb")] public Dictionary<string,object> DefaultConfig { get; set; }
+    [Column(TypeName = "jsonb")] public Dictionary<string,object> MetaData { get; set; }
     
-    [Column(TypeName = "jsonb")] public Dictionary<string,object> Spec { get; set; }
+    [Column(TypeName = "jsonb")] public Dictionary<string,object> Executable { get; set; }
     
     public int TenantId { get; set; }
 }

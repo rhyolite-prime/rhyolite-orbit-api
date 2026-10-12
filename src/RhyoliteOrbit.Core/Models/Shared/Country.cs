@@ -9,9 +9,14 @@ public class Country: Abp.Domain.Entities.Auditing.FullAuditedEntity<Guid>
 {
     [MaxLength(150)]
     public string Name { get; set; }
+    
     [MaxLength(20)]
     public string IsoCode { get; set; }
+    
     public int NumericIsoCode { get; set; }
+    
     [MaxLength(150)]
     public string Nationality { get; set; }
+    
+    [Column(TypeName = "jsonb")] public List<TelecomNetworkProvider> TelecomNetworkProviders { get; set; }
 }

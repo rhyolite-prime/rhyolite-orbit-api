@@ -22,8 +22,8 @@ using RhyoliteOrbit.Models.Wssd;
 namespace RhyoliteOrbit.Migrations
 {
     [DbContext(typeof(RhyoliteOrbitDbContext))]
-    [Migration("20260918002112_initial103")]
-    partial class initial103
+    [Migration("20261005180758_initial1")]
+    partial class initial1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -15583,6 +15583,9 @@ namespace RhyoliteOrbit.Migrations
                     b.Property<int>("NumericIsoCode")
                         .HasColumnType("integer");
 
+                    b.Property<List<TelecomNetworkProvider>>("TelecomNetworkProviders")
+                        .HasColumnType("jsonb");
+
                     b.HasKey("Id");
 
                     b.ToTable("Countries");
@@ -15916,6 +15919,9 @@ namespace RhyoliteOrbit.Migrations
 
                     b.Property<JsonDocument>("Exec")
                         .HasColumnType("jsonb");
+
+                    b.Property<bool>("IsDefault")
+                        .HasColumnType("boolean");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
@@ -16584,9 +16590,6 @@ namespace RhyoliteOrbit.Migrations
                     b.Property<long?>("CreatorUserId")
                         .HasColumnType("bigint");
 
-                    b.Property<Dictionary<string, object>>("DefaultConfig")
-                        .HasColumnType("jsonb");
-
                     b.Property<long?>("DeleterUserId")
                         .HasColumnType("bigint");
 
@@ -16596,6 +16599,9 @@ namespace RhyoliteOrbit.Migrations
                     b.Property<string>("Description")
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
+
+                    b.Property<Dictionary<string, object>>("Executable")
+                        .HasColumnType("jsonb");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
@@ -16612,15 +16618,15 @@ namespace RhyoliteOrbit.Migrations
                     b.Property<DateTime?>("LastUpdatedDate")
                         .HasColumnType("timestamp without time zone");
 
+                    b.Property<Dictionary<string, object>>("MetaData")
+                        .HasColumnType("jsonb");
+
                     b.Property<string>("Name")
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
                     b.Property<Guid>("PluginId")
                         .HasColumnType("uuid");
-
-                    b.Property<Dictionary<string, object>>("Spec")
-                        .HasColumnType("jsonb");
 
                     b.Property<int>("TenantId")
                         .HasColumnType("integer");
@@ -16641,8 +16647,13 @@ namespace RhyoliteOrbit.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("ActivityType")
+                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
+
+                    b.Property<string>("CorrelationId")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("timestamp without time zone");
@@ -16657,8 +16668,7 @@ namespace RhyoliteOrbit.Migrations
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Details")
-                        .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)");
+                        .HasColumnType("text");
 
                     b.Property<int>("ExecutionTimeMs")
                         .HasColumnType("integer");
@@ -16673,23 +16683,32 @@ namespace RhyoliteOrbit.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("Level")
+                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
 
                     b.Property<string>("Message")
+                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
 
                     b.Property<Guid>("PluginId")
                         .HasColumnType("uuid");
 
+                    b.Property<string>("PluginVersion")
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
+
                     b.Property<string>("Source")
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
                     b.Property<string>("StackTrace")
-                        .HasMaxLength(650)
-                        .HasColumnType("character varying(650)");
+                        .HasColumnType("text");
+
+                    b.Property<string>("StepOrRuleName")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<int>("TenantId")
                         .HasColumnType("integer");
@@ -16715,7 +16734,7 @@ namespace RhyoliteOrbit.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("character varying(30)");
 
-                    b.Property<List<DefaultDatasetModel>>("Dataset")
+                    b.Property<Dictionary<string, object>>("Dataset")
                         .HasColumnType("jsonb");
 
                     b.Property<long?>("DeleterUserId")
@@ -16768,14 +16787,6 @@ namespace RhyoliteOrbit.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
-                    b.Property<string>("ClientId")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("ClientSecret")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
                     b.Property<string>("Country")
                         .HasMaxLength(80)
                         .HasColumnType("character varying(80)");
@@ -16812,10 +16823,23 @@ namespace RhyoliteOrbit.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
+                    b.Property<Dictionary<string, object>>("Executable")
+                        .HasColumnType("jsonb");
+
                     b.Property<decimal>("Fee")
                         .HasColumnType("numeric");
 
+                    b.Property<Guid>("FlowId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("FlowName")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
                     b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsPorted")
                         .HasColumnType("boolean");
 
                     b.Property<bool>("IsUssdActive")
@@ -16847,9 +16871,24 @@ namespace RhyoliteOrbit.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
+                    b.Property<Dictionary<string, object>>("MetaData")
+                        .HasColumnType("jsonb");
+
                     b.Property<string>("Name")
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
+
+                    b.Property<List<string>>("Networks")
+                        .HasColumnType("jsonb");
+
+                    b.Property<int>("SessionsQuota")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("SessionsUsed")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
 
                     b.Property<int>("SubscriptionDuration")
                         .HasColumnType("integer");
@@ -16861,9 +16900,6 @@ namespace RhyoliteOrbit.Migrations
                     b.Property<int>("TenantId")
                         .HasColumnType("integer");
 
-                    b.Property<bool>("UseAsSecondaryService")
-                        .HasColumnType("boolean");
-
                     b.Property<string>("UssdCode")
                         .HasMaxLength(25)
                         .HasColumnType("character varying(25)");
@@ -16873,10 +16909,6 @@ namespace RhyoliteOrbit.Migrations
 
                     b.Property<decimal>("UssdSessionRate")
                         .HasColumnType("numeric");
-
-                    b.Property<string>("WebhookUrl")
-                        .HasMaxLength(350)
-                        .HasColumnType("character varying(350)");
 
                     b.Property<string>("WhiteLabelPrimaryThemeColor")
                         .HasMaxLength(50)
@@ -16895,54 +16927,6 @@ namespace RhyoliteOrbit.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("WssdServices");
-                });
-
-            modelBuilder.Entity("RhyoliteOrbit.Models.Wssd.WssdServiceInteractionConfiguration", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("DeleterUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("DeletionTime")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<long?>("LastModifierUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<List<WssdServiceInteractionConfigurationOption>>("Options")
-                        .HasColumnType("jsonb");
-
-                    b.Property<List<WssdServiceInteractionConfigurationParentNode>>("ParentNodes")
-                        .HasColumnType("jsonb");
-
-                    b.Property<int>("TenantId")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid>("WssdServiceId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("WssdServiceName")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("WssdServiceInteractionConfigurations");
                 });
 
             modelBuilder.Entity("RhyoliteOrbit.Models.Wssd.WssdServiceRelease", b =>
@@ -17032,109 +17016,6 @@ namespace RhyoliteOrbit.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("WssdServiceReleases");
-                });
-
-            modelBuilder.Entity("RhyoliteOrbit.Models.Wssd.WssdServiceRequest", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("BillingCycle")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<string>("Country")
-                        .HasMaxLength(80)
-                        .HasColumnType("character varying(80)");
-
-                    b.Property<string>("CountryCode")
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("CustomSubdomain")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<long?>("DeleterUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("DeletionTime")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("DisplayTitle")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("Duration")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<decimal>("Fee")
-                        .HasColumnType("numeric");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsUssdCodePorted")
-                        .HasColumnType("boolean");
-
-                    b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<long?>("LastModifierUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("LogoUrl")
-                        .HasMaxLength(350)
-                        .HasColumnType("character varying(350)");
-
-                    b.Property<Guid>("MerchantId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("MerchantName")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("PurposeDescription")
-                        .HasMaxLength(250)
-                        .HasColumnType("character varying(250)");
-
-                    b.Property<string>("ServiceDescription")
-                        .HasMaxLength(250)
-                        .HasColumnType("character varying(250)");
-
-                    b.Property<decimal>("SessionRate")
-                        .HasColumnType("numeric");
-
-                    b.Property<string>("SubscriptionPlan")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<int>("TenantId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("UssdCode")
-                        .HasMaxLength(25)
-                        .HasColumnType("character varying(25)");
-
-                    b.Property<string>("WhiteLabelPrimaryThemeColor")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<string>("WssdServiceName")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("WssdServiceRequests");
                 });
 
             modelBuilder.Entity("RhyoliteOrbit.Models.Wssd.WssdSessionInteraction", b =>

@@ -99,6 +99,17 @@ public class CurrencyManager : Abp.Domain.Services.DomainService, ICurrencyManag
         return paginatedResult;
         
     }
+
+    public async Task<object> ListAll(int tenantId)
+    {
+        return await _repositoryCurrency.GetAllListAsync(x=> x.TenantId == tenantId);
+    }
+    
+    public async Task<object> GetDefaultCurrency(int tenantId)
+    {
+        return await _repositoryCurrency.GetAllListAsync(x=> x.IsDefault && x.TenantId == tenantId);
+    }
+    
     public async Task Delete(Guid id, string dataSupportBusinessAccountId)
     {
         var currencyInfo = await _repositoryCurrency.FirstOrDefaultAsync(id);

@@ -278,10 +278,8 @@ public class RhyoliteOrbitDbContext : AbpZeroDbContext<Tenant, Role, User, Rhyol
     public DbSet<BannerSlider> BannerSliders { get; set; }
     
     // WSSD & USSD
-    public DbSet<WssdServiceRequest> WssdServiceRequests { get; set; }
     public DbSet<WssdSessionInteraction> WssdSessionInteractions { get; set; }
     public DbSet<WssdDataBucket> WssdDataBuckets { get; set; }
-    public DbSet<WssdServiceInteractionConfiguration> WssdServiceInteractionConfigurations { get; set; }
     public DbSet<WssdService> WssdServices { get; set; }
     public DbSet<WssdServiceRelease> WssdServiceReleases { get; set; }
     public DbSet<WebHookRegistry> WebHookRegistry { get; set; }

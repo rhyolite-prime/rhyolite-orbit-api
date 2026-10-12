@@ -16,7 +16,7 @@ public class WssdDataBucket: Abp.Domain.Entities.Auditing.FullAuditedEntity<Guid
     
     public Guid ParentBucketId { get; set; }
     
-    [Column(TypeName = "jsonb")] public List<DefaultDatasetModel> Dataset { get; set; } // maximum limit per dataset is 250,000 records
+    [Column(TypeName = "jsonb")] public Dictionary<string,object> Dataset { get; set; } // maximum limit per dataset is 250,000 records
     
     public int TenantId { get; set; }
 }

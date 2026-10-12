@@ -11,6 +11,7 @@ public class CountryDto
     public string IsoCode { get; set; }
     public int NumericIsoCode { get; set; }
     public string Nationality { get; set; }
+    public List<TelecomNetworkProvider> TelecomNetworkProviders { get; set; }
 }
 
 public class RegionDto

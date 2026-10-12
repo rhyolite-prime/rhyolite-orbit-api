@@ -25,7 +25,7 @@ public class Tenant : AbpTenant<User>
     
     public DateTime? GlSubscriptionStartDate { get; set; }
     public DateTime? GlSubscriptionEndDate { get; set; }
-    public decimal GlSubscriptionFee{ get; set; }
+    public decimal GlSubscriptionFee { get; set; }
     [MaxLength(50)]
     public string GlBillingCycle { get; set; }
     public DateTime? GlNextRenewalDate { get; set; }

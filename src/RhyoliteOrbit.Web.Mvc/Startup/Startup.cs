@@ -72,17 +72,11 @@ public class Startup
 
         });
         
-
         services.AddScoped<IWebResourceManager, WebResourceManager>();
         
         services.AddSingleton<IHashids>(_ => new Hashids("13a51c1b296346b5881b69d439749334", 10));
         services.AddSingleton<IConnectionMultiplexer>(x => ConnectionMultiplexer.Connect(_configuration.GetValue<string>("RedisCache:ConnectionString")));
-
-        services.Configure<KestrelServerOptions>(options =>
-        {
-            options.Limits.MaxRequestBodySize = int.MaxValue;
-        });
-
+        
         services.AddSignalR();
         
         services.Configure<SubscriptionPricingOptions>(options =>

@@ -7,6 +7,11 @@ namespace RhyoliteOrbit.Identity
 {
     public class ExternalLoginInfoHelper
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="claims"></param>
+        /// <returns></returns>
         public static (string name, string surname) GetNameAndSurnameFromClaims(List<Claim> claims)
         {
             string name = null;
