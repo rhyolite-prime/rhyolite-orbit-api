@@ -63,7 +63,8 @@ public class AclManager: DomainService, IAclManager
 
     public async Task RevokeAsync(Guid entryId, long revokedBy)
     {
-        await _repository.HardDeleteAsync(entryId);
+        var data = await  _repository.FirstOrDefaultAsync(entryId);
+        await _repository.HardDeleteAsync(data);
     }
 
     public async Task<List<DmsAclEntry>> GetEntriesAsync(RhyoliteOrbitConsts.SecurableType securableType, Guid securableId)

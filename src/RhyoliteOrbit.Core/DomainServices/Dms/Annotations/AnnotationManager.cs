@@ -47,7 +47,8 @@ public class AnnotationManager: DomainService, IAnnotationManager
 
     public async Task DeleteAsync(Guid annotationId, long deletedBy)
     {
-        await _repository.HardDeleteAsync(annotationId);
+        var data = await _repository.FirstOrDefaultAsync(annotationId);
+        await _repository.HardDeleteAsync(data);
     }
 
     public async Task<List<DmsAnnotation>> ListAsync(Guid documentId, Guid? versionId = null)

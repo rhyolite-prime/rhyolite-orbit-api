@@ -66,7 +66,8 @@ public class CommentManager: DomainService, ICommentManager
 
     public async Task DeleteAsync(Guid commentId, long deletedBy)
     {
-        await _repository.HardDeleteAsync(commentId);
+        var comment = await _repository.FirstOrDefaultAsync(commentId);
+        await _repository.HardDeleteAsync(comment);
     }
 
     public async Task<List<DmsComment>> ListAsync(Guid documentId, Guid? versionId = null)

@@ -51,7 +51,7 @@ public class PdfTextExtractor: DomainService, ITextExtractor
                 using var input = new MemoryStream(compressed, 2, compressed.Length - 2);
                 using var deflate = new DeflateStream(input, CompressionMode.Decompress);
                 using var output = new MemoryStream();
-                deflate.CopyTo(output);
+                await deflate.CopyToAsync(output, cancellationToken);
                 decoded = output.ToArray();
             }
             catch
