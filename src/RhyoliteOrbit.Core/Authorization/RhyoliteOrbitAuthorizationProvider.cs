@@ -163,6 +163,44 @@ public class RhyoliteOrbitAuthorizationProvider : AuthorizationProvider
         context.CreatePermission(PermissionNames.POS_UpdateShipmentStatus, L("UpdateShipmentStatus"));
         
         
+        // Document Management System
+        var dmsRoot = context.CreatePermission(PermissionNames.Pages_Documents, L("Documents"));
+
+        dmsRoot.CreateChildPermission(PermissionNames.DMS_ViewDocuments, L("DmsViewDocuments"));
+        dmsRoot.CreateChildPermission(PermissionNames.DMS_CreateDocument, L("DmsCreateDocument"));
+        dmsRoot.CreateChildPermission(PermissionNames.DMS_UpdateDocument, L("DmsUpdateDocument"));
+        dmsRoot.CreateChildPermission(PermissionNames.DMS_DeleteDocument, L("DmsDeleteDocument"));
+        dmsRoot.CreateChildPermission(PermissionNames.DMS_PurgeDocument, L("DmsPurgeDocument"));
+        dmsRoot.CreateChildPermission(PermissionNames.DMS_DownloadDocument, L("DmsDownloadDocument"));
+        dmsRoot.CreateChildPermission(PermissionNames.DMS_PreviewDocument, L("DmsPreviewDocument"));
+        dmsRoot.CreateChildPermission(PermissionNames.DMS_PrintDocument, L("DmsPrintDocument"));
+        dmsRoot.CreateChildPermission(PermissionNames.DMS_CheckOutDocument, L("DmsCheckOutDocument"));
+        dmsRoot.CreateChildPermission(PermissionNames.DMS_ForceUnlockDocument, L("DmsForceUnlockDocument"));
+        dmsRoot.CreateChildPermission(PermissionNames.DMS_ManageVersions, L("DmsManageVersions"));
+        dmsRoot.CreateChildPermission(PermissionNames.DMS_ManageFolders, L("DmsManageFolders"));
+        dmsRoot.CreateChildPermission(PermissionNames.DMS_ManageCollections, L("DmsManageCollections"));
+        dmsRoot.CreateChildPermission(PermissionNames.DMS_ManageTags, L("DmsManageTags"));
+        dmsRoot.CreateChildPermission(PermissionNames.DMS_ManageTemplates, L("DmsManageTemplates"));
+        dmsRoot.CreateChildPermission(PermissionNames.DMS_ManageIdentifiers, L("DmsManageIdentifiers"));
+        dmsRoot.CreateChildPermission(PermissionNames.DMS_ManagePermissions, L("DmsManagePermissions"));
+        dmsRoot.CreateChildPermission(PermissionNames.DMS_ShareDocument, L("DmsShareDocument"));
+        dmsRoot.CreateChildPermission(PermissionNames.DMS_ManageShares, L("DmsManageShares"));
+        dmsRoot.CreateChildPermission(PermissionNames.DMS_ManageWorkflows, L("DmsManageWorkflows"));
+        dmsRoot.CreateChildPermission(PermissionNames.DMS_StartWorkflow, L("DmsStartWorkflow"));
+        dmsRoot.CreateChildPermission(PermissionNames.DMS_ParticipateInWorkflow, L("DmsParticipateInWorkflow"));
+        dmsRoot.CreateChildPermission(PermissionNames.DMS_ViewAuditTrail, L("DmsViewAuditTrail"));
+        dmsRoot.CreateChildPermission(PermissionNames.DMS_ExportAuditTrail, L("DmsExportAuditTrail"));
+        dmsRoot.CreateChildPermission(PermissionNames.DMS_ManageRetention, L("DmsManageRetention"));
+        dmsRoot.CreateChildPermission(PermissionNames.DMS_ApplyLegalHold, L("DmsApplyLegalHold"));
+        dmsRoot.CreateChildPermission(PermissionNames.DMS_ManageSignatures, L("DmsManageSignatures"));
+        dmsRoot.CreateChildPermission(PermissionNames.DMS_SignDocument, L("DmsSignDocument"));
+        dmsRoot.CreateChildPermission(PermissionNames.DMS_ManageAnnotations, L("DmsManageAnnotations"));
+        dmsRoot.CreateChildPermission(PermissionNames.DMS_BulkImport, L("DmsBulkImport"));
+        dmsRoot.CreateChildPermission(PermissionNames.DMS_BulkExport, L("DmsBulkExport"));
+        dmsRoot.CreateChildPermission(PermissionNames.DMS_ManageSettings, L("DmsManageSettings"));
+        dmsRoot.CreateChildPermission(PermissionNames.DMS_ManageQuotas, L("DmsManageQuotas"));
+        dmsRoot.CreateChildPermission(PermissionNames.DMS_UseAiFeatures, L("DmsUseAiFeatures"));
+
         context.CreatePermission(PermissionNames.Pages_Users, L("Users"));
         context.CreatePermission(PermissionNames.Pages_Users_Activation, L("UsersActivation"));
         context.CreatePermission(PermissionNames.Pages_Roles, L("Roles"));

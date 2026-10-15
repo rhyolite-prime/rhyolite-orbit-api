@@ -23,6 +23,7 @@ using HashidsNet;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using RhyoliteOrbit.Actors;
+using RhyoliteOrbit.Actors.Dms;
 using RhyoliteOrbit.Models.Shared;
 using StackExchange.Redis;
 
@@ -125,6 +126,14 @@ public class Startup
             var configuration = provider.GetService<IConfiguration>();
             var studentBillActor = actorSystem.ActorOf(Props.Create(() => new StudentBillActor(provider)).WithRouter(new RoundRobinPool(2)));
             return () => studentBillActor;
+        });
+        
+        services.AddSingleton<TopLevelActors.DmsDocumentEventActorProvider>(provider =>
+        {
+            var actorSystem = provider.GetService<ActorSystem>();
+            var configuration = provider.GetService<IConfiguration>();
+            var dmsDocumentEventActor = actorSystem.ActorOf(Props.Create(() => new DmsDocumentEventActor(provider, configuration)).WithRouter(new RoundRobinPool(2)));
+            return () => dmsDocumentEventActor;
         });
         
         

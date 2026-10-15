@@ -9,4 +9,5 @@ public class TopLevelActors
     public delegate IActorRef PayslipDispatchActorProvider();
     public delegate IActorRef EmailActorProvider();
     public delegate IActorRef StudentBillActorProvider();
+    public delegate IActorRef DmsDocumentEventActorProvider();
 }
