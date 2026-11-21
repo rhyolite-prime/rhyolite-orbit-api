@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using RhyoliteOrbit.Debugging;
 
 namespace RhyoliteOrbit;
@@ -171,6 +172,7 @@ public class RhyoliteOrbitConsts
        PropertyOrAssetRental = 12,
        CoreBanking = 13,
        LogicPro = 14,
+       DocumentManagement = 15,
     }
     
     public enum ReceiptStatus
@@ -276,7 +278,10 @@ public class RhyoliteOrbitConsts
         Assign = 3,
         Delegate = 4,
         AddComment = 5,
-        UploadAttachment = 6
+        UploadAttachment = 6,
+        SendEmail = 7,
+        Webhook = 8,
+        UpdateMetadata = 9
     }
     
     public enum ConditionField
@@ -469,6 +474,253 @@ public class RhyoliteOrbitConsts
         Failed = 7,
         Returned = 8,
         Cancelled = 9,
+    }
+
+    // ---------------------------------------------------------------------
+    // Document Management System (DMS)
+    // ---------------------------------------------------------------------
+
+    /// <summary>Lifecycle state of a document.</summary>
+    public enum DocumentStatus
+    {
+        Draft = 0,
+        Active = 1,
+        Archived = 2,
+        Deleted = 3,
+        Quarantined = 4
+    }
+
+    /// <summary>Granular document permissions (bitmask, see <see cref="DmsPermissionExtensions"/>).</summary>
+    [Flags]
+    public enum DmsPermission
+    {
+        None = 0,
+        View = 1,
+        Preview = 2,
+        Download = 4,
+        Print = 8,
+        Edit = 16,
+        Delete = 32,
+        ManagePermissions = 64,
+        Share = 128,
+        CheckOut = 256,
+        ManageWorkflow = 512,
+        ManageRetention = 1024,
+        All = View | Preview | Download | Print | Edit | Delete | ManagePermissions | Share | CheckOut | ManageWorkflow | ManageRetention
+    }
+
+    public enum SecurableType
+    {
+        Collection = 0,
+        Folder = 1,
+        Document = 2
+    }
+
+    public enum AclSubjectType
+    {
+        User = 0,
+        Role = 1,
+        Department = 2,
+        Tenant = 3
+    }
+
+    public enum AclEffect
+    {
+        Allow = 0,
+        Deny = 1
+    }
+
+    public enum DocumentVersionScheme
+    {
+        Major = 0,
+        Minor = 1,
+        None = 2
+    }
+
+    public enum SequenceResetPolicy
+    {
+        Never = 0,
+        Yearly = 1,
+        Monthly = 2
+    }
+
+    public enum IndexStatus
+    {
+        NotIndexed = 0,
+        Queued = 1,
+        Indexing = 2,
+        Indexed = 3,
+        Failed = 4
+    }
+
+    public enum ScanStatus
+    {
+        NotScanned = 0,
+        Queued = 1,
+        Clean = 2,
+        Infected = 3,
+        Failed = 4
+    }
+
+    public enum OcrStatus
+    {
+        NotRequired = 0,
+        Queued = 1,
+        Running = 2,
+        Completed = 3,
+        Failed = 4
+    }
+
+    public enum AiStatus
+    {
+        NotRun = 0,
+        Queued = 1,
+        Running = 2,
+        Completed = 3,
+        Failed = 4
+    }
+
+    public enum AuditAction
+    {
+        FolderCreated = 0,
+        FolderUpdated = 1,
+        FolderMoved = 2,
+        FolderDeleted = 3,
+        FolderRestored = 4,
+        DocumentCreated = 5,
+        DocumentUpdated = 6,
+        DocumentMoved = 7,
+        DocumentCopied = 8,
+        DocumentDeleted = 9,
+        DocumentRestored = 10,
+        DocumentPurged = 11,
+        DocumentStarred = 12,
+        DocumentUnstarred = 13,
+        VersionUploaded = 14,
+        VersionPromoted = 15,
+        VersionRestored = 16,
+        VersionDownloaded = 17,
+        DocumentCheckedOut = 18,
+        DocumentCheckedIn = 19,
+        LockForceReleased = 20,
+        MetadataUpdated = 21,
+        TagAssigned = 22,
+        TagRemoved = 23,
+        PermissionGranted = 24,
+        PermissionRevoked = 25,
+        ShareCreated = 26,
+        ShareAccessed = 27,
+        ShareRevoked = 28,
+        CommentAdded = 29,
+        CommentDeleted = 30,
+        AnnotationAdded = 31,
+        AnnotationDeleted = 32,
+        WorkflowStarted = 33,
+        WorkflowTaskCompleted = 34,
+        WorkflowRejected = 35,
+        WorkflowCancelled = 36,
+        RetentionApplied = 37,
+        DispositionExecuted = 38,
+        LegalHoldApplied = 39,
+        LegalHoldReleased = 40,
+        SignatureApplied = 41,
+        EntityLinked = 42,
+        EntityUnlinked = 43,
+        BulkImportCompleted = 44,
+        BulkExportCompleted = 45,
+        SettingsUpdated = 46,
+        QuotaExceeded = 47,
+        VirusDetected = 48,
+        PiiRedacted = 49
+    }
+
+    public enum ShareType
+    {
+        Internal = 0,
+        PublicLink = 1,
+        Email = 2
+    }
+
+    public enum AnnotationType
+    {
+        Highlight = 0,
+        Note = 1,
+        Stamp = 2,
+        Redaction = 3
+    }
+
+    public enum SignatureType
+    {
+        Draw = 0,
+        Type = 1,
+        Upload = 2,
+        Certificate = 3
+    }
+
+    public enum RetentionTrigger
+    {
+        Creation = 0,
+        LastModified = 1,
+        EventDate = 2
+    }
+
+    public enum DispositionAction
+    {
+        Review = 0,
+        Delete = 1,
+        Archive = 2,
+        Transfer = 3
+    }
+
+    public enum WorkflowInstanceStatus
+    {
+        InProgress = 0,
+        Completed = 1,
+        Cancelled = 2,
+        Rejected = 3,
+        Suspended = 4
+    }
+
+    public enum IngestJobType
+    {
+        ImportZip = 0,
+        ExportZip = 1,
+        EmailIngest = 2
+    }
+
+    public enum IngestJobStatus
+    {
+        Queued = 0,
+        Running = 1,
+        Completed = 2,
+        Failed = 3,
+        Cancelled = 4
+    }
+
+    /// <summary>ERP record types that documents can be linked to.</summary>
+    public enum DmsEntityType
+    {
+        Invoice = 0,
+        Payment = 1,
+        Receipt = 2,
+        Payslip = 3,
+        Employee = 4,
+        Student = 5,
+        PosOrder = 6,
+        NonConformance = 7,
+        ProductionOrder = 8,
+        Supplier = 9,
+        Customer = 10,
+        FixedAsset = 11,
+        Other = 99
+    }
+
+    public enum DmsLinkType
+    {
+        Attachment = 0,
+        Supporting = 1,
+        Generated = 2,
+        SignedCopy = 3
     }
 
 

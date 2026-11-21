@@ -243,7 +243,21 @@ public class RhyoliteOrbitDbContext : AbpZeroDbContext<Tenant, Role, User, Rhyol
     public DbSet<DmsWorkflowInstance> DmsWorkflowInstances { get; set; }
     public DbSet<DmsWorkflowTask> DmsWorkflowTasks { get; set; }
     public DbSet<DmsComment> DmsComments { get; set; }
-    //public DbSet<DmsAnnotation> DmsAnnotations { get; set; }
+    public DbSet<DmsAnnotation> DmsAnnotations { get; set; }
+    public DbSet<DmsDocumentVersion> DmsDocumentVersions { get; set; }
+    public DbSet<DmsAclEntry> DmsAclEntries { get; set; }
+    public DbSet<DmsAuditEntry> DmsAuditEntries { get; set; }
+    public DbSet<DmsShare> DmsShares { get; set; }
+    public DbSet<DmsSavedSearch> DmsSavedSearches { get; set; }
+    public DbSet<DmsRetentionPolicy> DmsRetentionPolicies { get; set; }
+    public DbSet<DmsLegalHold> DmsLegalHolds { get; set; }
+    public DbSet<DmsSignature> DmsSignatures { get; set; }
+    public DbSet<DmsEntityLink> DmsEntityLinks { get; set; }
+    public DbSet<DmsEmbedding> DmsEmbeddings { get; set; }
+    public DbSet<DmsDocumentEvent> DmsDocumentEvents { get; set; }
+    public DbSet<DmsQuotaUsage> DmsQuotaUsages { get; set; }
+    public DbSet<DmsIngestJob> DmsIngestJobs { get; set; }
+    public DbSet<DmsSettings> DmsSettings { get; set; }
     // 
     
     // POS
@@ -277,6 +291,171 @@ public class RhyoliteOrbitDbContext : AbpZeroDbContext<Tenant, Role, User, Rhyol
     public DbSet<GiftCard> GiftCards { get; set; }
     public DbSet<BannerSlider> BannerSliders { get; set; }
     
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        ConfigureDms(modelBuilder);
+    }
+
+    private static void ConfigureDms(ModelBuilder modelBuilder)
+    {
+        // ---------------------------------------------------------------- documents
+        modelBuilder.Entity<DmsDocument>(b =>
+        {
+            b.Property(e => e.SearchVector)
+                .HasColumnType("tsvector")
+                .HasComputedColumnSql(
+                    "to_tsvector('simple', coalesce(\"Name\", '') || ' ' || coalesce(\"Title\", '') || ' ' || coalesce(\"Description\", '') || ' ' || coalesce(\"CustomId\", ''))",
+                    stored: true);
+
+            b.HasIndex(e => new { e.TenantId, e.FolderId, e.IsDeleted });
+            b.HasIndex(e => new { e.TenantId, e.CollectionId });
+            b.HasIndex(e => e.Checksum);
+            b.HasIndex(e => new { e.TenantId, e.CustomId });
+            b.HasIndex(e => e.CurrentVersionId);
+        });
+
+        modelBuilder.Entity<DmsDocumentVersion>(b =>
+        {
+            b.Property(e => e.SearchVector)
+                .HasColumnType("tsvector")
+                .HasComputedColumnSql(
+                    "to_tsvector('simple', coalesce(\"ExtractedText\", ''))",
+                    stored: true);
+
+            b.HasIndex(e => new { e.DocumentId, e.VersionNumber, e.MinorNumber });
+            b.HasIndex(e => new { e.TenantId, e.Checksum });
+        });
+
+        // ---------------------------------------------------------------- structure
+        modelBuilder.Entity<DmsFolder>(b =>
+        {
+            b.HasIndex(e => new { e.TenantId, e.ParentId });
+            b.HasIndex(e => e.CollectionId);
+        });
+
+        modelBuilder.Entity<DmsCollection>(b =>
+        {
+            b.HasIndex(e => e.TenantId);
+        });
+
+        // ---------------------------------------------------------------- security
+        modelBuilder.Entity<DmsAclEntry>(b =>
+        {
+            b.HasIndex(e => new { e.SecurableType, e.SecurableId });
+            b.HasIndex(e => new { e.TenantId, e.SubjectType, e.SubjectId });
+        });
+
+        modelBuilder.Entity<DmsAuditEntry>(b =>
+        {
+            b.HasIndex(e => new { e.TenantId, e.Sequence });
+            b.HasIndex(e => e.DocumentId);
+            b.HasIndex(e => e.FolderId);
+        });
+
+        modelBuilder.Entity<DmsShare>(b =>
+        {
+            b.HasIndex(e => e.DocumentId);
+            b.HasIndex(e => e.FolderId);
+            b.HasIndex(e => new { e.TenantId, e.Token });
+        });
+
+        // ---------------------------------------------------------------- metadata
+        modelBuilder.Entity<DmsDocumentTag>(b =>
+        {
+            b.HasIndex(e => e.DocumentId);
+            b.HasIndex(e => e.TagId);
+        });
+
+        modelBuilder.Entity<DmsCustomAttributes>(b =>
+        {
+            b.HasIndex(e => e.TemplateId);
+        });
+
+        modelBuilder.Entity<DmsDocumentMetadataValues>(b =>
+        {
+            b.HasIndex(e => new { e.DocumentId, e.AttributeId });
+        });
+
+        // ---------------------------------------------------------------- workflow
+        modelBuilder.Entity<DmsWorkflowInstance>(b =>
+        {
+            b.HasIndex(e => e.DocumentId);
+            b.HasIndex(e => new { e.TenantId, e.Status });
+        });
+
+        modelBuilder.Entity<DmsWorkflowTask>(b =>
+        {
+            b.HasIndex(e => e.WorkflowInstanceId);
+            b.HasIndex(e => new { e.TenantId, e.AssignedTo, e.Status });
+        });
+
+        // ---------------------------------------------------------------- records
+        modelBuilder.Entity<DmsEntityLink>(b =>
+        {
+            b.HasIndex(e => new { e.EntityType, e.EntityId });
+            b.HasIndex(e => e.DocumentId);
+        });
+
+        modelBuilder.Entity<DmsEmbedding>(b =>
+        {
+            b.HasIndex(e => new { e.DocumentId, e.VersionId });
+        });
+
+        modelBuilder.Entity<DmsDocumentEvent>(b =>
+        {
+            b.HasIndex(e => new { e.TenantId, e.ProcessedAt });
+        });
+
+        modelBuilder.Entity<DmsQuotaUsage>(b =>
+        {
+            b.HasIndex(e => e.TenantId).IsUnique();
+        });
+
+        modelBuilder.Entity<DmsSettings>(b =>
+        {
+            b.HasIndex(e => e.TenantId).IsUnique();
+        });
+
+        modelBuilder.Entity<DmsRetentionPolicy>(b =>
+        {
+            b.HasIndex(e => e.TenantId);
+        });
+
+        modelBuilder.Entity<DmsLegalHold>(b =>
+        {
+            b.HasIndex(e => new { e.TenantId, e.IsActive });
+        });
+
+        modelBuilder.Entity<DmsSignature>(b =>
+        {
+            b.HasIndex(e => e.DocumentId);
+            b.HasIndex(e => e.VersionId);
+        });
+
+        modelBuilder.Entity<DmsAnnotation>(b =>
+        {
+            b.HasIndex(e => e.DocumentId);
+        });
+
+        modelBuilder.Entity<DmsComment>(b =>
+        {
+            b.HasIndex(e => e.DocumentId);
+        });
+
+        modelBuilder.Entity<DmsSavedSearch>(b =>
+        {
+            b.HasIndex(e => new { e.TenantId, e.UserId });
+        });
+
+        modelBuilder.Entity<DmsIngestJob>(b =>
+        {
+            b.HasIndex(e => new { e.TenantId, e.Status });
+        });
+    }
+
     // WSSD & USSD
     public DbSet<WssdSessionInteraction> WssdSessionInteractions { get; set; }
     public DbSet<WssdDataBucket> WssdDataBuckets { get; set; }
